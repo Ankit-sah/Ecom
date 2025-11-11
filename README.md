@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Overview
+
+Janakpur Art and Craft is modelled after the real collective founded by Ajit Kumar Sah in 1993 to promote Mithila art and
+uplift artisan communities in Nepal. This storefront showcases how their jewellery, vessels, textiles, and paintings can
+reach global customers online, and it is built with:
+
+- **Next.js App Router** (TypeScript, React Server Components)
+- **Tailwind CSS v4** for styling
+- **Prisma** + **MongoDB** as the data layer
+- **Stripe Checkout** for secure payments
+- **NextAuth.js** with an **Okta** OAuth provider
+
+The project includes core storefront screens (home, products, product detail, cart, checkout), a role-aware administrative
+dashboard, bulk import tooling, Stripe webhooks, and ready-to-deploy configuration for Vercel.
+
+### Highlights
+
+- Role-based admin dashboard for catalogue, orders, and import jobs
+- Bulk JSON import pipeline that upserts categories, artisans, and products with audit logs
+- Order management workflow with fulfilment stages, tracking numbers, and Stripe webhook reconciliation
+- Customer checkout form that captures shipping details, computes region-aware shipping, and creates Stripe sessions
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` to explore the storefront.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create an `.env` file (see `.env.example` for reference):
 
-## Learn More
+```
+DATABASE_URL="mongodb+srv://..."
+NEXTAUTH_SECRET="generate-a-strong-secret"
+NEXTAUTH_URL="http://localhost:3000"
 
-To learn more about Next.js, take a look at the following resources:
+OKTA_CLIENT_ID="your-okta-client-id"
+OKTA_CLIENT_SECRET="your-okta-client-secret"
+OKTA_ISSUER="https://your-okta-domain.okta.com/oauth2/default"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+ADMIN_EMAILS="founder@jac.com.np,operations@jac.com.np"
+```
 
-## Deploy on Vercel
+> Tip: use `openssl rand -base64 32` to generate `NEXTAUTH_SECRET`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Database
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Update `DATABASE_URL` with your MongoDB connection string.
+2. Generate the Prisma client: `npx prisma generate`
+3. Optional: push schema to your database `npx prisma db push`
+
+The application seeds a small catalog the first time it runs if the database is empty.
+
+### Authentication (Okta)
+
+1. Create an Okta OIDC application.
+2. Configure the callback URL: `http://localhost:3000/api/auth/callback/okta`
+3. Copy the Client ID, Client Secret, and Issuer URL into your `.env`.
+
+### Stripe
+
+1. Create a product catalog or use test mode.
+2. Add your secret and publishable keys to `.env`.
+3. Create a webhook endpoint (e.g. `/api/stripe/webhook`) in the Stripe dashboard and copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
+4. (Optional) Configure Stripe Tax or shipping rates if you need automated localisation.
+
+### Admin dashboard & RBAC
+
+- Signed-in users whose email matches `ADMIN_EMAILS` are automatically promoted to the `ADMIN` role; staff can be managed via the Prisma `User` model.
+- Protected routes:
+  - `/admin` – overview analytics
+  - `/admin/products` – create products, toggle featured/published states, and manage artisans/categories
+  - `/admin/orders` – update statuses, fulfilment stages, tracking, and view customer details
+  - `/admin/imports` – run JSON-based bulk imports and monitor job history
+- Middleware enforces role access for both pages and `/api/admin/*` endpoints.
+
+### Stripe webhook lifecycle
+
+- `checkout.session.completed` → marks the order as `PAID`, stores the payment intent, and transitions fulfilment to `PREPARING`.
+- `checkout.session.expired` / `checkout.session.async_payment_failed` → updates the order to `CANCELLED` or `FAILED`.
+- Extend `src/app/api/stripe/webhook/route.ts` with additional events (refunds, disputes) as needed.
+
+### Testing the Flow
+
+- Visit `/products` to browse Mithila handicrafts, add items to the cart, and verify stock handling.
+- Sign in with Okta via `/auth/sign-in`.
+- Complete the checkout form with shipping details and proceed to Stripe’s hosted payment page.
+- Inspect `/admin/orders` to confirm statuses update after successful payment (requires webhook).
+
+## Deployment (Vercel)
+
+1. Push the repository to GitHub/GitLab/Bitbucket.
+2. Create a new Vercel project and import the repo.
+3. Set all environment variables in the Vercel dashboard.
+4. Trigger the deploy—Vercel will build and host the app automatically.
+
+Post-deploy tasks:
+
+- Update `NEXTAUTH_URL`/`NEXT_PUBLIC_APP_URL` to your production domain.
+- Configure Stripe webhook for the production URL if you intend to process live payments.
+
+## Useful Scripts
+
+| Command             | Description                                    |
+| ------------------- | ---------------------------------------------- |
+| `npm run dev`       | Start local development server                 |
+| `npm run build`     | Create a production build                      |
+| `npm run start`     | Run the production build                       |
+| `npm run lint`      | Check code style and lint errors                |
+| `npx prisma studio` | Inspect and modify data via Prisma Studio      |
+
+## Folder Structure Highlights
+
+- `src/app` – App Router pages and API routes
+- `src/components` – Reusable UI components
+- `src/providers` – React context providers (auth, cart)
+- `src/lib` – Prisma client, business logic helpers
+- `prisma/schema.prisma` – Prisma schema and models
+
+## Notes
+
+- Tailwind CSS v4 uses the new `@import "tailwindcss"` syntax.
+- NextAuth is configured with database sessions and Prisma adapter.
+- Stripe checkout route also stores a pending order to reconcile payment outcomes.
