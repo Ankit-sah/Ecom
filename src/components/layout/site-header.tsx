@@ -7,6 +7,10 @@ import { CartButton } from "@/components/layout/site-header/cart-button";
 
 export async function SiteHeader() {
   const session = await getServerSession(authOptions);
+  const isAdmin =
+    session?.user?.role === "ADMIN" ||
+    session?.user?.role === "STAFF" ||
+    session?.user?.role === "ARTISAN_MANAGER";
 
   return (
     <header className="border-b border-[#f6b2c5] bg-white/80 backdrop-blur">
@@ -24,6 +28,11 @@ export async function SiteHeader() {
           <Link href="/checkout" className="transition hover:text-[#8a2040]">
             Checkout
           </Link>
+          {isAdmin ? (
+            <Link href="/admin" className="transition hover:text-[#8a2040]">
+              Admin
+            </Link>
+          ) : null}
         </nav>
         <div className="flex items-center gap-4">
           <CartButton />

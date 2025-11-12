@@ -7,6 +7,7 @@ import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/server-auth";
 import type { Product } from "@/types/product";
 import { formatCurrencyFromCents } from "@/utils/format";
+import { ProductImagesField } from "@/components/admin/product-images-field";
 
 function slugify(value: string) {
   return value
@@ -106,6 +107,9 @@ async function createProduct(formData: FormData) {
     .split(/\n|,/)
     .map((url) => url.trim())
     .filter(Boolean);
+  if (images.length === 0) {
+    throw new Error("Please upload at least one product image.");
+  }
   const tags = tagsInput
     .split(",")
     .map((tag) => tag.trim())
@@ -291,18 +295,8 @@ export default async function AdminProductsPage() {
               className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
             />
           </div>
-          <div className="space-y-2 md:col-span-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="images">
-              Image URLs (one per line or comma separated)
-            </label>
-            <textarea
-              id="images"
-              name="images"
-              rows={3}
-              required
-              placeholder="https://…"
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
-            />
+          <div className="md:col-span-2">
+            <ProductImagesField />
           </div>
           <fieldset className="space-y-2 rounded-2xl border border-[#f6b2c5]/70 bg-white/60 p-4">
             <legend className="px-2 text-sm font-semibold text-[#40111f]">Category</legend>

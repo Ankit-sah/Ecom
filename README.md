@@ -49,6 +49,7 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
 
 ADMIN_EMAILS="founder@jac.com.np,operations@jac.com.np"
+BLOB_READ_WRITE_TOKEN="vercel-blob-read-write-token"
 ```
 
 > Tip: use `openssl rand -base64 32` to generate `NEXTAUTH_SECRET`.
@@ -97,6 +98,7 @@ The application seeds a small catalog the first time it runs if the database is 
 - Sign up via `/auth/sign-up` (creates the user in Okta) and then sign in via `/auth/sign-in`.
 - Complete the checkout form with shipping details and proceed to Stripe’s hosted payment page.
 - Inspect `/admin/orders` to confirm statuses update after successful payment (requires webhook).
+- Use `/admin/products` to upload imagery (stored in Vercel Blob) and publish new catalogue items.
 
 ## Deployment (Vercel)
 
