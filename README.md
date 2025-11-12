@@ -41,6 +41,7 @@ NEXTAUTH_URL="http://localhost:3000"
 OKTA_CLIENT_ID="your-okta-client-id"
 OKTA_CLIENT_SECRET="your-okta-client-secret"
 OKTA_ISSUER="https://your-okta-domain.okta.com/oauth2/default"
+OKTA_API_TOKEN="your-okta-api-token"
 
 STRIPE_SECRET_KEY="sk_test_..."
 STRIPE_WEBHOOK_SECRET="whsec_..."
@@ -65,6 +66,7 @@ The application seeds a small catalog the first time it runs if the database is 
 1. Create an Okta OIDC application.
 2. Configure the callback URL: `http://localhost:3000/api/auth/callback/okta`
 3. Copy the Client ID, Client Secret, and Issuer URL into your `.env`.
+4. Generate an Okta API token (Security → API → Tokens) and add it to `OKTA_API_TOKEN`. This powers the custom sign-up flow.
 
 ### Stripe
 
@@ -92,7 +94,7 @@ The application seeds a small catalog the first time it runs if the database is 
 ### Testing the Flow
 
 - Visit `/products` to browse Mithila handicrafts, add items to the cart, and verify stock handling.
-- Sign in with Okta via `/auth/sign-in`.
+- Sign up via `/auth/sign-up` (creates the user in Okta) and then sign in via `/auth/sign-in`.
 - Complete the checkout form with shipping details and proceed to Stripe’s hosted payment page.
 - Inspect `/admin/orders` to confirm statuses update after successful payment (requires webhook).
 

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import type { Artisan, Prisma, Product as ProductModel, ProductCategory } from "@/generated/prisma/client";
+import type { Artisan, Product as ProductModel, ProductCategory } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { Product } from "@/types/product";
 
@@ -205,12 +205,61 @@ const sampleProducts: SeedProduct[] = [
   },
 ];
 
+type LegacyProductDoc = {
+  _id: string | { $oid: string };
+  name: string;
+  slug?: string;
+};
+
 let hasSeeded = false;
 
 async function ensureSeedData() {
   if (hasSeeded) {
     return;
   }
+
+  const legacyResult = (await prisma.$runCommandRaw({
+    aggregate: "Product",
+    pipeline: [
+      {
+        $match: {
+          $or: [{ sku: { $exists: false } }, { sku: null }, { sku: "" }],
+        },
+      },
+      {
+        $project: { _id: 1, name: 1, slug: 1 },
+      },
+    ],
+    cursor: { batchSize: 50 },
+  })) as { cursor?: { firstBatch?: LegacyProductDoc[] } };
+
+  const legacyProducts = legacyResult.cursor?.firstBatch ?? [];
+
+  if (legacyProducts.length > 0) {
+    await Promise.all(
+      legacyProducts.map((product) => {
+        const id =
+          typeof product._id === "string"
+            ? product._id
+            : product._id && typeof product._id === "object" && "$oid" in product._id
+              ? (product._id.$oid as string)
+              : null;
+
+        if (!id) {
+          return Promise.resolve();
+        }
+
+        const base = product.slug?.length ? product.slug : slugify(product.name);
+        const sku = `${base}-${id.slice(-6)}`.toUpperCase();
+
+        return prisma.product.update({
+          where: { id },
+          data: { sku },
+        });
+      }),
+    );
+  }
+
   const productCount = await prisma.product.count();
   if (productCount === 0) {
     await prisma.$transaction(async (tx) => {
