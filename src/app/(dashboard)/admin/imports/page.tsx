@@ -2,9 +2,11 @@ import "server-only";
 
 import { revalidatePath } from "next/cache";
 
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/server-auth";
+
+// Type for JSON values in Prisma
+type JsonValue = string | number | boolean | null | { [key: string]: JsonValue } | JsonValue[];
 
 type ImportProductPayload = {
   name: string;
@@ -93,7 +95,7 @@ async function processImportPayload(payload: ImportProductPayload[], actorEmail?
               create: {
                 action: "UPDATED_VIA_IMPORT",
                 actorEmail: actorEmail ?? undefined,
-                changes: product as Prisma.JsonValue,
+                changes: product as JsonValue,
               },
             },
           },
@@ -121,7 +123,7 @@ async function processImportPayload(payload: ImportProductPayload[], actorEmail?
               create: {
                 action: "CREATED_VIA_IMPORT",
                 actorEmail: actorEmail ?? undefined,
-                changes: product as Prisma.JsonValue,
+                changes: product as JsonValue,
               },
             },
           },
@@ -191,6 +193,8 @@ async function fetchImportHistory() {
   });
 }
 
+type ImportJob = Awaited<ReturnType<typeof fetchImportHistory>>[number];
+
 export default async function AdminImportsPage() {
   const history = await fetchImportHistory();
 
@@ -249,7 +253,7 @@ export default async function AdminImportsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f6b2c5]/40 bg-white/70">
-              {history.map((job) => (
+              {history.map((job: ImportJob) => (
                 <tr key={job.id}>
                   <td className="px-4 py-3 text-sm text-[#40111f]">{job.filename ?? "Manual import"}</td>
                   <td className="px-4 py-3 text-sm font-semibold">
