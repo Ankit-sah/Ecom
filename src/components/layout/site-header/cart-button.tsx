@@ -1,11 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { useCart } from "@/providers/cart-provider";
 
 export function CartButton() {
   const { totalQuantity } = useCart();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // Show 0 on server to avoid hydration mismatch
+  const displayQuantity = mounted ? totalQuantity : 0;
 
   return (
     <Link
@@ -14,7 +23,7 @@ export function CartButton() {
     >
       <span>Cart</span>
       <span className="flex h-6 min-w-6 items-center justify-center rounded-full bg-[#8a2040] px-2 text-xs font-semibold text-white shadow shadow-[#8a2040]/40">
-        {totalQuantity}
+        {displayQuantity}
       </span>
     </Link>
   );

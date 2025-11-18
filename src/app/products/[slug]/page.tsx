@@ -13,9 +13,11 @@ type PageProps = {
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
-  return products.map((product) => ({
-    slug: product.slug,
-  }));
+  return products
+    .filter((product) => product.slug) // Filter out products with undefined/null slugs
+    .map((product) => ({
+      slug: product.slug,
+    }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {

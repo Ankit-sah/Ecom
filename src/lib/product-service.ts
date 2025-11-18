@@ -400,7 +400,13 @@ export async function getAllProducts(): Promise<Product[]> {
 
 export async function getProductBySlug(slug: string): Promise<Product> {
   await ensureSeedData();
-  const product = await prisma.product.findUnique({
+  
+  if (!slug) {
+    notFound();
+  }
+
+  // Use findFirst instead of findUnique when filtering by published
+  const product = await prisma.product.findFirst({
     where: { slug, published: true },
     include: {
       category: true,
