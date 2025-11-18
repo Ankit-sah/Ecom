@@ -102,6 +102,17 @@ export type { PrismaClient } from './client';
   };
   copyAllFiles(prismaClientDir, prismaPackagePrismaDir);
   
+  // Also update @prisma/client/default.d.ts to directly export from the copied files
+  // This ensures TypeScript can resolve PrismaClient even with bundler module resolution
+  const prismaDefaultDtsPath = path.join(prismaPackageDir, 'default.d.ts');
+  if (fs.existsSync(prismaDefaultDtsPath)) {
+    const directExport = `export * from './.prisma/client/default';
+export { PrismaClient } from './.prisma/client/client';
+export type { PrismaClient } from './.prisma/client/client';
+`;
+    fs.writeFileSync(prismaDefaultDtsPath, directExport);
+  }
+  
   console.log('✓ Copied Prisma client files to .prisma/client and @prisma/client/.prisma/client');
 } else {
   console.error('✗ Generated Prisma client not found at', generatedClientDir);
