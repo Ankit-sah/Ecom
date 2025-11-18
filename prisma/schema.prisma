@@ -16,116 +16,116 @@ datasource db {
 }
 
 model Product {
-  id             String             @id @default(auto()) @map("_id") @db.ObjectId
-  name           String
-  slug           String             @unique
-  sku            String             @unique
-  description    String?
-  priceCents     Int
-  images         String[]
-  tags           String[]
-  details        Json?
-  stock          Int                @default(0)
-  featured       Boolean            @default(false)
-  published      Boolean            @default(true)
-  publishedAt    DateTime?          @default(now())
-  category       ProductCategory?   @relation(fields: [categoryId], references: [id])
-  categoryId     String?            @db.ObjectId
-  artisan        Artisan?           @relation(fields: [artisanId], references: [id])
-  artisanId      String?            @db.ObjectId
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
-  createdBy      String?
-  lastUpdatedBy  String?
+  id            String           @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  slug          String           @unique
+  sku           String           @unique
+  description   String?
+  priceCents    Int
+  images        String[]
+  tags          String[]
+  details       Json?
+  stock         Int              @default(0)
+  featured      Boolean          @default(false)
+  published     Boolean          @default(true)
+  publishedAt   DateTime?        @default(now())
+  category      ProductCategory? @relation(fields: [categoryId], references: [id])
+  categoryId    String?          @db.ObjectId
+  artisan       Artisan?         @relation(fields: [artisanId], references: [id])
+  artisanId     String?          @db.ObjectId
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  createdBy     String?
+  lastUpdatedBy String?
 
-  orderItems     OrderItem[]
-  inventoryLog   ProductInventoryEvent[]
-  auditLog       ProductAuditLog[]
+  orderItems   OrderItem[]
+  inventoryLog ProductInventoryEvent[]
+  auditLog     ProductAuditLog[]
 }
 
 model ProductCategory {
-  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  slug        String     @unique
+  slug        String   @unique
   description String?
   heroImage   String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  products    Product[]
+  products Product[]
 }
 
 model Artisan {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  name        String    @unique
-  location    String?
-  bio         String?
-  photoUrl    String?
-  stories     String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String   @unique
+  location  String?
+  bio       String?
+  photoUrl  String?
+  stories   String[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  products    Product[]
+  products Product[]
 }
 
 model ProductInventoryEvent {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  product     Product  @relation(fields: [productId], references: [id])
-  productId   String   @db.ObjectId
-  delta       Int
-  reason      String
-  createdAt   DateTime @default(now())
-  createdBy   String?
-  metadata    Json?
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  delta     Int
+  reason    String
+  createdAt DateTime @default(now())
+  createdBy String?
+  metadata  Json?
 }
 
 model ProductAuditLog {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  product     Product  @relation(fields: [productId], references: [id])
-  productId   String   @db.ObjectId
-  action      String
-  changes     Json?
-  actorId     String?
-  actorEmail  String?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  String   @db.ObjectId
+  action     String
+  changes    Json?
+  actorId    String?
+  actorEmail String?
+  createdAt  DateTime @default(now())
 }
 
 model Order {
-  id               String           @id @default(auto()) @map("_id") @db.ObjectId
-  email            String
-  status           OrderStatus      @default(PENDING)
-  fulfillmentStage FulfillmentStage @default(NOT_STARTED)
-  subtotalCents    Int
-  taxCents         Int              @default(0)
-  shippingCents    Int              @default(0)
-  totalCents       Int
-  currency         String           @default("USD")
-  stripeSessionId  String?          @unique
-  stripePaymentId  String?
-  trackingNumber   String?
-  notes            String?
-  user             User?            @relation(fields: [userId], references: [id])
-  userId           String?          @db.ObjectId
-  shippingAddress  Address?         @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
-  shippingAddressId String?         @db.ObjectId
-  billingAddress   Address?         @relation("BillingAddress", fields: [billingAddressId], references: [id])
-  billingAddressId String?          @db.ObjectId
-  createdAt        DateTime         @default(now())
-  updatedAt        DateTime         @updatedAt
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  email             String
+  status            OrderStatus      @default(PENDING)
+  fulfillmentStage  FulfillmentStage @default(NOT_STARTED)
+  subtotalCents     Int
+  taxCents          Int              @default(0)
+  shippingCents     Int              @default(0)
+  totalCents        Int
+  currency          String           @default("USD")
+  stripeSessionId   String?          @unique
+  stripePaymentId   String?
+  trackingNumber    String?
+  notes             String?
+  user              User?            @relation(fields: [userId], references: [id])
+  userId            String?          @db.ObjectId
+  shippingAddress   Address?         @relation("ShippingAddress", fields: [shippingAddressId], references: [id])
+  shippingAddressId String?          @db.ObjectId
+  billingAddress    Address?         @relation("BillingAddress", fields: [billingAddressId], references: [id])
+  billingAddressId  String?          @db.ObjectId
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 
-  items            OrderItem[]
-  statusHistory    OrderStatusHistory[]
-  shipment         OrderShipment?
+  items         OrderItem[]
+  statusHistory OrderStatusHistory[]
+  shipment      OrderShipment?
 }
 
 model OrderItem {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  quantity   Int     @default(1)
-  unitPrice  Int
-  product    Product @relation(fields: [productId], references: [id])
-  productId  String  @db.ObjectId
-  order      Order   @relation(fields: [orderId], references: [id])
-  orderId    String  @db.ObjectId
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  quantity  Int     @default(1)
+  unitPrice Int
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @db.ObjectId
+  order     Order   @relation(fields: [orderId], references: [id])
+  orderId   String  @db.ObjectId
 }
 
 enum OrderStatus {
@@ -168,32 +168,32 @@ enum UserRole {
 }
 
 model Account {
-  id                       String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId                   String   @db.ObjectId
+  id                       String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId                   String  @db.ObjectId
   type                     String
   provider                 String
   providerAccountId        String
-  refresh_token            String?  @db.String
+  refresh_token            String? @db.String
   refresh_token_expires_in Int?
-  access_token             String?  @db.String
+  access_token             String? @db.String
   expires_at               Int?
   token_type               String?
   scope                    String?
-  id_token                 String?  @db.String
+  id_token                 String? @db.String
   session_state            String?
-  user                     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
-  userId       String   @db.ObjectId
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String    @unique
+  userId       String    @db.ObjectId
   expires      DateTime
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
@@ -206,55 +206,55 @@ model VerificationToken {
 }
 
 model Address {
-  id            String  @id @default(auto()) @map("_id") @db.ObjectId
-  label         String?
-  fullName      String
-  phone         String?
-  addressLine1  String
-  addressLine2  String?
-  city          String
-  state         String?
-  postalCode    String
-  country       String  @default("NP")
-  createdAt     DateTime @default(now())
-  user          User?   @relation(fields: [userId], references: [id])
-  userId        String?  @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  label        String?
+  fullName     String
+  phone        String?
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String?
+  postalCode   String
+  country      String   @default("NP")
+  createdAt    DateTime @default(now())
+  user         User?    @relation(fields: [userId], references: [id])
+  userId       String?  @db.ObjectId
 
   shippingOrders Order[] @relation("ShippingAddress")
   billingOrders  Order[] @relation("BillingAddress")
 }
 
 model OrderStatusHistory {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  order      Order       @relation(fields: [orderId], references: [id])
-  orderId    String      @db.ObjectId
-  status     OrderStatus
-  note       String?
-  actorId    String?
-  createdAt  DateTime    @default(now())
+  id        String      @id @default(auto()) @map("_id") @db.ObjectId
+  order     Order       @relation(fields: [orderId], references: [id])
+  orderId   String      @db.ObjectId
+  status    OrderStatus
+  note      String?
+  actorId   String?
+  createdAt DateTime    @default(now())
 }
 
 model OrderShipment {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  order           Order    @relation(fields: [orderId], references: [id])
-  orderId         String   @unique @db.ObjectId
-  carrier         String?
-  service         String?
-  trackingNumber  String?
-  shippedAt       DateTime?
-  deliveredAt     DateTime?
-  metadata        Json?
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  order          Order     @relation(fields: [orderId], references: [id])
+  orderId        String    @unique @db.ObjectId
+  carrier        String?
+  service        String?
+  trackingNumber String?
+  shippedAt      DateTime?
+  deliveredAt    DateTime?
+  metadata       Json?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model CatalogImportJob {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  filename   String?
-  status     ImportStatus @default(PENDING)
-  createdBy  String?
-  summary    Json?
-  createdAt  DateTime @default(now())
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  filename    String?
+  status      ImportStatus @default(PENDING)
+  createdBy   String?
+  summary     Json?
+  createdAt   DateTime     @default(now())
   completedAt DateTime?
 }
 
