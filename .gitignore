@@ -40,5 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Prisma generated files - we commit these for Vercel deployment
-# /src/generated/prisma
+# Prisma - using default output location (node_modules/.prisma/client)
+# No need to commit generated files when using default location

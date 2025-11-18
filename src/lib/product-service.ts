@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import type { Artisan, Product as ProductModel, ProductCategory } from "@/generated/prisma/client";
+import type { Artisan, Product as ProductModel, ProductCategory } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import type { Product } from "@/types/product";
 
