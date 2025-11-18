@@ -34,8 +34,12 @@ async function fetchAdminCatalogue() {
     }),
   ]);
 
+  type ProductWithRelations = (typeof products)[number];
+  type Category = (typeof categories)[number];
+  type Artisan = (typeof artisans)[number];
+
   return {
-    products: products.map((product) => ({
+    products: products.map((product: ProductWithRelations) => ({
       id: product.id,
       name: product.name,
       slug: product.slug,
@@ -74,6 +78,8 @@ async function fetchAdminCatalogue() {
     artisans,
   };
 }
+
+type CatalogueData = Awaited<ReturnType<typeof fetchAdminCatalogue>>;
 
 async function createProduct(formData: FormData) {
   "use server";
@@ -206,6 +212,10 @@ async function deleteProduct(productId: string) {
 export default async function AdminProductsPage() {
   const { products, categories, artisans } = await fetchAdminCatalogue();
 
+  type Product = CatalogueData["products"][number];
+  type Category = CatalogueData["categories"][number];
+  type Artisan = CatalogueData["artisans"][number];
+
   return (
     <div className="space-y-12">
       <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/90 p-8 shadow-sm">
@@ -310,7 +320,7 @@ export default async function AdminProductsPage() {
               className="mt-1 w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
             >
               <option value="">-- No category --</option>
-              {categories.map((category) => (
+              {categories.map((category: Category) => (
                 <option key={category.id} value={category.id}>
                   {category.name}
                 </option>
@@ -344,7 +354,7 @@ export default async function AdminProductsPage() {
               className="mt-1 w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
             >
               <option value="">-- No artisan --</option>
-              {artisans.map((artisan) => (
+              {artisans.map((artisan: Artisan) => (
                 <option key={artisan.id} value={artisan.id}>
                   {artisan.name}
                 </option>
@@ -422,7 +432,7 @@ export default async function AdminProductsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#f6b2c5]/40 bg-white/70">
-              {products.map((product) => (
+              {products.map((product: Product) => (
                 <tr key={product.id}>
                   <td className="px-4 py-4">
                     <div className="space-y-1">

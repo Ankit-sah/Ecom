@@ -262,7 +262,7 @@ async function ensureSeedData() {
 
   const productCount = await prisma.product.count();
   if (productCount === 0) {
-    await prisma.$transaction(async (tx) => {
+    await prisma.$transaction(async (tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]) => {
       const categoryCache = new Map<string, ProductCategory>();
       const artisanCache = new Map<string, Artisan>();
 

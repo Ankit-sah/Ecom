@@ -30,8 +30,10 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
 
+  type OrderWithRelations = (typeof orders)[number];
+  
   return NextResponse.json({
-    orders: orders.map((order) => ({
+    orders: orders.map((order: OrderWithRelations) => ({
       id: order.id,
       email: order.email,
       status: order.status,
@@ -68,13 +70,13 @@ export async function GET() {
             country: order.billingAddress.country,
           }
         : null,
-      statusHistory: order.statusHistory.map((entry) => ({
+      statusHistory: order.statusHistory.map((entry: OrderWithRelations["statusHistory"][number]) => ({
         id: entry.id,
         status: entry.status,
         note: entry.note,
         createdAt: entry.createdAt,
       })),
-      items: order.items.map((item) => ({
+      items: order.items.map((item: OrderWithRelations["items"][number]) => ({
         id: item.id,
         quantity: item.quantity,
         unitPrice: item.unitPrice,
@@ -139,8 +141,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Some products could not be found." }, { status: 400 });
     }
 
-    const items = body.items.map((item) => {
-      const product = products.find((p) => p.id === item.productId);
+    const items = body.items.map((item: { productId: string; quantity: number }) => {
+      const product = products.find((p: { id: string }) => p.id === item.productId);
       if (!product) {
         throw new Error(`Product ${item.productId} not found`);
       }
@@ -236,7 +238,7 @@ export async function POST(request: Request) {
           ...order,
           shippingAddress: order.shippingAddress,
           billingAddress: order.billingAddress,
-          items: order.items.map((item) => ({
+          items: order.items.map((item: typeof order.items[number]) => ({
             id: item.id,
             quantity: item.quantity,
             unitPrice: item.unitPrice,

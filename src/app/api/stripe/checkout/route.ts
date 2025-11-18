@@ -57,8 +57,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Some products could not be found." }, { status: 400 });
     }
 
-    const itemsWithProduct = body.items.map((item) => {
-      const product = products.find((p) => p.id === item.productId);
+    const itemsWithProduct = body.items.map((item: { productId: string; quantity: number }) => {
+      const product = products.find((p: { id: string }) => p.id === item.productId);
       if (!product) {
         throw new Error(`Missing product ${item.productId}`);
       }
