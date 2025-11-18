@@ -3,8 +3,7 @@ import type { NextAuthOptions } from "next-auth";
 import type { Adapter } from "next-auth/adapters";
 import OktaProvider from "next-auth/providers/okta";
 
-import type { $Enums } from "@prisma/client";
-type UserRole = $Enums.UserRole;
+import type { UserRole } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const adminEmailEnv = process.env.ADMIN_EMAILS ?? "";
