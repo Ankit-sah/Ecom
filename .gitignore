@@ -40,5 +40,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Prisma - using default output location (node_modules/.prisma/client)
-# No need to commit generated files when using default location
+# Prisma - generated files are created during build via postinstall script
+# .prisma directory is created during build, no need to commit
+.prisma
