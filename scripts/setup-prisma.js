@@ -66,24 +66,43 @@ export * from './enums';
 module.exports = require('../../node_modules/.prisma/client/client');
 `;
   
-  // Create default.d.ts
-  const defaultDts = defaultTs;
+  // Create default.d.ts - must properly export all types including PrismaClient
+  // Use a more explicit export to ensure TypeScript can resolve PrismaClient
+  const defaultDts = `export * from './client';
+export * from './models';
+export * from './enums';
+export { PrismaClient } from './client';
+export type { PrismaClient } from './client';
+`;
   
   fs.writeFileSync(path.join(prismaClientDir, 'default.ts'), defaultTs);
   fs.writeFileSync(path.join(prismaClientDir, 'default.js'), defaultJs);
   fs.writeFileSync(path.join(prismaClientDir, 'default.d.ts'), defaultDts);
   
-  // Create symlink in @prisma/client package so it can find .prisma/client
+  // Copy all client files to @prisma/client/.prisma/client so TypeScript can resolve them
+  // This is needed because @prisma/client/default.d.ts exports from '.prisma/client/default'
+  // which TypeScript resolves relative to @prisma/client package
   const prismaPackageDir = path.join(process.cwd(), 'node_modules', '@prisma', 'client');
-  const prismaPackagePrismaDir = path.join(prismaPackageDir, '.prisma');
+  const prismaPackagePrismaDir = path.join(prismaPackageDir, '.prisma', 'client');
   fs.mkdirSync(prismaPackagePrismaDir, { recursive: true });
-  const symlinkPath = path.join(prismaPackagePrismaDir, 'client');
-  if (fs.existsSync(symlinkPath)) {
-    fs.unlinkSync(symlinkPath);
-  }
-  fs.symlinkSync(path.relative(prismaPackagePrismaDir, prismaClientDir), symlinkPath, 'dir');
   
-  console.log('✓ Copied Prisma client files to .prisma/client and created symlink');
+  // Copy all files from .prisma/client to @prisma/client/.prisma/client
+  const copyAllFiles = (src, dest) => {
+    fs.mkdirSync(dest, { recursive: true });
+    const entries = fs.readdirSync(src, { withFileTypes: true });
+    entries.forEach(entry => {
+      const srcPath = path.join(src, entry.name);
+      const destPath = path.join(dest, entry.name);
+      if (entry.isDirectory()) {
+        copyAllFiles(srcPath, destPath);
+      } else {
+        fs.copyFileSync(srcPath, destPath);
+      }
+    });
+  };
+  copyAllFiles(prismaClientDir, prismaPackagePrismaDir);
+  
+  console.log('✓ Copied Prisma client files to .prisma/client and @prisma/client/.prisma/client');
 } else {
   console.error('✗ Generated Prisma client not found at', generatedClientDir);
   process.exit(1);
