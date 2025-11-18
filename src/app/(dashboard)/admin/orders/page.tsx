@@ -96,6 +96,8 @@ async function updateFulfillmentStage(orderId: string, stage: string, trackingNu
   revalidatePath("/admin/orders");
 }
 
+type OrderWithRelations = Awaited<ReturnType<typeof fetchOrders>>[number];
+
 export default async function AdminOrdersPage() {
   const orders = await fetchOrders();
 
@@ -109,7 +111,7 @@ export default async function AdminOrdersPage() {
       </section>
 
       <section className="space-y-6">
-        {orders.map((order) => (
+        {orders.map((order: OrderWithRelations) => (
           <article
             key={order.id}
             className="rounded-3xl border border-[#f6b2c5]/60 bg-white/90 p-6 shadow-sm transition hover:border-[#8a2040]/60"
@@ -246,7 +248,7 @@ export default async function AdminOrdersPage() {
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {order.items.map((item) => (
+              {order.items.map((item: OrderWithRelations["items"][number]) => (
                 <div key={item.id} className="rounded-2xl border border-[#f6b2c5]/60 bg-white/70 p-4 text-xs text-neutral-600">
                   <p className="font-semibold text-[#40111f]">{item.product.name}</p>
                   <p>SKU {item.product.sku}</p>
@@ -262,7 +264,7 @@ export default async function AdminOrdersPage() {
             <div className="mt-6 rounded-2xl border border-[#f6b2c5]/50 bg-white/60 p-4 text-xs text-neutral-500">
               <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Recent status history</h4>
               <ul className="mt-2 space-y-1">
-                {order.statusHistory.map((entry) => (
+                {order.statusHistory.map((entry: OrderWithRelations["statusHistory"][number]) => (
                   <li key={entry.id}>
                     {entry.status} • {new Date(entry.createdAt).toLocaleString(undefined, { dateStyle: "short", timeStyle: "short" })}{" "}
                     {entry.actorId ? `by ${entry.actorId}` : ""} {entry.note ? `— ${entry.note}` : ""}
