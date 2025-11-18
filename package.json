@@ -4,7 +4,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "rm -rf node_modules/.prisma && prisma generate"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
