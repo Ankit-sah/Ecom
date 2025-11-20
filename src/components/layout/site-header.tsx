@@ -22,7 +22,7 @@ export async function SiteHeader() {
   const links = isAdmin ? [...navItems, { href: "/admin", label: "Admin" }] : navItems;
 
   return (
-    <header className="border-b border-[#f6b2c5] bg-white/85 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[#f6b2c5] bg-white/85 shadow-sm backdrop-blur">
       <div className="relative mx-auto max-w-6xl px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <Link href="/" className="text-lg font-semibold tracking-tight text-[#8a2040] sm:text-xl">

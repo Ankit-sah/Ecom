@@ -20,10 +20,10 @@ export function HeroSection() {
           variants={heroVariants}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center rounded-full bg-[#ffe1ef] px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-[#8a2040]">
+          <span className="inline-flex items-center rounded-full bg-[#ffe1ef] px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#8a2040]">
             Hand-painted traditions
           </span>
-          <h1 className="text-4xl font-semibold tracking-tight text-[#40111f] sm:text-5xl lg:text-[56px]">
+          <h1 className="text-3xl font-semibold tracking-tight text-[#40111f] sm:text-4xl lg:text-[56px]">
             Experience Janakpur Art and Craft—custodians of Mithila artistry since 1993.
           </h1>
           <p className="text-base leading-relaxed text-neutral-700 sm:text-lg">
