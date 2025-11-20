@@ -14,16 +14,30 @@ const adminEmails = adminEmailEnv
   .map((email) => email.trim().toLowerCase())
   .filter((email) => email.length > 0);
 
-async function ensureAdminRole(userId: string, email?: string | null) {
-  if (!email) {
+function isValidObjectId(value: string | undefined | null) {
+  return typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value);
+}
+
+async function ensureAdminRole(userId: string | undefined | null, email?: string | null) {
+  const normalizedEmail = email?.toLowerCase();
+  if (!normalizedEmail || !adminEmails.includes(normalizedEmail)) {
     return;
   }
-  const normalized = email.toLowerCase();
-  if (!adminEmails.includes(normalized)) {
-    return;
+
+  if (isValidObjectId(userId)) {
+    try {
+      await prisma.user.update({
+        where: { id: userId as string },
+        data: { role: "ADMIN" },
+      });
+      return;
+    } catch (error) {
+      console.warn("Failed to promote admin role via userId, falling back to email lookup:", error);
+    }
   }
-  await prisma.user.update({
-    where: { id: userId },
+
+  await prisma.user.updateMany({
+    where: { email: normalizedEmail },
     data: { role: "ADMIN" },
   });
 }
