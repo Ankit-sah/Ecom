@@ -10,6 +10,7 @@ export const metadata: Metadata = {
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await requireRole(["ADMIN", "STAFF", "ARTISAN_MANAGER"]);
   const roleLabel = session.user?.role ?? "CUSTOMER";
+  console.log("[admin] session role", roleLabel, "for user", session.user?.email ?? "unknown");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fff7ec] via-[#fce1d2] to-[#ffd1e3]">
