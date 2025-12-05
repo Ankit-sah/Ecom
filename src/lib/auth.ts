@@ -45,7 +45,7 @@ async function ensureAdminRole(userId: string | undefined | null, email?: string
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   session: {
-    strategy: "database",
+    strategy: "jwt",
   },
   providers: [
     OktaProvider({
@@ -55,16 +55,20 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        session.user.role = (user.role as UserRole) ?? "CUSTOMER";
-        session.user.phone = user.phone;
+    async session({ session, token }) {
+      if (!session.user) {
+        return session;
       }
+
+      session.user.id = (token?.sub as string) ?? session.user.id;
+      session.user.role = (token?.role as UserRole) ?? session.user.role ?? "CUSTOMER";
+      session.user.phone = (token?.phone as string | null) ?? session.user.phone ?? null;
+
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
+        token.sub = user.id;
         token.role = (user.role as UserRole) ?? "CUSTOMER";
         token.phone = user.phone ?? null;
       }
