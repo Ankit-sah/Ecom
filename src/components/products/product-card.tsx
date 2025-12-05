@@ -1,11 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 
 import { useCart } from "@/providers/cart-provider";
 import type { Product } from "@/types/product";
 import { formatCurrencyFromCents } from "@/utils/format";
+import { OptimizedImage } from "@/components/products/optimized-image";
 
 type Props = {
   product: Product;
@@ -22,14 +22,12 @@ export function ProductCard({ product }: Props) {
         aria-label={`View details for ${product.name}`}
       >
         {product.images.length > 0 ? (
-          <Image
+          <OptimizedImage
             src={product.images[0]}
             alt={`${product.name}${product.category ? ` - ${product.category.name}` : ""}${product.artisan ? ` by ${product.artisan.name}` : ""}`}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            context="card"
             className="object-cover transition duration-500 hover:scale-105"
-            priority={false}
-            loading="lazy"
           />
         ) : (
           <div className="flex h-full items-center justify-center bg-neutral-100 text-sm font-medium text-neutral-500" aria-label="No image available">

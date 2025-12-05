@@ -10,6 +10,7 @@ import {
   getAllCategories,
   getAllArtisans,
   getFilteredProducts,
+  getMaxPrice,
 } from "@/lib/product-service";
 import { getCanonicalUrl, generateCollectionPageSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 
@@ -61,15 +62,12 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     sortBy: (params.sort as "price-asc" | "price-desc" | "name-asc" | "name-desc" | "newest" | "oldest" | undefined) || "newest",
   };
 
-  const [products, categories, artisans] = await Promise.all([
+  const [products, categories, artisans, maxPrice] = await Promise.all([
     getFilteredProducts(filters),
     getAllCategories(),
     getAllArtisans(),
+    getMaxPrice(),
   ]);
-
-  const maxPrice = products.length > 0 
-    ? Math.max(...products.map((p) => p.priceCents)) / 100 
-    : 1000;
 
   const collectionSchema = generateCollectionPageSchema(products);
   const breadcrumbSchema = generateBreadcrumbSchema([

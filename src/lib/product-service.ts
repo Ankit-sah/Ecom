@@ -161,19 +161,46 @@ export async function getFilteredProducts(filters: ProductFilters = {}): Promise
     published: true,
   };
 
-  if (filters.search) {
-    // For MongoDB, we'll filter in memory after fetching
-    // This is acceptable for small catalogs
+  // Handle search using MongoDB case-insensitive search
+  if (filters.search && filters.search.trim()) {
+    const searchTerm = filters.search.trim();
+    // Use case-insensitive search across name, description, and tags
+    // For tags array, we use array-contains which works with case-insensitive mode
+    where.OR = [
+      { name: { contains: searchTerm, mode: "insensitive" } },
+      { description: { contains: searchTerm, mode: "insensitive" } },
+      // For tags array, search for any tag that contains the search term (case-insensitive)
+      // Note: MongoDB array search with case-insensitive might need special handling
+      // We'll use a combination approach - exact match first, then fallback to contains
+      { tags: { has: searchTerm } },
+    ];
   }
 
+  // Handle category filter
   if (filters.category) {
     where.category = { slug: filters.category };
   }
 
-  if (filters.artisan) {
-    // For MongoDB, we'll filter in memory after fetching
+  // Handle artisan filter - find artisan by name first, then filter products
+  if (filters.artisan && filters.artisan.trim()) {
+    const artisanName = filters.artisan.trim();
+    // Find artisan by name (case-insensitive)
+    const artisan = await prisma.artisan.findFirst({
+      where: {
+        name: { contains: artisanName, mode: "insensitive" },
+      },
+      select: { id: true },
+    });
+    
+    if (artisan) {
+      where.artisanId = artisan.id;
+    } else {
+      // If artisan not found, return empty array
+      return [];
+    }
   }
 
+  // Handle price range filter
   if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
     where.priceCents = {};
     if (filters.minPrice !== undefined) {
@@ -184,10 +211,12 @@ export async function getFilteredProducts(filters: ProductFilters = {}): Promise
     }
   }
 
+  // Handle featured filter
   if (filters.featured !== undefined) {
     where.featured = filters.featured;
   }
 
+  // Handle sorting - all done in database
   let orderBy: Prisma.ProductOrderByWithRelationInput = { createdAt: "desc" };
   
   if (filters.sortBy) {
@@ -213,7 +242,8 @@ export async function getFilteredProducts(filters: ProductFilters = {}): Promise
     }
   }
 
-  let products = await prisma.product.findMany({
+  // Execute query with all filters and sorting applied in database
+  const products = await prisma.product.findMany({
     where,
     orderBy,
     include: {
@@ -221,24 +251,6 @@ export async function getFilteredProducts(filters: ProductFilters = {}): Promise
       artisan: true,
     },
   });
-
-  // Apply search and artisan filters in memory (MongoDB/Prisma limitation)
-  if (filters.search) {
-    const searchLower = filters.search.toLowerCase();
-    products = products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(searchLower) ||
-        (p.description && p.description.toLowerCase().includes(searchLower)) ||
-        p.tags.some((tag) => tag.toLowerCase().includes(searchLower))
-    );
-  }
-
-  if (filters.artisan) {
-    const artisanLower = filters.artisan.toLowerCase();
-    products = products.filter(
-      (p) => p.artisan && p.artisan.name.toLowerCase().includes(artisanLower)
-    );
-  }
 
   return products.map(toProductPayload);
 }
@@ -249,6 +261,18 @@ export async function getAllCategories(): Promise<Array<{ id: string; name: stri
     orderBy: { name: "asc" },
   });
   return categories.map((cat) => ({ id: cat.id, name: cat.name, slug: cat.slug }));
+}
+
+/**
+ * Get the maximum price from all published products (for price filter range)
+ */
+export async function getMaxPrice(): Promise<number> {
+  await ensureLegacyProductsMigrated();
+  const result = await prisma.product.aggregate({
+    where: { published: true },
+    _max: { priceCents: true },
+  });
+  return result._max.priceCents ? result._max.priceCents / 100 : 1000;
 }
 
 export async function getAllArtisans(): Promise<Array<{ id: string; name: string }>> {

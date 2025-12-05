@@ -1,10 +1,10 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import Script from "next/script";
 
 import { ProductDetailActions } from "@/components/products/product-detail-actions";
 import { RelatedProducts } from "@/components/products/related-products";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { OptimizedImage } from "@/components/products/optimized-image";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/product-service";
 import { getCanonicalUrl, generateProductSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 import { formatCurrencyFromCents } from "@/utils/format";
@@ -131,11 +131,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="grid gap-6">
           <div className="relative aspect-square overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
             {product.images.length > 0 ? (
-              <Image
+              <OptimizedImage
                 src={product.images[0]}
                 alt={`${product.name}${product.category ? ` - ${product.category.name}` : ""}${product.artisan ? ` crafted by ${product.artisan.name}` : ""}`}
                 fill
-                sizes="(max-width: 1024px) 100vw, 50vw"
+                context="detail"
                 className="object-cover"
                 priority
               />
@@ -149,13 +149,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <div className="grid grid-cols-3 gap-3">
               {product.images.slice(1).map((image, index) => (
                 <div key={image} className="relative aspect-square overflow-hidden rounded-2xl border border-neutral-200">
-                  <Image
+                  <OptimizedImage
                     src={image}
                     alt={`${product.name} - Additional view ${index + 2}`}
                     fill
-                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    context="thumbnail"
                     className="object-cover"
-                    loading="lazy"
                   />
                 </div>
               ))}
