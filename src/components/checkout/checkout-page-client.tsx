@@ -27,7 +27,7 @@ type ShippingForm = {
 };
 
 export function CheckoutPageClient() {
-  const { items, subtotalCents, totalQuantity, clearCart } = useCart();
+  const { items, subtotalCents, totalQuantity } = useCart();
   const searchParams = useSearchParams();
   const sessionId = searchParams?.get("session_id");
   const [isLoading, setIsLoading] = useState(false);

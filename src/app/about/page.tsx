@@ -32,7 +32,7 @@ export default function AboutPage() {
       <section className="space-y-6">
         <div className="space-y-3">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Our Heritage</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Rooted in Janakpur's cultural renaissance</h1>
+          <h1 className="text-4xl font-semibold text-[#40111f]">Rooted in Janakpur&apos;s cultural renaissance</h1>
         </div>
 
         <div className="prose prose-sm max-w-none space-y-4 text-neutral-700">
@@ -45,7 +45,7 @@ export default function AboutPage() {
 
           <p>
             Our mission extends beyond commerce. We partner with communities and cultural societies throughout Janakpur
-            to secure steady income opportunities and fair wages for the artisans who keep Mithila's stories alive in
+            to secure steady income opportunities and fair wages for the artisans who keep Mithila&apos;s stories alive in
             every brushstroke, every thread, and every handcrafted detail.
           </p>
         </div>
@@ -108,7 +108,7 @@ export default function AboutPage() {
           <div className="flex gap-4">
             <span className="font-semibold text-[#8a2040]">Today</span>
             <p>
-              Continuing to champion Janakpur's Mithila artisans through online platforms, ensuring their craft reaches
+              Continuing to champion Janakpur&apos;s Mithila artisans through online platforms, ensuring their craft reaches
               a global audience while supporting local communities.
             </p>
           </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
       <section className="rounded-3xl border border-[#8a2040]/50 bg-[#8a2040] p-8 text-white">
         <h2 className="text-2xl font-semibold">Join Our Mission</h2>
         <p className="mt-3 text-rose-100">
-          Every purchase supports the artisans who bring Mithila's vibrant stories to life. Explore our collection of
+          Every purchase supports the artisans who bring Mithila&apos;s vibrant stories to life. Explore our collection of
           handcrafted treasures and become part of a movement that celebrates cultural heritage while empowering
           communities.
         </p>

@@ -33,7 +33,7 @@ export function SiteFooter() {
           <div className="lg:col-span-2">
             <h2 className="text-lg font-semibold text-[#8a2040]">Janakpur Art and Craft</h2>
             <p className="mt-3 text-sm text-neutral-600">
-              Since 1993 we've championed Janakpur's Mithila artisans—crafting jewellery, vessels, textiles, and
+              Since 1993 we&apos;ve championed Janakpur&apos;s Mithila artisans—crafting jewellery, vessels, textiles, and
               paintings exported worldwide with uncompromising quality.
             </p>
             <p className="mt-4 text-xs text-neutral-500">

@@ -162,7 +162,6 @@ export async function getFilteredProducts(filters: ProductFilters = {}): Promise
   };
 
   if (filters.search) {
-    const searchLower = filters.search.toLowerCase();
     // For MongoDB, we'll filter in memory after fetching
     // This is acceptable for small catalogs
   }

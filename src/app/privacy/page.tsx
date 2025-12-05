@@ -38,7 +38,7 @@ export default function PrivacyPage() {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-[#40111f]">Introduction</h2>
           <p>
-            Janakpur Art and Craft ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy
+            Janakpur Art and Craft (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy
             explains how we collect, use, disclose, and safeguard your information when you visit our website and make
             purchases.
           </p>

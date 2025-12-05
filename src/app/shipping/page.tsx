@@ -109,11 +109,11 @@ export default function ShippingPage() {
         <h2 className="text-2xl font-semibold text-[#40111f]">Tracking Your Order</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
-            Once your order ships, you'll receive a tracking number via email. You can use this to monitor your package's
+            Once your order ships, you&apos;ll receive a tracking number via email. You can use this to monitor your package&apos;s
             journey from our workshop to your door.
           </p>
           <p>
-            For international orders, tracking may be limited once the package enters your country's postal system.
+            For international orders, tracking may be limited once the package enters your country&apos;s postal system.
           </p>
         </div>
       </section>
@@ -125,7 +125,7 @@ export default function ShippingPage() {
           <a href="/contact" className="font-semibold underline hover:text-white">
             contact us
           </a>{" "}
-          and we'll be happy to help.
+          and we&apos;ll be happy to help.
         </p>
       </section>
     </div>

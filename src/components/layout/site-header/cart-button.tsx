@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import { useCart } from "@/providers/cart-provider";
 
@@ -12,13 +11,6 @@ type CartButtonProps = {
 
 export function CartButton({ variant = "default", showLabel = true }: CartButtonProps) {
   const { totalQuantity } = useCart();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const displayQuantity = mounted ? totalQuantity : 0;
 
   const baseClasses =
     variant === "compact"
@@ -34,10 +26,10 @@ export function CartButton({ variant = "default", showLabel = true }: CartButton
     <Link 
       href="/cart" 
       className={baseClasses}
-      aria-label={`Shopping cart with ${displayQuantity} ${displayQuantity === 1 ? 'item' : 'items'}`}
+      aria-label={`Shopping cart with ${totalQuantity} ${totalQuantity === 1 ? 'item' : 'items'}`}
     >
       {showLabel ? <span>Cart</span> : null}
-      <span className={badgeClasses} aria-hidden="true">{displayQuantity}</span>
+      <span className={badgeClasses} aria-hidden="true">{totalQuantity}</span>
     </Link>
   );
 }

@@ -140,11 +140,11 @@ export default function FAQPage() {
       <section className="rounded-3xl border border-[#8a2040]/50 bg-[#8a2040] p-8 text-white">
         <h2 className="text-2xl font-semibold">Still Have Questions?</h2>
         <p className="mt-3 text-rose-100">
-          Can't find what you're looking for?{" "}
+          Can&apos;t find what you&apos;re looking for?{" "}
           <a href="/contact" className="font-semibold underline hover:text-white">
             Contact us
           </a>{" "}
-          and we'll be happy to help.
+          and we&apos;ll be happy to help.
         </p>
       </section>
     </div>

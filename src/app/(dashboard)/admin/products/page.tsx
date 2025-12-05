@@ -35,8 +35,6 @@ async function fetchAdminCatalogue() {
   ]);
 
   type ProductWithRelations = (typeof products)[number];
-  type Category = (typeof categories)[number];
-  type Artisan = (typeof artisans)[number];
 
   return {
     products: products.map((product: ProductWithRelations) => ({

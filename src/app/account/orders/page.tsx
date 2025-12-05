@@ -7,7 +7,40 @@ import { prisma } from "@/lib/prisma";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { formatCurrencyFromCents } from "@/utils/format";
 
-async function getOrders(userId: string) {
+type OrderItem = {
+  id: string;
+  quantity: number;
+  unitPrice: number;
+  product: {
+    id: string;
+    name: string;
+    slug: string;
+    priceCents: number;
+  };
+};
+
+type ShippingAddress = {
+  fullName: string;
+  addressLine1: string;
+  addressLine2: string | null;
+  city: string;
+  state: string | null;
+  postalCode: string;
+  country: string;
+};
+
+type Order = {
+  id: string;
+  status: string;
+  fulfillmentStage: string | null;
+  totalCents: number;
+  trackingNumber: string | null;
+  createdAt: Date;
+  items: OrderItem[];
+  shippingAddress: ShippingAddress | null;
+};
+
+async function getOrders(userId: string): Promise<Order[]> {
   const orders = await prisma.order.findMany({
     where: { userId },
     include: {
@@ -81,7 +114,7 @@ export default async function OrdersPage() {
 
       {orders.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/70 p-16 text-center">
-          <p className="text-sm text-neutral-600 mb-4">You haven't placed any orders yet.</p>
+          <p className="text-sm text-neutral-600 mb-4">You haven&apos;t placed any orders yet.</p>
           <Link
             href="/products"
             className="inline-block rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731]"
@@ -91,7 +124,7 @@ export default async function OrdersPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {orders.map((order: any) => (
+          {orders.map((order) => (
             <div
               key={order.id}
               className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-6 shadow-sm"
@@ -142,7 +175,7 @@ export default async function OrdersPage() {
               {order.items && order.items.length > 0 && (
                 <div className="mt-4 border-t border-[#f6b2c5]/50 pt-4">
                   <div className="space-y-2">
-                    {order.items.map((item: any) => (
+                    {order.items.map((item) => (
                       <div key={item.id} className="flex items-center justify-between text-sm">
                         <Link
                           href={`/products/${item.product.slug}`}

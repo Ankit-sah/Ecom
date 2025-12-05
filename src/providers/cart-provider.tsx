@@ -95,6 +95,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (items.length === 0 || typeof window === "undefined") return;
 
     let isMounted = true;
+    const initialItems = items; // Capture initial items for this effect
 
     const syncCartWithStock = async () => {
       try {
@@ -104,7 +105,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            items: items.map((item) => ({
+            items: initialItems.map((item) => ({
               productId: item.product.id,
               quantity: item.quantity,
             })),
@@ -148,7 +149,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => {
       isMounted = false;
     };
-  }, []); // Only on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only on mount - initialItems is captured from items at mount time
 
   const totals = useMemo(() => getCartTotals(items), [items]);
 

@@ -58,7 +58,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     minPrice: params.minPrice ? parseFloat(params.minPrice) : undefined,
     maxPrice: params.maxPrice ? parseFloat(params.maxPrice) : undefined,
     featured: params.featured === "true",
-    sortBy: (params.sort as any) || "newest",
+    sortBy: (params.sort as "price-asc" | "price-desc" | "name-asc" | "name-desc" | "newest" | "oldest" | undefined) || "newest",
   };
 
   const [products, categories, artisans] = await Promise.all([

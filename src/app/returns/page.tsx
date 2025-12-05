@@ -33,7 +33,7 @@ export default function ReturnsPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Return Policy</p>
           <h1 className="text-4xl font-semibold text-[#40111f]">Returns & Exchanges</h1>
           <p className="text-neutral-600">
-            We want you to be completely satisfied with your purchase. If you're not happy, we're here to help.
+            We want you to be completely satisfied with your purchase. If you&apos;re not happy, we&apos;re here to help.
           </p>
         </div>
       </section>
@@ -59,10 +59,10 @@ export default function ReturnsPage() {
             <h3 className="font-semibold text-[#8a2040]">Return Process</h3>
             <ol className="ml-4 list-decimal space-y-2">
               <li>Contact us at returns@janakpurartandcraft.com with your order number</li>
-              <li>We'll provide a return authorization and shipping instructions</li>
+              <li>We&apos;ll provide a return authorization and shipping instructions</li>
               <li>Package the item securely in its original packaging</li>
               <li>Ship the item back to us using the provided return label</li>
-              <li>Once received, we'll process your refund within 5-7 business days</li>
+              <li>Once received, we&apos;ll process your refund within 5-7 business days</li>
             </ol>
           </div>
         </div>
@@ -72,7 +72,7 @@ export default function ReturnsPage() {
         <h2 className="text-2xl font-semibold text-[#40111f]">Exchanges</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
-            We're happy to exchange items for a different size, color, or style, subject to availability. Exchanges
+            We&apos;re happy to exchange items for a different size, color, or style, subject to availability. Exchanges
             follow the same 30-day window and condition requirements as returns.
           </p>
           <p>
@@ -80,7 +80,7 @@ export default function ReturnsPage() {
             <Link href="/contact" className="font-semibold text-[#8a2040] hover:underline">
               contact us
             </Link>{" "}
-            with your order number and the item you'd like to exchange for.
+            with your order number and the item you&apos;d like to exchange for.
           </p>
         </div>
       </section>
@@ -103,7 +103,7 @@ export default function ReturnsPage() {
         <h2 className="text-2xl font-semibold text-[#40111f]">Damaged or Defective Items</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
-            If your item arrives damaged or defective, please contact us immediately with photos of the damage. We'll
+            If your item arrives damaged or defective, please contact us immediately with photos of the damage. We&apos;ll
             arrange for a replacement or full refund, including return shipping costs.
           </p>
           <p>
@@ -119,7 +119,7 @@ export default function ReturnsPage() {
           <Link href="/contact" className="font-semibold underline hover:text-white">
             contact us
           </Link>{" "}
-          and we'll be happy to help.
+          and we&apos;ll be happy to help.
         </p>
       </section>
     </div>

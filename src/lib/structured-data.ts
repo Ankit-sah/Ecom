@@ -62,7 +62,6 @@ export function generateWebSiteSchema() {
 export function generateProductSchema(product: Product) {
   const baseUrl = getBaseUrl();
   const productUrl = `${baseUrl}/products/${product.slug}`;
-  const imageUrl = product.images.length > 0 ? product.images[0] : undefined;
   
   return {
     "@context": "https://schema.org",

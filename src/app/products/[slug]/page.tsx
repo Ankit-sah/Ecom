@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   let product;
   try {
     product = await getProductBySlug(slug);
-  } catch (error) {
+  } catch {
     // If product not found, return default metadata
     return {
       title: "Product Not Found",
@@ -40,7 +40,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
   const productUrl = getCanonicalUrl(`/products/${slug}`);
   const productImage = product.images.length > 0 ? product.images[0] : undefined;
-  const price = (product.priceCents / 100).toFixed(2);
 
   return {
     title: product.name,

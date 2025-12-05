@@ -22,7 +22,7 @@ export default function Error({
           <h1 className="text-6xl font-semibold text-[#8a2040]">500</h1>
           <h2 className="text-3xl font-semibold text-[#40111f]">Something went wrong</h2>
           <p className="text-neutral-600">
-            We're sorry, but something unexpected happened. Our team has been notified and is working to fix the issue.
+            We&apos;re sorry, but something unexpected happened. Our team has been notified and is working to fix the issue.
           </p>
           {error.digest && (
             <p className="text-xs text-neutral-500">Error ID: {error.digest}</p>

@@ -47,7 +47,7 @@ export default function TermsPage() {
         <div className="space-y-4">
           <h2 className="text-2xl font-semibold text-[#40111f]">Use License</h2>
           <p>
-            Permission is granted to temporarily access and use the materials on Janakpur Art and Craft's website for
+            Permission is granted to temporarily access and use the materials on Janakpur Art and Craft&apos;s website for
             personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title,
             and under this license you may not:
           </p>

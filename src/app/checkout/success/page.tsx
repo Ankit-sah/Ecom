@@ -78,7 +78,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
         <div className="space-y-3">
           <h1 className="text-4xl font-semibold text-[#40111f]">Order Confirmed!</h1>
           <p className="text-neutral-600">
-            Thank you for your purchase. We've received your order and will begin processing it shortly.
+            Thank you for your purchase. We&apos;ve received your order and will begin processing it shortly.
           </p>
         </div>
       </div>
@@ -192,10 +192,10 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
       </div>
 
       <div className="rounded-3xl border border-[#8a2040]/50 bg-[#8a2040] p-8 text-white">
-        <h2 className="text-xl font-semibold">What's Next?</h2>
+        <h2 className="text-xl font-semibold">What&apos;s Next?</h2>
         <ul className="mt-4 space-y-2 text-sm text-rose-100">
-          <li>• You'll receive an order confirmation email shortly</li>
-          <li>• We'll notify you when your order ships with tracking information</li>
+          <li>• You&apos;ll receive an order confirmation email shortly</li>
+          <li>• We&apos;ll notify you when your order ships with tracking information</li>
           <li>• Estimated delivery: {order.shippingAddress?.country === "NP" ? "3-7 business days" : "7-21 business days"}</li>
           <li>• Questions? <Link href="/contact" className="font-semibold underline hover:text-white">Contact us</Link></li>
         </ul>

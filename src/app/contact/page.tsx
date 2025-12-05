@@ -33,7 +33,7 @@ export default function ContactPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Get in Touch</p>
           <h1 className="text-4xl font-semibold text-[#40111f]">Contact Janakpur Art and Craft</h1>
           <p className="text-neutral-600">
-            Have questions about our products, orders, or partnerships? We'd love to hear from you.
+            Have questions about our products, orders, or partnerships? We&apos;d love to hear from you.
           </p>
         </div>
       </section>

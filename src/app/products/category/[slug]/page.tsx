@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { ProductCard } from "@/components/products/product-card";
@@ -102,9 +103,9 @@ export default async function CategoryPage({ params }: PageProps) {
           <div className="rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/70 p-16 text-center">
             <p className="text-sm text-neutral-600">
               No products found in this category.{" "}
-              <a href="/products" className="font-semibold text-[#8a2040] underline-offset-2 hover:underline">
+              <Link href="/products" className="font-semibold text-[#8a2040] underline-offset-2 hover:underline">
                 Browse all products
-              </a>
+              </Link>
               .
             </p>
           </div>

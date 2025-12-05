@@ -61,7 +61,7 @@ export default async function ArtisansPage() {
       {artisans.length === 0 ? (
         <div className="rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/70 p-16 text-center">
           <p className="text-sm text-neutral-600">
-            We're working on adding artisan profiles. Please check back soon to meet the makers behind our collection.
+            We&apos;re working on adding artisan profiles. Please check back soon to meet the makers behind our collection.
           </p>
         </div>
       ) : (

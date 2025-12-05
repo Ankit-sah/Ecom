@@ -3,8 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { Session } from "next-auth";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 import { AuthActions } from "@/components/layout/site-header/auth-actions";
 import { CartButton } from "@/components/layout/site-header/cart-button";
@@ -22,13 +21,8 @@ const navItems = [
 
 export function MobileNav({ session, isAdmin }: MobileNavProps) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
 
   const links = isAdmin ? [...navItems, { href: "/admin", label: "Admin" }] : navItems;
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   return (
     <div className="flex items-center gap-2 md:hidden">
@@ -80,6 +74,7 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
                     <Link
                       key={item.href}
                       href={item.href}
+                      onClick={() => setOpen(false)}
                       className="rounded-2xl border border-transparent px-4 py-2 transition hover:border-[#f6b2c5]"
                     >
                       {item.label}
