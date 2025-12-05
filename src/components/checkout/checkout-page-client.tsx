@@ -29,6 +29,7 @@ type ShippingForm = {
 export function CheckoutPageClient() {
   const { items, subtotalCents, totalQuantity, clearCart } = useCart();
   const searchParams = useSearchParams();
+  const sessionId = searchParams?.get("session_id");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shippingMethod, setShippingMethod] = useState<"domestic" | "international">("domestic");
@@ -43,7 +44,6 @@ export function CheckoutPageClient() {
     country: "NP",
   });
 
-  const success = searchParams?.get("success") === "1";
   const taxEstimateCents = useMemo(() => Math.round(subtotalCents * 0.08), [subtotalCents]);
   const shippingCents = useMemo(() => {
     if (items.length === 0) {
@@ -58,11 +58,12 @@ export function CheckoutPageClient() {
     [subtotalCents, taxEstimateCents, shippingCents],
   );
 
+  // Redirect to success page if we have a session_id (from Stripe redirect)
   useEffect(() => {
-    if (success && items.length > 0) {
-      clearCart();
+    if (sessionId) {
+      window.location.href = `/checkout/success?session_id=${sessionId}`;
     }
-  }, [clearCart, items.length, success]);
+  }, [sessionId]);
 
   const handleCheckout = async () => {
     if (!shipping.fullName || !shipping.addressLine1 || !shipping.city || !shipping.postalCode) {
@@ -70,10 +71,52 @@ export function CheckoutPageClient() {
       return;
     }
 
+    if (items.length === 0) {
+      setError("Your cart is empty.");
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
     try {
+      // Validate stock before proceeding to checkout
+      const stockResponse = await fetch("/api/products/stock", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            productId: item.product.id,
+            quantity: item.quantity,
+          })),
+        }),
+      });
+
+      if (!stockResponse.ok) {
+        throw new Error("Failed to validate stock availability.");
+      }
+
+      const stockData = (await stockResponse.json()) as {
+        allAvailable: boolean;
+        items: Array<{
+          productId: string;
+          name?: string;
+          available: boolean;
+          error?: string | null;
+        }>;
+      };
+
+      if (!stockData.allAvailable) {
+        const unavailableItems = stockData.items
+          .filter((item) => !item.available)
+          .map((item) => item.name || item.productId);
+        throw new Error(
+          `Some items are no longer available in the requested quantities: ${unavailableItems.join(", ")}. Please update your cart.`
+        );
+      }
+
       const stripeClient = await getStripe();
       if (!stripeClient) {
         throw new Error("Stripe publishable key is missing. Check your environment variables.");
@@ -97,7 +140,12 @@ export function CheckoutPageClient() {
 
       if (!response.ok) {
         const result = await response.json().catch(() => ({}));
-        throw new Error(result.error ?? "Unable to initiate checkout.");
+        const errorMessage = result.details 
+          ? Array.isArray(result.details) 
+            ? result.details.join(", ")
+            : result.details
+          : result.error ?? "Unable to initiate checkout.";
+        throw new Error(errorMessage);
       }
 
       const { sessionId, url } = (await response.json()) as {
@@ -128,7 +176,7 @@ export function CheckoutPageClient() {
     }
   };
 
-  if (!success && items.length === 0) {
+  if (!sessionId && items.length === 0) {
     return (
       <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/75 p-16 text-center">
         <p className="text-2xl font-semibold text-[#40111f]">Your cart is empty</p>
@@ -147,15 +195,7 @@ export function CheckoutPageClient() {
           </p>
         </header>
 
-        {success ? (
-          <div className="rounded-2xl border border-[#b4f7d1] bg-[#e8fff1] p-6 text-left">
-            <p className="text-lg font-semibold text-[#138651]">Payment successful!</p>
-            <p className="mt-2 text-sm text-[#0f6a40]">
-              Dhanyabad! Your order supports Janakpur artisans. A confirmation email will arrive shortly.
-            </p>
-          </div>
-        ) : (
-          <>
+        <>
             <ul className="space-y-4">
               {items.map((item) => (
                 <li
@@ -260,8 +300,7 @@ export function CheckoutPageClient() {
                 </div>
               </div>
             </div>
-          </>
-        )}
+        </>
       </section>
 
       <aside className="space-y-6 rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-6 shadow-sm">
@@ -290,21 +329,17 @@ export function CheckoutPageClient() {
           </div>
         </dl>
         {error && <p className="rounded-xl bg-red-50 px-4 py-2 text-xs font-semibold text-red-600">{error}</p>}
-        {!success && (
-          <>
-            <button
-              type="button"
-              onClick={handleCheckout}
-              disabled={isLoading}
-              className="w-full rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300"
-            >
-              {isLoading ? "Redirecting..." : "Complete purchase"}
-            </button>
-            <p className="text-xs text-neutral-500">
-              Transactions are securely processed via Stripe. Payments empower Janakpur artisans—your card details are never stored on our servers.
-            </p>
-          </>
-        )}
+        <button
+          type="button"
+          onClick={handleCheckout}
+          disabled={isLoading}
+          className="w-full rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300"
+        >
+          {isLoading ? "Redirecting..." : "Complete purchase"}
+        </button>
+        <p className="text-xs text-neutral-500">
+          Transactions are securely processed via Stripe. Payments empower Janakpur artisans—your card details are never stored on our servers.
+        </p>
       </aside>
     </div>
   );

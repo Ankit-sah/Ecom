@@ -1,54 +1,149 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import Script from "next/script";
 
 import { ProductDetailActions } from "@/components/products/product-detail-actions";
-import { getAllProducts, getProductBySlug } from "@/lib/product-service";
+import { RelatedProducts } from "@/components/products/related-products";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs";
+import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/product-service";
+import { getCanonicalUrl, generateProductSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 import { formatCurrencyFromCents } from "@/utils/format";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 };
 
 export async function generateStaticParams() {
   const products = await getAllProducts();
   return products
-    .filter((product) => product.slug) // Filter out products with undefined/null slugs
+    .filter((product) => product.slug)
     .map((product) => ({
       slug: product.slug,
     }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = params;
-  const product = await getProductBySlug(slug);
+  const { slug } = await params;
+  let product;
+  try {
+    product = await getProductBySlug(slug);
+  } catch (error) {
+    // If product not found, return default metadata
+    return {
+      title: "Product Not Found",
+      description: "The requested product could not be found.",
+    };
+  }
+  const productUrl = getCanonicalUrl(`/products/${slug}`);
+  const productImage = product.images.length > 0 ? product.images[0] : undefined;
+  const price = (product.priceCents / 100).toFixed(2);
 
   return {
     title: product.name,
-    description: product.description ?? "Discover more from our collection.",
+    description: product.description ?? `${product.name} - Handcrafted Mithila art from Janakpur, Nepal.`,
+    keywords: [
+      product.name,
+      ...(product.tags || []),
+      product.category?.name || "Mithila art",
+      "handcrafted",
+      "Janakpur",
+      "Nepal",
+    ],
+    openGraph: {
+      title: product.name,
+      description: product.description ?? `${product.name} - Handcrafted Mithila art from Janakpur, Nepal.`,
+      url: productUrl,
+      type: "website",
+      siteName: "Janakpur Art and Craft",
+      images: product.images.length > 0
+        ? product.images.map((img) => ({
+            url: img,
+            width: 1200,
+            height: 1200,
+            alt: product.name,
+          }))
+        : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: product.description ?? `${product.name} - Handcrafted Mithila art from Janakpur, Nepal.`,
+      images: productImage ? [productImage] : [],
+    },
+    alternates: {
+      canonical: productUrl,
+    },
   };
 }
 
 export default async function ProductDetailPage({ params }: PageProps) {
-  const { slug } = params;
-  const product = await getProductBySlug(slug);
+  const { slug } = await params;
+  let product;
+  try {
+    product = await getProductBySlug(slug);
+  } catch (error) {
+    // getProductBySlug calls notFound() which will redirect to 404
+    // But if there's another error, we should handle it
+    throw error;
+  }
+  const productUrl = getCanonicalUrl(`/products/${slug}`);
+  
+  const [relatedProducts] = await Promise.all([
+    getRelatedProducts(
+      product.id,
+      product.category?.id || null,
+      product.artisan?.id || null,
+      4
+    ),
+  ]);
+  
+  const productSchema = generateProductSchema(product);
+  const breadcrumbSchema = generateBreadcrumbSchema([
+    { name: "Home", url: getCanonicalUrl("/") },
+    { name: "Products", url: getCanonicalUrl("/products") },
+    { name: product.name, url: productUrl },
+  ]);
 
   return (
-    <div className="mx-auto max-w-6xl space-y-10 px-4 py-16">
+    <>
+      <Script
+        id="product-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+      <Script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      <div className="mx-auto max-w-6xl space-y-10 px-4 py-16">
+        <Breadcrumbs
+          items={[
+            { label: "Home", href: "/" },
+            { label: "Products", href: "/products" },
+            { label: product.name, href: `/products/${slug}` },
+          ]}
+        />
       <div className="grid gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
         <div className="grid gap-6">
           <div className="relative aspect-square overflow-hidden rounded-3xl border border-neutral-200 bg-neutral-100">
             {product.images.length > 0 ? (
               <Image
                 src={product.images[0]}
-                alt={product.name}
+                alt={`${product.name}${product.category ? ` - ${product.category.name}` : ""}${product.artisan ? ` crafted by ${product.artisan.name}` : ""}`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
+                priority
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-neutral-500">No image available</div>
+              <div className="flex h-full items-center justify-center text-neutral-500" aria-label="No image available">
+                No image available
+              </div>
             )}
           </div>
           {product.images.length > 1 && (
@@ -57,10 +152,11 @@ export default async function ProductDetailPage({ params }: PageProps) {
                 <div key={image} className="relative aspect-square overflow-hidden rounded-2xl border border-neutral-200">
                   <Image
                     src={image}
-                    alt={`${product.name} image ${index + 2}`}
+                    alt={`${product.name} - Additional view ${index + 2}`}
                     fill
                     sizes="(max-width: 1024px) 100vw, 33vw"
                     className="object-cover"
+                    loading="lazy"
                   />
                 </div>
               ))}
@@ -131,8 +227,20 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
           <div>
             <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Availability</dt>
-            <dd className="mt-2 text-sm text-neutral-700">
-              {product.stock > 0 ? `${product.stock} in stock` : "Currently unavailable"}
+            <dd className="mt-2">
+              {product.stock === 0 ? (
+                <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-700">
+                  Out of Stock
+                </span>
+              ) : product.stock <= 5 ? (
+                <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
+                  Only {product.stock} left in stock
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-700">
+                  {product.stock} in stock
+                </span>
+              )}
             </dd>
           </div>
           <div>
@@ -147,7 +255,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
         </dl>
       </div>
+
+      {relatedProducts.length > 0 && (
+        <RelatedProducts products={relatedProducts} currentProductSlug={slug} />
+      )}
     </div>
+    </>
   );
 }
 

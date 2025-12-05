@@ -31,9 +31,13 @@ export function CartButton({ variant = "default", showLabel = true }: CartButton
       : "flex h-6 min-w-6 items-center justify-center rounded-full bg-[#8a2040] px-2 text-xs font-semibold text-white shadow shadow-[#8a2040]/40";
 
   return (
-    <Link href="/cart" className={baseClasses}>
+    <Link 
+      href="/cart" 
+      className={baseClasses}
+      aria-label={`Shopping cart with ${displayQuantity} ${displayQuantity === 1 ? 'item' : 'items'}`}
+    >
       {showLabel ? <span>Cart</span> : null}
-      <span className={badgeClasses}>{displayQuantity}</span>
+      <span className={badgeClasses} aria-hidden="true">{displayQuantity}</span>
     </Link>
   );
 }

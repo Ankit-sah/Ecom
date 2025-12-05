@@ -16,18 +16,23 @@ export function ProductCard({ product }: Props) {
 
   return (
     <div className="flex h-full flex-col rounded-2xl border border-[#f6b2c5]/60 bg-white/90 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-[#8a2040]/50">
-      <Link href={`/products/${product.slug}`} className="relative block aspect-square overflow-hidden rounded-t-2xl">
+      <Link 
+        href={`/products/${product.slug}`} 
+        className="relative block aspect-square overflow-hidden rounded-t-2xl"
+        aria-label={`View details for ${product.name}`}
+      >
         {product.images.length > 0 ? (
           <Image
             src={product.images[0]}
-            alt={product.name}
+            alt={`${product.name}${product.category ? ` - ${product.category.name}` : ""}${product.artisan ? ` by ${product.artisan.name}` : ""}`}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition duration-500 hover:scale-105"
             priority={false}
+            loading="lazy"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-neutral-100 text-sm font-medium text-neutral-500">
+          <div className="flex h-full items-center justify-center bg-neutral-100 text-sm font-medium text-neutral-500" aria-label="No image available">
             No image
           </div>
         )}
@@ -66,16 +71,27 @@ export function ProductCard({ product }: Props) {
             </div>
           ) : null}
         </div>
-        <div className="mt-auto flex items-center justify-between">
-          <span className="text-base font-semibold text-[#8a2040]">
-            {formatCurrencyFromCents(product.priceCents)}
-          </span>
+        <div className="mt-auto space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-base font-semibold text-[#8a2040]">
+              {formatCurrencyFromCents(product.priceCents)}
+            </span>
+            {product.stock === 0 ? (
+              <span className="text-xs font-semibold text-red-600">Out of Stock</span>
+            ) : product.stock <= 5 ? (
+              <span className="text-xs font-semibold text-orange-600">Only {product.stock} left</span>
+            ) : (
+              <span className="text-xs text-neutral-500">In Stock</span>
+            )}
+          </div>
           <button
             type="button"
             onClick={() => addItem(product)}
-            className="rounded-full bg-[#8a2040] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731]"
+            disabled={product.stock === 0}
+            className="w-full rounded-full bg-[#8a2040] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] focus:outline-none focus:ring-2 focus:ring-[#8a2040] focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+            aria-label={`Add ${product.name} to cart`}
           >
-            Add to cart
+            {product.stock === 0 ? "Out of Stock" : "Add to cart"}
           </button>
         </div>
       </div>

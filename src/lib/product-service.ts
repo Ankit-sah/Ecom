@@ -398,6 +398,172 @@ export async function getAllProducts(): Promise<Product[]> {
   return products.map(toProductPayload);
 }
 
+type ProductFilters = {
+  search?: string;
+  category?: string;
+  artisan?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  featured?: boolean;
+  sortBy?: "price-asc" | "price-desc" | "name-asc" | "name-desc" | "newest" | "oldest";
+};
+
+export async function getFilteredProducts(filters: ProductFilters = {}): Promise<Product[]> {
+  await ensureSeedData();
+  
+  const where: Parameters<typeof prisma.product.findMany>[0]["where"] = {
+    published: true,
+  };
+
+  if (filters.search) {
+    const searchLower = filters.search.toLowerCase();
+    // For MongoDB, we'll filter in memory after fetching
+    // This is acceptable for small catalogs
+  }
+
+  if (filters.category) {
+    where.category = { slug: filters.category };
+  }
+
+  if (filters.artisan) {
+    // For MongoDB, we'll filter in memory after fetching
+  }
+
+  if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+    where.priceCents = {};
+    if (filters.minPrice !== undefined) {
+      where.priceCents.gte = filters.minPrice * 100;
+    }
+    if (filters.maxPrice !== undefined) {
+      where.priceCents.lte = filters.maxPrice * 100;
+    }
+  }
+
+  if (filters.featured !== undefined) {
+    where.featured = filters.featured;
+  }
+
+  let orderBy: Parameters<typeof prisma.product.findMany>[0]["orderBy"] = { createdAt: "desc" };
+  
+  if (filters.sortBy) {
+    switch (filters.sortBy) {
+      case "price-asc":
+        orderBy = { priceCents: "asc" };
+        break;
+      case "price-desc":
+        orderBy = { priceCents: "desc" };
+        break;
+      case "name-asc":
+        orderBy = { name: "asc" };
+        break;
+      case "name-desc":
+        orderBy = { name: "desc" };
+        break;
+      case "newest":
+        orderBy = { createdAt: "desc" };
+        break;
+      case "oldest":
+        orderBy = { createdAt: "asc" };
+        break;
+    }
+  }
+
+  let products = await prisma.product.findMany({
+    where,
+    orderBy,
+    include: {
+      category: true,
+      artisan: true,
+    },
+  });
+
+  // Apply search and artisan filters in memory (MongoDB/Prisma limitation)
+  if (filters.search) {
+    const searchLower = filters.search.toLowerCase();
+    products = products.filter(
+      (p) =>
+        p.name.toLowerCase().includes(searchLower) ||
+        (p.description && p.description.toLowerCase().includes(searchLower)) ||
+        p.tags.some((tag) => tag.toLowerCase().includes(searchLower))
+    );
+  }
+
+  if (filters.artisan) {
+    const artisanLower = filters.artisan.toLowerCase();
+    products = products.filter(
+      (p) => p.artisan && p.artisan.name.toLowerCase().includes(artisanLower)
+    );
+  }
+
+  return products.map(toProductPayload);
+}
+
+export async function getAllCategories(): Promise<Array<{ id: string; name: string; slug: string }>> {
+  await ensureSeedData();
+  const categories = await prisma.productCategory.findMany({
+    orderBy: { name: "asc" },
+  });
+  return categories.map((cat) => ({ id: cat.id, name: cat.name, slug: cat.slug }));
+}
+
+export async function getAllArtisans(): Promise<Array<{ id: string; name: string }>> {
+  await ensureSeedData();
+  const artisans = await prisma.artisan.findMany({
+    orderBy: { name: "asc" },
+  });
+  return artisans.map((artisan) => ({ id: artisan.id, name: artisan.name }));
+}
+
+export async function getRelatedProducts(
+  productId: string,
+  categoryId: string | null,
+  artisanId: string | null,
+  limit: number = 4
+): Promise<Product[]> {
+  await ensureSeedData();
+  
+  const where: Parameters<typeof prisma.product.findMany>[0]["where"] = {
+    published: true,
+    id: { not: productId },
+  };
+
+  // Prioritize same category, then same artisan
+  if (categoryId) {
+    where.categoryId = categoryId;
+  } else if (artisanId) {
+    where.artisanId = artisanId;
+  }
+
+  const products = await prisma.product.findMany({
+    where,
+    take: limit,
+    include: {
+      category: true,
+      artisan: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  // If we don't have enough products, fill with any other products
+  if (products.length < limit) {
+    const additionalProducts = await prisma.product.findMany({
+      where: {
+        published: true,
+        id: { not: productId, notIn: products.map((p) => p.id) },
+      },
+      take: limit - products.length,
+      include: {
+        category: true,
+        artisan: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    products.push(...additionalProducts);
+  }
+
+  return products.map(toProductPayload);
+}
+
 export async function getProductBySlug(slug: string): Promise<Product> {
   await ensureSeedData();
   

@@ -73,6 +73,20 @@ export function CartPageClient() {
                 <p className="text-xs uppercase tracking-[0.25em] text-[#b03d5e]">
                   {item.product.category?.name ?? "Mithila Craft"}
                 </p>
+                {item.product.stock < item.quantity && (
+                  <div className="rounded-lg bg-orange-50 border border-orange-200 p-2">
+                    <p className="text-xs font-semibold text-orange-700">
+                      ⚠️ Only {item.product.stock} available. Quantity adjusted.
+                    </p>
+                  </div>
+                )}
+                {item.product.stock === 0 && (
+                  <div className="rounded-lg bg-red-50 border border-red-200 p-2">
+                    <p className="text-xs font-semibold text-red-700">
+                      ⚠️ This item is out of stock and will be removed.
+                    </p>
+                  </div>
+                )}
                 <div className="flex flex-wrap items-center gap-4">
                   <div className="flex items-center rounded-full border border-[#8a2040]/40">
                     <button
@@ -89,7 +103,8 @@ export function CartPageClient() {
                     <button
                       type="button"
                       onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                      className="h-10 w-10 rounded-r-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731]"
+                      disabled={item.quantity >= item.product.stock}
+                      className="h-10 w-10 rounded-r-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731] disabled:cursor-not-allowed disabled:text-neutral-400"
                       aria-label="Increase quantity"
                     >
                       +

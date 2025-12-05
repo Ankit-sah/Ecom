@@ -89,6 +89,67 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems([]);
   }, []);
 
+  // Sync cart with current stock levels - remove out of stock items
+  // This runs once on mount to clean up any stale cart items
+  useEffect(() => {
+    if (items.length === 0 || typeof window === "undefined") return;
+
+    let isMounted = true;
+
+    const syncCartWithStock = async () => {
+      try {
+        const response = await fetch("/api/products/stock", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            items: items.map((item) => ({
+              productId: item.product.id,
+              quantity: item.quantity,
+            })),
+          }),
+        });
+
+        if (response.ok && isMounted) {
+          const stockData = (await response.json()) as {
+            allAvailable: boolean;
+            items: Array<{
+              productId: string;
+              available: boolean;
+              availableStock?: number;
+            }>;
+          };
+
+          // Remove items that are no longer available or adjust quantities
+          setItems((current) =>
+            current
+              .map((item) => {
+                const stockInfo = stockData.items.find((s) => s.productId === item.product.id);
+                if (!stockInfo || !stockInfo.available) {
+                  return null; // Remove unavailable items
+                }
+                // Adjust quantity if stock is less than requested
+                if (stockInfo.availableStock !== undefined && stockInfo.availableStock < item.quantity) {
+                  return { ...item, quantity: stockInfo.availableStock };
+                }
+                return item;
+              })
+              .filter((item): item is CartItem => item !== null)
+          );
+        }
+      } catch (error) {
+        console.error("Failed to sync cart with stock:", error);
+      }
+    };
+
+    syncCartWithStock();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Only on mount
+
   const totals = useMemo(() => getCartTotals(items), [items]);
 
   const value = useMemo<CartContextValue>(

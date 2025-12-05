@@ -17,13 +17,28 @@ export function ProductDetailActions({ product }: Props) {
   const increment = () => setQuantity((prev) => Math.min(prev + 1, product.stock));
   const decrement = () => setQuantity((prev) => Math.max(1, prev - 1));
 
+  const isOutOfStock = product.stock === 0;
+  const isLowStock = product.stock > 0 && product.stock <= 5;
+
   return (
     <div className="space-y-4 rounded-2xl border border-[#f6b2c5]/70 bg-white/80 p-6 shadow-sm backdrop-blur">
       <div className="flex items-center justify-between">
         <span className="text-lg font-semibold text-[#8a2040]">{formatCurrencyFromCents(product.priceCents)}</span>
-        <span className="text-xs font-medium uppercase tracking-[0.25em] text-[#b03d5e]">
-          {product.stock > 10 ? "In stock" : product.stock > 0 ? `Only ${product.stock} left` : "Out of stock"}
-        </span>
+        <div className="text-right">
+          {isOutOfStock ? (
+            <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+              Out of Stock
+            </span>
+          ) : isLowStock ? (
+            <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
+              Only {product.stock} left
+            </span>
+          ) : (
+            <span className="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+              In Stock
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-3">
@@ -31,7 +46,8 @@ export function ProductDetailActions({ product }: Props) {
           <button
             type="button"
             onClick={decrement}
-            className="h-10 w-10 rounded-l-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731]"
+            disabled={isOutOfStock}
+            className="h-10 w-10 rounded-l-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731] disabled:cursor-not-allowed disabled:text-neutral-400"
             aria-label="Decrease quantity"
           >
             –
@@ -40,7 +56,8 @@ export function ProductDetailActions({ product }: Props) {
           <button
             type="button"
             onClick={increment}
-            className="h-10 w-10 rounded-r-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731]"
+            disabled={isOutOfStock || quantity >= product.stock}
+            className="h-10 w-10 rounded-r-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731] disabled:cursor-not-allowed disabled:text-neutral-400"
             aria-label="Increase quantity"
           >
             +
@@ -49,12 +66,17 @@ export function ProductDetailActions({ product }: Props) {
         <button
           type="button"
           onClick={() => addItem(product, quantity)}
-          disabled={product.stock === 0}
-          className="flex-1 rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300"
+          disabled={isOutOfStock}
+          className="flex-1 rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
         >
-          Add to cart
+          {isOutOfStock ? "Out of Stock" : "Add to cart"}
         </button>
       </div>
+      {isLowStock && !isOutOfStock && (
+        <p className="text-xs text-orange-600">
+          ⚠️ Limited stock available. Order soon to secure your item.
+        </p>
+      )}
     </div>
   );
 }

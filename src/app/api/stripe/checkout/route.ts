@@ -4,6 +4,7 @@ import Stripe from "stripe";
 
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { validateOrderStock } from "@/lib/inventory";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
@@ -55,6 +56,18 @@ export async function POST(request: Request) {
 
     if (products.length !== body.items.length) {
       return NextResponse.json({ error: "Some products could not be found." }, { status: 400 });
+    }
+
+    // Validate stock availability before creating checkout session
+    const stockValidation = await validateOrderStock(body.items);
+    if (!stockValidation.valid) {
+      return NextResponse.json(
+        {
+          error: "Stock validation failed",
+          details: stockValidation.errors,
+        },
+        { status: 400 }
+      );
     }
 
     const itemsWithProduct = body.items.map((item: { productId: string; quantity: number }) => {
@@ -142,11 +155,12 @@ export async function POST(request: Request) {
       mode: "payment",
       customer_email: session.user.email,
       line_items: lineItems,
-      success_url: `${origin}/checkout?success=1&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${origin}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cart`,
       metadata: {
         userId: session.user.id,
         shipping_method: shippingMethod,
+        orderId: "", // Will be set after order creation
       },
     });
 
@@ -183,6 +197,14 @@ export async function POST(request: Request) {
       },
     });
 
+    // Update Stripe session metadata with order ID
+    await stripe.checkout.sessions.update(checkoutSession.id, {
+      metadata: {
+        ...checkoutSession.metadata,
+        orderId: order.id,
+      },
+    });
+
     return NextResponse.json(
       {
         sessionId: checkoutSession.id,
@@ -193,7 +215,36 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     console.error("Failed to create Stripe checkout session", error);
-    return NextResponse.json({ error: "Failed to create checkout session." }, { status: 500 });
+    
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      if (error.message.includes("stock") || error.message.includes("Stock")) {
+        return NextResponse.json(
+          { 
+            error: "Stock validation failed",
+            details: error.message,
+          },
+          { status: 400 }
+        );
+      }
+      if (error.message.includes("product") || error.message.includes("Product")) {
+        return NextResponse.json(
+          { 
+            error: "Product validation failed",
+            details: error.message,
+          },
+          { status: 400 }
+        );
+      }
+    }
+    
+    return NextResponse.json(
+      { 
+        error: "Failed to create checkout session.",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 }
+    );
   }
 }
 

@@ -1,0 +1,19 @@
+import type { MetadataRoute } from "next";
+
+import { getBaseUrl } from "@/lib/structured-data";
+
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl = getBaseUrl();
+  
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/admin/", "/api/", "/auth/"],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}
+

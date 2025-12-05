@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
 import { prisma } from "@/lib/prisma";
+import { deductStockFromOrder, restoreStockFromOrder } from "@/lib/inventory";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
@@ -36,7 +38,22 @@ export async function POST(request: Request) {
         });
 
         if (order && order.status !== "PAID") {
-          await prisma.order.update({
+          // Deduct stock from products
+          try {
+            await deductStockFromOrder(order.id);
+          } catch (error) {
+            console.error(`Failed to deduct stock for order ${order.id}:`, error);
+            // If stock deduction fails, mark order with a note but still mark as paid
+            // Admin will need to handle this manually
+            await prisma.order.update({
+              where: { id: order.id },
+              data: {
+                notes: `WARNING: Stock deduction failed - ${error instanceof Error ? error.message : "Unknown error"}. Manual intervention required.`,
+              },
+            });
+          }
+
+          const updatedOrder = await prisma.order.update({
             where: { id: order.id },
             data: {
               status: "PAID",
@@ -49,7 +66,35 @@ export async function POST(request: Request) {
                 },
               },
             },
+            include: {
+              items: {
+                include: {
+                  product: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                },
+              },
+            },
           });
+
+          // Send order confirmation email
+          try {
+            await sendOrderConfirmationEmail(
+              order.email,
+              order.id,
+              order.totalCents,
+              updatedOrder.items.map((item) => ({
+                name: item.product.name,
+                quantity: item.quantity,
+                price: item.unitPrice * item.quantity,
+              }))
+            );
+          } catch (error) {
+            console.error(`Failed to send order confirmation email for order ${order.id}:`, error);
+            // Don't fail the webhook if email fails
+          }
         }
         break;
       }
@@ -60,6 +105,15 @@ export async function POST(request: Request) {
           where: { stripeSessionId: session.id },
         });
         if (order) {
+          // If order was already paid but payment failed later, restore stock
+          if (order.status === "PAID") {
+            try {
+              await restoreStockFromOrder(order.id);
+            } catch (error) {
+              console.error(`Failed to restore stock for order ${order.id}:`, error);
+            }
+          }
+
           await prisma.order.update({
             where: { id: order.id },
             data: {
@@ -72,6 +126,40 @@ export async function POST(request: Request) {
               },
             },
           });
+        }
+        break;
+      }
+      case "charge.refunded": {
+        // Handle refunds - restore stock if needed
+        const charge = event.data.object as Stripe.Charge;
+        const paymentIntentId = typeof charge.payment_intent === "string" 
+          ? charge.payment_intent 
+          : charge.payment_intent?.id;
+
+        if (paymentIntentId) {
+          const order = await prisma.order.findFirst({
+            where: { stripePaymentId: paymentIntentId },
+          });
+
+          if (order && order.status === "PAID") {
+            try {
+              await restoreStockFromOrder(order.id);
+              await prisma.order.update({
+                where: { id: order.id },
+                data: {
+                  status: "REFUNDED",
+                  statusHistory: {
+                    create: {
+                      status: "REFUNDED",
+                      note: "Payment refunded via Stripe",
+                    },
+                  },
+                },
+              });
+            } catch (error) {
+              console.error(`Failed to process refund for order ${order.id}:`, error);
+            }
+          }
         }
         break;
       }
