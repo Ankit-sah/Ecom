@@ -27,13 +27,7 @@ export function isVercelBlobUrl(url: string): boolean {
  * Next.js Image component automatically optimizes images from allowed domains
  * This function can be used for non-Next.js Image scenarios
  */
-export function getOptimizedImageUrl(
-  imageUrl: string,
-  options?: {
-    width?: number;
-    quality?: number;
-  }
-): string {
+export function getOptimizedImageUrl(imageUrl: string): string {
   if (!imageUrl) {
     return "";
   }

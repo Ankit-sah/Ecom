@@ -96,15 +96,15 @@ export async function sendOrderConfirmationEmail(
       </head>
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(to bottom right, #fff7ec, #ffe8c5, #ffd1e3); padding: 30px; border-radius: 12px;">
-          <h1 style="color: #8a2040; margin-top: 0;">Order Confirmation</h1>
+          <h1 style="color: #F97316; margin-top: 0;">Order Confirmation</h1>
           <p>Thank you for your purchase from Janakpur Art and Craft!</p>
           <p><strong>Order Number:</strong> #${orderId.slice(-8).toUpperCase()}</p>
           <p><strong>Total:</strong> ${currencyFormatter.format(orderTotal / 100)}</p>
           
-          <h2 style="color: #40111f; margin-top: 30px;">Order Items</h2>
+          <h2 style="color: #1F2937; margin-top: 30px;">Order Items</h2>
           <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
             <thead>
-              <tr style="border-bottom: 2px solid #f6b2c5;">
+              <tr style="border-bottom: 2px solid #FED7AA;">
                 <th style="text-align: left; padding: 8px 0;">Item</th>
                 <th style="text-align: center; padding: 8px 0;">Quantity</th>
                 <th style="text-align: right; padding: 8px 0;">Price</th>
@@ -116,7 +116,7 @@ export async function sendOrderConfirmationEmail(
           </table>
           
           <p style="margin-top: 30px;">We'll send you another email when your order ships with tracking information.</p>
-          <p>If you have any questions, please <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://ecom-one-sandy.vercel.app"}/contact" style="color: #8a2040;">contact us</a>.</p>
+          <p>If you have any questions, please <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://ecom-one-sandy.vercel.app"}/contact" style="color: #F97316;">contact us</a>.</p>
           
           <p style="margin-top: 30px; font-size: 12px; color: #666;">
             Janakpur Art and Craft<br>
@@ -171,11 +171,11 @@ export async function sendShippingNotificationEmail(
       </head>
       <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(to bottom right, #fff7ec, #ffe8c5, #ffd1e3); padding: 30px; border-radius: 12px;">
-          <h1 style="color: #8a2040; margin-top: 0;">Your Order Has Shipped!</h1>
+          <h1 style="color: #F97316; margin-top: 0;">Your Order Has Shipped!</h1>
           <p>Great news! Your order from Janakpur Art and Craft has been shipped.</p>
           <p><strong>Order Number:</strong> #${orderId.slice(-8).toUpperCase()}</p>
           ${trackingNumber ? `<p><strong>Tracking Number:</strong> ${trackingNumber}</p>` : ""}
-          <p>You can track your order and view order details in your <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://ecom-one-sandy.vercel.app"}/account/orders" style="color: #8a2040;">account</a>.</p>
+          <p>You can track your order and view order details in your <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://ecom-one-sandy.vercel.app"}/account/orders" style="color: #F97316;">account</a>.</p>
           <p style="margin-top: 30px; font-size: 12px; color: #666;">
             Janakpur Art and Craft<br>
             Handcrafted Mithila Artistry Since 1993
