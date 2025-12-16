@@ -106,12 +106,12 @@ export default async function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} bg-gradient-to-br from-[#fff7ec] via-[#ffe8c5] to-[#ffd1e3] antialiased text-text-gray-800`}
+        className={`${geistSans.variable} ${geistMono.variable} bg-gradient-to-br from-[#fff7ec] via-[#ffe8c5] to-[#ffd1e3] antialiased text-gray-800`}
         suppressHydrationWarning
       >
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-[text-bg-orange-500] focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-[text-bg-orange-500] focus:ring-offset-2"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-[orange-500] focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-[orange-500] focus:ring-offset-2"
         >
           Skip to main content
         </a>

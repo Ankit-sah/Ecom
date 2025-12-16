@@ -173,7 +173,7 @@ export function SignUpForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-neutral-300"
+        className="w-full rounded-full bg-[orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-neutral-300"
       >
         {isSubmitting ? "Creating account…" : "Create account"}
       </button>

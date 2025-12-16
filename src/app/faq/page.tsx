@@ -137,7 +137,7 @@ export default function FAQPage() {
         ))}
       </div>
 
-      <section className="rounded-3xl border border-orange-500/50 bg-[text-bg-orange-500] p-8 text-white">
+      <section className="rounded-3xl border border-orange-500/50 bg-[orange-500] p-8 text-white">
         <h2 className="text-2xl font-semibold">Still Have Questions?</h2>
         <p className="mt-3 text-rose-100">
           Can&apos;t find what you&apos;re looking for?{" "}

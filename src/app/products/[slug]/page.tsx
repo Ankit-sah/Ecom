@@ -165,28 +165,28 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="space-y-6 sm:space-y-8">
           <div className="space-y-3 sm:space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">
                 {product.category?.name ?? "Mithila Collection"}
               </p>
               {product.artisan ? (
-                <span className="rounded-full border border-border-orange-200 px-3 py-1 text-[11px] font-semibold text-text-bg-orange-500">
+                <span className="rounded-full border border-orange-200 px-3 py-1 text-[11px] font-semibold text-orange-500">
                   Crafted by {product.artisan.name}
                 </span>
               ) : null}
-              <span className="rounded-full border border-border-orange-200 px-3 py-1 text-[11px] font-semibold text-text-bg-orange-500">
+              <span className="rounded-full border border-orange-200 px-3 py-1 text-[11px] font-semibold text-orange-500">
                 SKU: {product.sku}
               </span>
             </div>
-            <h1 className="text-2xl font-semibold text-text-gray-800 sm:text-3xl md:text-4xl">{product.name}</h1>
+            <h1 className="text-2xl font-semibold text-gray-800 sm:text-3xl md:text-4xl">{product.name}</h1>
             <p className="text-xs text-neutral-600 sm:text-sm">{product.description}</p>
             <p className="text-sm font-medium text-neutral-500">
-              Catalog slug: <span className="text-text-bg-orange-500">{product.slug}</span>
+              Catalog slug: <span className="text-orange-500">{product.slug}</span>
             </p>
           </div>
 
           <ProductDetailActions product={product} />
 
-          <div className="space-y-4 rounded-3xl border border-border-orange-200 bg-white/85 p-8">
+          <div className="space-y-4 rounded-3xl border border-orange-200 bg-white/85 p-8">
             <h2 className="text-lg font-semibold text-gray-800">Why it’s special</h2>
             <ul className="space-y-3 text-sm text-neutral-600">
               <li>• Handcrafted in Janakpur using generations-old Mithila techniques.</li>
@@ -195,7 +195,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </ul>
           </div>
 
-          <div className="rounded-3xl border border-text-bg-orange-500/50 bg-text-bg-orange-500 p-8 text-white">
+          <div className="rounded-3xl border border-orange-500/50 bg-orange-500 p-8 text-white">
             <h2 className="text-lg font-semibold">Ethical sourcing promise</h2>
             <p className="mt-2 text-sm text-rose-100">
               Fair wages, safe workshops, and reinvestment into artisan communities are at the heart of every Janakpur
@@ -205,33 +205,33 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-border-orange-200 bg-white/85 p-10">
+      <div className="rounded-3xl border border-orange-200 bg-white/85 p-10">
         <h2 className="text-xl font-semibold text-gray-800">Product details</h2>
         <dl className="mt-6 grid gap-6 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">Category</dt>
+            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Category</dt>
             <dd className="mt-2 text-sm text-neutral-700">{product.category?.name ?? "Mithila Art"}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">Artisan</dt>
+            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Artisan</dt>
             <dd className="mt-2 text-sm text-neutral-700">
               {product.artisan?.name ?? "Janakpur Art and Craft Collective"}
               {product.artisan?.location ? ` • ${product.artisan.location}` : ""}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">Price</dt>
-            <dd className="mt-2 text-sm text-text-bg-orange-500">{formatCurrencyFromCents(product.priceCents)}</dd>
+            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Price</dt>
+            <dd className="mt-2 text-sm text-orange-500">{formatCurrencyFromCents(product.priceCents)}</dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">Availability</dt>
+            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Availability</dt>
             <dd className="mt-2">
               {product.stock === 0 ? (
                 <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-700">
                   Out of Stock
                 </span>
               ) : product.stock <= 5 ? (
-                <span className="inline-flex items-center rounded-full bg-bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
+                <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
                   Only {product.stock} left in stock
                 </span>
               ) : (
@@ -242,7 +242,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">Created & updated</dt>
+            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Created & updated</dt>
             <dd className="mt-2 text-sm text-neutral-700">
               {new Date(product.updatedAt).toLocaleDateString(undefined, {
                 month: "short",

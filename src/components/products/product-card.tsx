@@ -39,19 +39,19 @@ export function ProductCard({ product }: Props) {
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             {product.category ? (
-              <span className="inline-flex items-center rounded-full bg-bg-orange-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-text-orange-600">
+              <span className="inline-flex items-center rounded-full bg-orange-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-orange-600">
                 {product.category.name}
               </span>
             ) : null}
             {product.artisan ? (
-              <span className="inline-flex items-center rounded-full border border-border-orange-200 px-3 py-1 text-[11px] font-semibold text-text-bg-orange-500">
+              <span className="inline-flex items-center rounded-full border border-orange-200 px-3 py-1 text-[11px] font-semibold text-orange-500">
                 {product.artisan.name}
               </span>
             ) : null}
           </div>
           <Link
             href={`/products/${product.slug}`}
-            className="line-clamp-2 text-base font-semibold text-text-gray-800 transition hover:text-text-bg-orange-500 sm:text-lg"
+            className="line-clamp-2 text-base font-semibold text-gray-800 transition hover:text-orange-500 sm:text-lg"
           >
             {product.name}
           </Link>
@@ -61,7 +61,7 @@ export function ProductCard({ product }: Props) {
               {product.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-border-orange-200 px-3 py-1 text-[11px] font-medium text-text-orange-600"
+                  className="rounded-full border border-orange-200 px-3 py-1 text-[11px] font-medium text-orange-600"
                 >
                   #{tag}
                 </span>
@@ -71,13 +71,13 @@ export function ProductCard({ product }: Props) {
         </div>
         <div className="mt-auto space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-base font-semibold text-text-bg-orange-500">
+            <span className="text-base font-semibold text-orange-500">
               {formatCurrencyFromCents(product.priceCents)}
             </span>
             {product.stock === 0 ? (
               <span className="text-xs font-semibold text-red-600">Out of Stock</span>
             ) : product.stock <= 5 ? (
-              <span className="text-xs font-semibold text-text-orange-600">Only {product.stock} left</span>
+              <span className="text-xs font-semibold text-orange-600">Only {product.stock} left</span>
             ) : (
               <span className="text-xs text-neutral-500">In Stock</span>
             )}
@@ -86,7 +86,7 @@ export function ProductCard({ product }: Props) {
             type="button"
             onClick={() => addItem(product)}
             disabled={product.stock === 0}
-            className="w-full rounded-full bg-text-bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-text-bg-orange-500/30 transition hover:bg-text-orange-600 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+            className="w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
             aria-label={`Add ${product.name} to cart`}
           >
             {product.stock === 0 ? "Out of Stock" : "Add to cart"}

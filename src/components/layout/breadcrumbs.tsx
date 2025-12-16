@@ -32,7 +32,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             >
               {isLast ? (
                 <span
-                  className="font-medium text-text-bg-orange-500"
+                  className="font-medium text-orange-500"
                   itemProp="name"
                   aria-current="page"
                 >
@@ -42,7 +42,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                 <>
                   <Link
                     href={item.href}
-                    className="text-neutral-600 transition hover:text-text-bg-orange-500"
+                    className="text-neutral-600 transition hover:text-orange-500"
                     itemProp="item"
                   >
                     <span itemProp="name">{item.label}</span>

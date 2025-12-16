@@ -35,19 +35,19 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
   const featured = searchParams.get("featured") === "true";
 
   return (
-    <div className="space-y-6 rounded-3xl border border-border-orange-200 bg-white/85 p-6 shadow-sm">
-      <h2 className="text-lg font-semibold text-text-gray-800">Filters</h2>
+    <div className="space-y-6 rounded-3xl border border-orange-200 bg-white/85 p-6 shadow-sm">
+      <h2 className="text-lg font-semibold text-gray-800">Filters</h2>
 
       <div className="space-y-4">
         <div>
-            <label htmlFor="category" className="mb-2 block text-sm font-medium text-text-bg-orange-500">
+            <label htmlFor="category" className="mb-2 block text-sm font-medium text-orange-500">
             Category
           </label>
           <select
             id="category"
             value={currentCategory}
             onChange={(e) => updateFilter("category", e.target.value)}
-            className="w-full rounded-lg border border-border-orange-200 bg-white px-4 py-2 text-sm text-text-gray-800 focus:border-text-bg-orange-500 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500/20"
+            className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-gray-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
             disabled={isPending}
           >
             <option value="all">All Categories</option>
@@ -60,14 +60,14 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
         </div>
 
         <div>
-            <label htmlFor="artisan" className="mb-2 block text-sm font-medium text-text-bg-orange-500">
+            <label htmlFor="artisan" className="mb-2 block text-sm font-medium text-orange-500">
             Artisan
           </label>
           <select
             id="artisan"
             value={currentArtisan}
             onChange={(e) => updateFilter("artisan", e.target.value)}
-            className="w-full rounded-lg border border-border-orange-200 bg-white px-4 py-2 text-sm text-text-gray-800 focus:border-text-bg-orange-500 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500/20"
+            className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-gray-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
             disabled={isPending}
           >
             <option value="all">All Artisans</option>
@@ -80,14 +80,14 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
         </div>
 
         <div>
-            <label htmlFor="sort" className="mb-2 block text-sm font-medium text-text-bg-orange-500">
+            <label htmlFor="sort" className="mb-2 block text-sm font-medium text-orange-500">
             Sort By
           </label>
           <select
             id="sort"
             value={currentSort}
             onChange={(e) => updateFilter("sort", e.target.value)}
-            className="w-full rounded-lg border border-border-orange-200 bg-white px-4 py-2 text-sm text-text-gray-800 focus:border-text-bg-orange-500 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500/20"
+            className="w-full rounded-lg border border-orange-200 bg-white px-4 py-2 text-sm text-gray-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
             disabled={isPending}
           >
             <option value="newest">Newest First</option>
@@ -100,7 +100,7 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
         </div>
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-text-bg-orange-500">Price Range</label>
+          <label className="mb-2 block text-sm font-medium text-orange-500">Price Range</label>
           <div className="grid grid-cols-2 gap-2">
             <input
               type="number"
@@ -109,7 +109,7 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
               max={maxPrice}
               value={currentMinPrice}
               onChange={(e) => updateFilter("minPrice", e.target.value || null)}
-              className="rounded-lg border border-border-orange-200 bg-white px-3 py-2 text-sm text-text-gray-800 focus:border-text-bg-orange-500 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500/20"
+              className="rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm text-gray-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
               disabled={isPending}
             />
             <input
@@ -119,7 +119,7 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
               max={maxPrice}
               value={currentMaxPrice}
               onChange={(e) => updateFilter("maxPrice", e.target.value || null)}
-              className="rounded-lg border border-border-orange-200 bg-white px-3 py-2 text-sm text-text-gray-800 focus:border-text-bg-orange-500 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500/20"
+              className="rounded-lg border border-orange-200 bg-white px-3 py-2 text-sm text-gray-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
               disabled={isPending}
             />
           </div>
@@ -131,10 +131,10 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
               type="checkbox"
               checked={featured}
               onChange={(e) => updateFilter("featured", e.target.checked ? "true" : null)}
-              className="h-4 w-4 rounded border-border-orange-200 text-text-bg-orange-500 focus:ring-text-bg-orange-500"
+              className="h-4 w-4 rounded border-orange-200 text-orange-500 focus:ring-orange-500"
               disabled={isPending}
             />
-            <span className="text-sm text-text-gray-800">Featured Only</span>
+            <span className="text-sm text-gray-800">Featured Only</span>
           </label>
         </div>
 
@@ -149,7 +149,7 @@ export function ProductFilters({ categories, artisans, maxPrice }: ProductFilter
                 router.push("/products");
               });
             }}
-            className="w-full rounded-lg border border-text-bg-orange-500/40 px-4 py-2 text-sm font-semibold text-text-bg-orange-500 transition hover:border-text-bg-orange-500 hover:bg-bg-orange-50"
+            className="w-full rounded-lg border border-orange-500/40 px-4 py-2 text-sm font-semibold text-orange-500 transition hover:border-orange-500 hover:bg-orange-50"
             disabled={isPending}
           >
             Clear Filters

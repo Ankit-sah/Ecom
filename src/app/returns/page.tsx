@@ -112,7 +112,7 @@ export default function ReturnsPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-orange-500/50 bg-[text-bg-orange-500] p-8 text-white">
+      <section className="rounded-3xl border border-orange-500/50 bg-[orange-500] p-8 text-white">
         <h2 className="text-2xl font-semibold">Need Help?</h2>
         <p className="mt-3 text-rose-100">
           If you have questions about returns or need assistance, please{" "}

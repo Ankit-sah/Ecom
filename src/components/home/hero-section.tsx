@@ -9,7 +9,7 @@ export function HeroSection() {
     <section className="relative overflow-hidden bg-[#fff9f0]">
       {/* Background Decorative Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-bg-orange-50 mix-blend-multiply opacity-70 blur-3xl filter" />
+        <div className="absolute top-[-10%] left-[-10%] h-[500px] w-[500px] rounded-full bg-orange-50 mix-blend-multiply opacity-70 blur-3xl filter" />
         <div className="absolute bottom-[-10%] right-[-10%] h-[500px] w-[500px] rounded-full bg-[#fae8b4] mix-blend-multiply opacity-70 blur-3xl filter" />
       </div>
 
@@ -18,13 +18,13 @@ export function HeroSection() {
         {/* Text Content */}
         <div className="flex-1 space-y-8 text-center md:text-left">
           <FadeIn delay={0.1}>
-            <span className="inline-flex items-center rounded-full bg-bg-orange-50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-text-orange-600 shadow-sm ring-1 ring-border-orange-200">
+            <span className="inline-flex items-center rounded-full bg-orange-50 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-orange-600 shadow-sm ring-1 ring-border-orange-200">
               Hand-painted traditions
             </span>
           </FadeIn>
 
           <FadeIn delay={0.2}>
-            <h1 className="text-3xl font-bold tracking-tight text-text-gray-800 sm:text-4xl md:text-5xl lg:text-[64px] lg:leading-[1.1]">
+            <h1 className="text-3xl font-bold tracking-tight text-gray-800 sm:text-4xl md:text-5xl lg:text-[64px] lg:leading-[1.1]">
               Use Janakpur Art and Craft—custodians of Mithila artistry since 1993.
             </h1>
           </FadeIn>
@@ -40,13 +40,13 @@ export function HeroSection() {
             <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:gap-4 md:justify-start">
               <Link
                 href="/products"
-                className="group relative inline-flex h-11 items-center justify-center overflow-hidden rounded-full bg-text-bg-orange-500 px-6 text-sm font-medium text-white shadow-lg shadow-text-bg-orange-500/20 transition-all duration-300 hover:bg-text-orange-600 hover:shadow-xl hover:shadow-text-bg-orange-500/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500 focus:ring-offset-2 sm:h-12 sm:px-8 sm:text-base"
+                className="group relative inline-flex h-11 items-center justify-center overflow-hidden rounded-full bg-orange-500 px-6 text-sm font-medium text-white shadow-lg shadow-orange-500/20 transition-all duration-300 hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-500/30 hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:h-12 sm:px-8 sm:text-base"
               >
                 <span className="relative z-10">Explore the gallery</span>
               </Link>
               <Link
                 href="/products?filter=featured"
-                className="inline-flex h-11 items-center justify-center rounded-full border-2 border-text-bg-orange-500/20 px-6 text-sm font-medium text-text-bg-orange-500 transition-colors hover:border-text-bg-orange-500 hover:bg-bg-orange-50 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500 focus:ring-offset-2 sm:h-12 sm:px-8 sm:text-base"
+                className="inline-flex h-11 items-center justify-center rounded-full border-2 border-orange-500/20 px-6 text-sm font-medium text-orange-500 transition-colors hover:border-orange-500 hover:bg-orange-50 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 sm:h-12 sm:px-8 sm:text-base"
               >
                 Meet the artisans
               </Link>
@@ -96,7 +96,7 @@ export function HeroSection() {
               </div>
 
               {/* Decorative behind card */}
-              <div className="absolute -bottom-6 -right-6 -z-10 h-full w-full rounded-[40px] bg-text-bg-orange-500/10" />
+              <div className="absolute -bottom-6 -right-6 -z-10 h-full w-full rounded-[40px] bg-orange-500/10" />
             </div>
           </FadeIn>
         </div>

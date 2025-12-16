@@ -27,14 +27,14 @@ export function FeaturedProductsSection({ products }: FeaturedProductsSectionPro
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <FadeIn>
           <div>
-            <h2 className="text-xl font-semibold text-text-gray-800 sm:text-2xl">Featured Mithila creations</h2>
+            <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl">Featured Mithila creations</h2>
             <p className="text-xs text-neutral-600 sm:text-sm">
               Handpicked treasures that celebrate ancestral motifs, natural dyes, and the spirit of Janakpur.
             </p>
           </div>
         </FadeIn>
         <FadeIn delay={0.1} direction="left">
-          <Link href="/products" className="text-sm font-semibold text-text-bg-orange-500 transition hover:text-text-orange-600">
+          <Link href="/products" className="text-sm font-semibold text-orange-500 transition hover:text-orange-600">
             View all
           </Link>
         </FadeIn>

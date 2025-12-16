@@ -179,7 +179,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
         <Link
           href="/account/orders"
-          className="rounded-full bg-[text-bg-orange-500] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
+          className="rounded-full bg-[orange-500] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600"
         >
           View Order History
         </Link>
@@ -191,7 +191,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
         </Link>
       </div>
 
-      <div className="rounded-3xl border border-orange-500/50 bg-[text-bg-orange-500] p-8 text-white">
+      <div className="rounded-3xl border border-orange-500/50 bg-[orange-500] p-8 text-white">
         <h2 className="text-xl font-semibold">What&apos;s Next?</h2>
         <ul className="mt-4 space-y-2 text-sm text-rose-100">
           <li>• You&apos;ll receive an order confirmation email shortly</li>

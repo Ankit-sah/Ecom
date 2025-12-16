@@ -18,7 +18,7 @@ export function CartPageClient() {
         </p>
         <Link
           href="/products"
-          className="rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
+          className="rounded-full bg-[orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600"
         >
           Start shopping
         </Link>
@@ -74,7 +74,7 @@ export function CartPageClient() {
                   {item.product.category?.name ?? "Mithila Craft"}
                 </p>
                 {item.product.stock < item.quantity && (
-                  <div className="rounded-lg bg-bg-orange-50 border border-border-orange-200 p-2">
+                  <div className="rounded-lg bg-orange-50 border border-orange-200 p-2">
                     <p className="text-xs font-semibold text-orange-700">
                       ⚠️ Only {item.product.stock} available. Quantity adjusted.
                     </p>
@@ -145,7 +145,7 @@ export function CartPageClient() {
         </dl>
         <Link
           href="/checkout"
-          className="block rounded-full bg-[text-bg-orange-500] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
+          className="block rounded-full bg-[orange-500] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600"
         >
           Proceed to checkout
         </Link>

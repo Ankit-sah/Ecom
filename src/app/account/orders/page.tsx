@@ -117,7 +117,7 @@ export default async function OrdersPage() {
           <p className="text-sm text-neutral-600 mb-4">You haven&apos;t placed any orders yet.</p>
           <Link
             href="/products"
-            className="inline-block rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
+            className="inline-block rounded-full bg-[orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600"
           >
             Start Shopping
           </Link>

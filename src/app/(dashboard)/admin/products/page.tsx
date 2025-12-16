@@ -393,7 +393,7 @@ export default async function AdminProductsPage() {
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
+              className="rounded-full bg-[orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600"
             >
               Create product
             </button>
