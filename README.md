@@ -73,8 +73,24 @@ The application seeds a small catalog the first time it runs if the database is 
 
 1. Create a product catalog or use test mode.
 2. Add your secret and publishable keys to `.env`.
-3. Create a webhook endpoint (e.g. `/api/stripe/webhook`) in the Stripe dashboard and copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
-4. (Optional) Configure Stripe Tax or shipping rates if you need automated localisation.
+3. **For Local Development**: Install Stripe CLI and forward webhooks:
+
+   ```bash
+   # Install Stripe CLI (if not already installed)
+   # macOS: brew install stripe/stripe-cli/stripe
+   # Or download from https://stripe.com/docs/stripe-cli
+
+   # Login to Stripe CLI
+   stripe login
+
+   # Forward webhooks to your local server (run in a separate terminal)
+   stripe listen --forward-to localhost:3000/api/stripe/webhook
+   ```
+
+   This will output a webhook signing secret (starts with `whsec_`). Copy this to `STRIPE_WEBHOOK_SECRET` in your `.env` file.
+
+4. **For Production**: Create a webhook endpoint (e.g. `https://yourdomain.com/api/stripe/webhook`) in the Stripe dashboard and copy the signing secret to `STRIPE_WEBHOOK_SECRET`.
+5. (Optional) Configure Stripe Tax or shipping rates if you need automated localisation.
 
 ### Admin dashboard & RBAC
 
@@ -98,6 +114,7 @@ The application seeds a small catalog the first time it runs if the database is 
 - Sign up via `/auth/sign-up` (creates the user in Okta) and then sign in via `/auth/sign-in`.
 - Complete the checkout form with shipping details and proceed to Stripe’s hosted payment page.
 - Inspect `/admin/orders` to confirm statuses update after successful payment (requires webhook).
+- Check your server console for email sending logs and your inbox for order confirmation emails.
 - Use `/admin/products` to upload imagery (stored in Vercel Blob) and publish new catalogue items.
 
 ## Deployment (Vercel)
@@ -114,13 +131,13 @@ Post-deploy tasks:
 
 ## Useful Scripts
 
-| Command             | Description                                    |
-| ------------------- | ---------------------------------------------- |
-| `npm run dev`       | Start local development server                 |
-| `npm run build`     | Create a production build                      |
-| `npm run start`     | Run the production build                       |
-| `npm run lint`      | Check code style and lint errors                |
-| `npx prisma studio` | Inspect and modify data via Prisma Studio      |
+| Command             | Description                               |
+| ------------------- | ----------------------------------------- |
+| `npm run dev`       | Start local development server            |
+| `npm run build`     | Create a production build                 |
+| `npm run start`     | Run the production build                  |
+| `npm run lint`      | Check code style and lint errors          |
+| `npx prisma studio` | Inspect and modify data via Prisma Studio |
 
 ## Folder Structure Highlights
 

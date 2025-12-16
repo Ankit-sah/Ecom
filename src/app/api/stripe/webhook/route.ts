@@ -10,6 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 export async function POST(request: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
+    console.error("STRIPE_WEBHOOK_SECRET not configured in environment variables");
     return NextResponse.json({ error: "Webhook secret not configured." }, { status: 500 });
   }
 
@@ -34,9 +35,16 @@ export async function POST(request: Request) {
 
         const order = await prisma.order.findUnique({
           where: { stripeSessionId },
-          include: { statusHistory: true },
+          include: { 
+            statusHistory: true,
+            shippingAddress: true,
+          },
         });
 
+        if (!order) {
+          console.warn(`Order not found for Stripe session: ${stripeSessionId}`);
+        }
+        
         if (order && order.status !== "PAID") {
           // Deduct stock from products
           try {
@@ -81,7 +89,7 @@ export async function POST(request: Request) {
 
           // Send order confirmation email
           try {
-            await sendOrderConfirmationEmail(
+            const emailSent = await sendOrderConfirmationEmail(
               order.email,
               order.id,
               order.totalCents,
@@ -89,8 +97,21 @@ export async function POST(request: Request) {
                 name: item.product.name,
                 quantity: item.quantity,
                 price: item.unitPrice * item.quantity,
-              }))
+              })),
+              order.shippingAddress ? {
+                fullName: order.shippingAddress.fullName,
+                addressLine1: order.shippingAddress.addressLine1,
+                addressLine2: order.shippingAddress.addressLine2,
+                city: order.shippingAddress.city,
+                state: order.shippingAddress.state,
+                postalCode: order.shippingAddress.postalCode,
+                country: order.shippingAddress.country,
+              } : null
             );
+            
+            if (!emailSent) {
+              console.warn(`Order confirmation email was not sent for order ${order.id} (email may be disabled)`);
+            }
           } catch (error) {
             console.error(`Failed to send order confirmation email for order ${order.id}:`, error);
             // Don't fail the webhook if email fails

@@ -28,29 +28,38 @@ const CartContext = createContext<CartContextValue | undefined>(undefined);
 const STORAGE_KEY = "ecom-cart";
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    if (typeof window === "undefined") {
-      return [];
-    }
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      return [];
-    }
-    try {
-      return JSON.parse(stored) as CartItem[];
-    } catch (error) {
-      console.error("Failed to parse cart from storage", error);
-      window.localStorage.removeItem(STORAGE_KEY);
-      return [];
-    }
-  });
+  // Always start with empty array to avoid hydration mismatch
+  // We'll hydrate from localStorage in useEffect after mount
+  const [items, setItems] = useState<CartItem[]>([]);
+  const [isHydrated, setIsHydrated] = useState(false);
 
+  // Hydrate cart from localStorage only on client after mount
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
+
+    try {
+      const stored = window.localStorage.getItem(STORAGE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored) as CartItem[];
+        setItems(parsed);
+      }
+    } catch (error) {
+      console.error("Failed to parse cart from storage", error);
+      window.localStorage.removeItem(STORAGE_KEY);
+    } finally {
+      setIsHydrated(true);
+    }
+  }, []);
+
+  // Save to localStorage only after hydration to avoid issues
+  useEffect(() => {
+    if (typeof window === "undefined" || !isHydrated) {
+      return;
+    }
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+  }, [items, isHydrated]);
 
   const addItem = useCallback((product: Product, quantity = 1) => {
     setItems((current) => {
@@ -90,9 +99,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, []);
 
   // Sync cart with current stock levels - remove out of stock items
-  // This runs once on mount to clean up any stale cart items
+  // This runs once after hydration to clean up any stale cart items
   useEffect(() => {
-    if (items.length === 0 || typeof window === "undefined") return;
+    if (!isHydrated || items.length === 0 || typeof window === "undefined") return;
 
     let isMounted = true;
     const initialItems = items; // Capture initial items for this effect
@@ -150,7 +159,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isMounted = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Only on mount - initialItems is captured from items at mount time
+  }, [isHydrated]); // Only after hydration - initialItems is captured from items at mount time
 
   const totals = useMemo(() => getCartTotals(items), [items]);
 

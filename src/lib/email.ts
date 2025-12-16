@@ -21,13 +21,13 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
   const emailProvider = process.env.EMAIL_PROVIDER || "none";
 
   if (!emailEnabled || emailProvider === "none") {
-    console.log("Email notifications disabled. Would send:", options);
     return false;
   }
 
   try {
     // Resend implementation example
     if (emailProvider === "resend" && process.env.RESEND_API_KEY) {
+      const emailFrom = process.env.EMAIL_FROM || "onboarding@resend.dev";
       const response = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
@@ -35,7 +35,7 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
           Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: process.env.EMAIL_FROM || "noreply@janakpurartandcraft.com",
+          from: emailFrom,
           to: options.to,
           subject: options.subject,
           html: options.html,
@@ -48,12 +48,10 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
         console.error("Failed to send email via Resend:", error);
         return false;
       }
-
       return true;
     }
-
     // Add other email providers here (SendGrid, AWS SES, etc.)
-    console.warn(`Email provider "${emailProvider}" not implemented`);
+    console.warn(`Email provider "${emailProvider}" not configured properly`);
     return false;
   } catch (error) {
     console.error("Failed to send email:", error);
@@ -68,7 +66,16 @@ export async function sendOrderConfirmationEmail(
   email: string,
   orderId: string,
   orderTotal: number,
-  items: Array<{ name: string; quantity: number; price: number }>
+  items: Array<{ name: string; quantity: number; price: number }>,
+  shippingAddress?: {
+    fullName: string;
+    addressLine1: string;
+    addressLine2?: string | null;
+    city: string;
+    state?: string | null;
+    postalCode: string;
+    country?: string | null;
+  } | null
 ): Promise<boolean> {
   const currencyFormatter = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -115,6 +122,19 @@ export async function sendOrderConfirmationEmail(
             </tbody>
           </table>
           
+          ${shippingAddress ? `
+          <h2 style="color: #1F2937; margin-top: 30px;">Shipping Address</h2>
+          <div style="background: #fff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0; line-height: 1.8;">
+              <strong>${shippingAddress.fullName}</strong><br>
+              ${shippingAddress.addressLine1}<br>
+              ${shippingAddress.addressLine2 ? `${shippingAddress.addressLine2}<br>` : ""}
+              ${shippingAddress.city}${shippingAddress.state ? `, ${shippingAddress.state}` : ""} ${shippingAddress.postalCode}<br>
+              ${shippingAddress.country || ""}
+            </p>
+          </div>
+          ` : ""}
+          
           <p style="margin-top: 30px;">We'll send you another email when your order ships with tracking information.</p>
           <p>If you have any questions, please <a href="${process.env.NEXT_PUBLIC_APP_URL || "https://ecom-one-sandy.vercel.app"}/contact" style="color: #F97316;">contact us</a>.</p>
           
@@ -137,6 +157,8 @@ Total: ${currencyFormatter.format(orderTotal / 100)}
 
 Order Items:
 ${items.map((item) => `- ${item.name} x${item.quantity} - ${currencyFormatter.format(item.price / 100)}`).join("\n")}
+
+${shippingAddress ? `\nShipping Address:\n${shippingAddress.fullName}\n${shippingAddress.addressLine1}${shippingAddress.addressLine2 ? `\n${shippingAddress.addressLine2}` : ""}\n${shippingAddress.city}${shippingAddress.state ? `, ${shippingAddress.state}` : ""} ${shippingAddress.postalCode}\n${shippingAddress.country || ""}\n` : ""}
 
 We'll send you another email when your order ships with tracking information.
 
