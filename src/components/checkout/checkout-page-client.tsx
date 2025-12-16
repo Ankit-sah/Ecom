@@ -178,8 +178,8 @@ export function CheckoutPageClient() {
 
   if (!sessionId && items.length === 0) {
     return (
-      <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/75 p-16 text-center">
-        <p className="text-2xl font-semibold text-[#40111f]">Your cart is empty</p>
+      <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-3xl border border-dashed border-text-bg-orange-500/40 bg-white/75 p-16 text-center">
+        <p className="text-2xl font-semibold text-text-gray-800">Your cart is empty</p>
         <p className="text-sm text-neutral-600">Add Mithila creations to your cart before proceeding to checkout.</p>
       </div>
     );
@@ -187,9 +187,9 @@ export function CheckoutPageClient() {
 
   return (
     <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)]">
-      <section className="space-y-6 rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-6 shadow-sm">
+      <section className="space-y-6 rounded-3xl border border-border-orange-200 bg-white/85 p-6 shadow-sm">
         <header className="space-y-2">
-          <h1 className="text-3xl font-semibold text-[#40111f]">Checkout</h1>
+          <h1 className="text-3xl font-semibold text-text-gray-800">Checkout</h1>
           <p className="text-sm text-neutral-600">
             Review your Mithila selections, confirm shipping, and secure payment via Stripe.
           </p>
@@ -200,80 +200,80 @@ export function CheckoutPageClient() {
               {items.map((item) => (
                 <li
                   key={item.product.id}
-                  className="flex items-center justify-between gap-6 rounded-2xl border border-[#f6b2c5]/50 bg-white/85 p-4"
+                  className="flex items-center justify-between gap-6 rounded-2xl border border-border-orange-200/50 bg-white/85 p-4"
                 >
                   <div>
-                    <p className="text-sm font-semibold text-[#40111f]">{item.product.name}</p>
+                    <p className="text-sm font-semibold text-text-gray-800">{item.product.name}</p>
                     <p className="text-xs text-neutral-500">Quantity: {item.quantity}</p>
                   </div>
-                  <span className="text-sm font-semibold text-[#8a2040]">
+                  <span className="text-sm font-semibold text-text-bg-orange-500">
                     {formatCurrencyFromCents(item.product.priceCents * item.quantity)}
                   </span>
                 </li>
               ))}
             </ul>
 
-            <div className="space-y-4 rounded-2xl border border-[#f6b2c5]/60 bg-white/70 p-4">
-              <h2 className="text-lg font-semibold text-[#40111f]">Shipping details</h2>
+            <div className="space-y-4 rounded-2xl border border-border-orange-200/60 bg-white/70 p-4">
+              <h2 className="text-lg font-semibold text-text-gray-800">Shipping details</h2>
               <div className="grid gap-3 md:grid-cols-2">
                 <input
                   required
                   placeholder="Full name*"
                   value={shipping.fullName}
                   onChange={(event) => setShipping((prev) => ({ ...prev, fullName: event.target.value }))}
-                  className="rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   placeholder="Phone"
                   value={shipping.phone}
                   onChange={(event) => setShipping((prev) => ({ ...prev, phone: event.target.value }))}
-                  className="rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   required
                   placeholder="Address line 1*"
                   value={shipping.addressLine1}
                   onChange={(event) => setShipping((prev) => ({ ...prev, addressLine1: event.target.value }))}
-                  className="md:col-span-2 rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="md:col-span-2 rounded-xl border border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   placeholder="Address line 2"
                   value={shipping.addressLine2}
                   onChange={(event) => setShipping((prev) => ({ ...prev, addressLine2: event.target.value }))}
-                  className="md:col-span-2 rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="md:col-span-2 rounded-xl border border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   required
                   placeholder="City*"
                   value={shipping.city}
                   onChange={(event) => setShipping((prev) => ({ ...prev, city: event.target.value }))}
-                  className="rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   placeholder="State/Province"
                   value={shipping.state}
                   onChange={(event) => setShipping((prev) => ({ ...prev, state: event.target.value }))}
-                  className="rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   required
                   placeholder="Postal code*"
                   value={shipping.postalCode}
                   onChange={(event) => setShipping((prev) => ({ ...prev, postalCode: event.target.value }))}
-                  className="rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
                 <input
                   placeholder="Country"
                   value={shipping.country}
                   onChange={(event) => setShipping((prev) => ({ ...prev, country: event.target.value }))}
-                  className="rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm"
+                  className="rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm"
                 />
               </div>
 
               <div className="space-y-2">
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Shipping method</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-text-orange-600">Shipping method</p>
                 <div className="grid gap-2 md:grid-cols-2">
-                  <label className="flex items-center justify-between rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm">
+                  <label className="flex items-center justify-between rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm">
                     <span>
                       Domestic courier
                       <span className="block text-xs text-neutral-500">Dispatch from Kathmandu hub (3–5 days)</span>
@@ -282,10 +282,10 @@ export function CheckoutPageClient() {
                       type="radio"
                       checked={shippingMethod === "domestic"}
                       onChange={() => setShippingMethod("domestic")}
-                      className="h-4 w-4 border-[#f6b2c5]/60 text-[#8a2040]"
+                      className="h-4 w-4 border-border-orange-200/60 text-text-bg-orange-500"
                     />
                   </label>
-                  <label className="flex items-center justify-between rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-sm">
+                  <label className="flex items-center justify-between rounded-xl border border-border-orange-200/60 bg-white px-3 py-2 text-sm">
                     <span>
                       International express
                       <span className="block text-xs text-neutral-500">Insured DHL/FedEx service (5–10 days)</span>
@@ -294,7 +294,7 @@ export function CheckoutPageClient() {
                       type="radio"
                       checked={shippingMethod === "international"}
                       onChange={() => setShippingMethod("international")}
-                      className="h-4 w-4 border-[#f6b2c5]/60 text-[#8a2040]"
+                      className="h-4 w-4 border-border-orange-200/60 text-text-bg-orange-500"
                     />
                   </label>
                 </div>
@@ -303,27 +303,27 @@ export function CheckoutPageClient() {
         </>
       </section>
 
-      <aside className="space-y-6 rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-6 shadow-sm">
+      <aside className="space-y-6 rounded-3xl border border-border-orange-200 bg-white/85 p-6 shadow-sm">
         <div className="space-y-2">
-          <h2 className="text-xl font-semibold text-[#40111f]">Order summary</h2>
+          <h2 className="text-xl font-semibold text-text-gray-800">Order summary</h2>
           <p className="text-sm text-neutral-600">Items ({totalQuantity})</p>
         </div>
         <dl className="space-y-3 text-sm text-neutral-700">
           <div className="flex items-center justify-between">
             <dt>Subtotal</dt>
-            <dd className="font-semibold text-[#8a2040]">{formatCurrencyFromCents(subtotalCents)}</dd>
+            <dd className="font-semibold text-text-bg-orange-500">{formatCurrencyFromCents(subtotalCents)}</dd>
           </div>
           <div className="flex items-center justify-between">
             <dt>Estimated tax</dt>
-            <dd className="font-semibold text-[#8a2040]">{formatCurrencyFromCents(taxEstimateCents)}</dd>
+            <dd className="font-semibold text-text-bg-orange-500">{formatCurrencyFromCents(taxEstimateCents)}</dd>
           </div>
           <div className="flex items-center justify-between">
             <dt>Shipping</dt>
-            <dd className="font-semibold text-[#8a2040]">
+            <dd className="font-semibold text-text-bg-orange-500">
               {items.length > 0 ? formatCurrencyFromCents(shippingCents) : "—"}
             </dd>
           </div>
-          <div className="flex items-center justify-between border-t border-[#f6b2c5]/60 pt-3 text-base font-semibold text-[#40111f]">
+          <div className="flex items-center justify-between border-t border-border-orange-200/60 pt-3 text-base font-semibold text-text-gray-800">
             <dt>Total</dt>
             <dd>{formatCurrencyFromCents(totalCents)}</dd>
           </div>
@@ -333,7 +333,7 @@ export function CheckoutPageClient() {
           type="button"
           onClick={handleCheckout}
           disabled={isLoading}
-          className="w-full rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300"
+          className="w-full rounded-full bg-text-bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-text-bg-orange-500/30 transition hover:bg-text-orange-600 disabled:cursor-not-allowed disabled:bg-neutral-300"
         >
           {isLoading ? "Redirecting..." : "Complete purchase"}
         </button>

@@ -21,16 +21,16 @@ export function ProductDetailActions({ product }: Props) {
   const isLowStock = product.stock > 0 && product.stock <= 5;
 
   return (
-    <div className="space-y-4 rounded-2xl border border-[#f6b2c5]/70 bg-white/80 p-6 shadow-sm backdrop-blur">
+    <div className="space-y-4 rounded-2xl border border-orange-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-semibold text-[#8a2040]">{formatCurrencyFromCents(product.priceCents)}</span>
+        <span className="text-lg font-semibold text-text-bg-orange-500">{formatCurrencyFromCents(product.priceCents)}</span>
         <div className="text-right">
           {isOutOfStock ? (
             <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
               Out of Stock
             </span>
           ) : isLowStock ? (
-            <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
+            <span className="inline-flex items-center rounded-full bg-bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
               Only {product.stock} left
             </span>
           ) : (
@@ -42,22 +42,22 @@ export function ProductDetailActions({ product }: Props) {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex items-center rounded-full border border-[#8a2040]/40">
+        <div className="flex items-center rounded-full border border-text-bg-orange-500/40">
           <button
             type="button"
             onClick={decrement}
             disabled={isOutOfStock}
-            className="h-10 w-10 rounded-l-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731] disabled:cursor-not-allowed disabled:text-neutral-400"
+            className="h-10 w-10 rounded-l-full text-lg font-semibold text-text-bg-orange-500 transition hover:bg-bg-orange-50 hover:text-text-orange-600 disabled:cursor-not-allowed disabled:text-neutral-400"
             aria-label="Decrease quantity"
           >
             –
           </button>
-          <span className="min-w-[3rem] text-center text-sm font-semibold text-[#40111f]">{quantity}</span>
+          <span className="min-w-[3rem] text-center text-sm font-semibold text-text-gray-800">{quantity}</span>
           <button
             type="button"
             onClick={increment}
             disabled={isOutOfStock || quantity >= product.stock}
-            className="h-10 w-10 rounded-r-full text-lg font-semibold text-[#8a2040] transition hover:bg-[#ffe1ef] hover:text-[#6f1731] disabled:cursor-not-allowed disabled:text-neutral-400"
+            className="h-10 w-10 rounded-r-full text-lg font-semibold text-text-bg-orange-500 transition hover:bg-bg-orange-50 hover:text-text-orange-600 disabled:cursor-not-allowed disabled:text-neutral-400"
             aria-label="Increase quantity"
           >
             +
@@ -67,13 +67,13 @@ export function ProductDetailActions({ product }: Props) {
           type="button"
           onClick={() => addItem(product, quantity)}
           disabled={isOutOfStock}
-          className="flex-1 rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+          className="flex-1 rounded-full bg-text-bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-text-bg-orange-500/30 transition hover:bg-text-orange-600 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
         >
           {isOutOfStock ? "Out of Stock" : "Add to cart"}
         </button>
       </div>
       {isLowStock && !isOutOfStock && (
-        <p className="text-xs text-orange-600">
+        <p className="text-xs text-text-orange-600">
           ⚠️ Limited stock available. Order soon to secure your item.
         </p>
       )}

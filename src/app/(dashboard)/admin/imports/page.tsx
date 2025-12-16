@@ -200,26 +200,26 @@ export default async function AdminImportsPage() {
 
   return (
     <div className="space-y-10">
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/90 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Bulk import catalogue</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/90 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Bulk import catalogue</h2>
         <p className="mt-2 text-sm text-neutral-600">
           Paste JSON payloads exported from the warehouse system to sync products at scale. The importer will upsert
           categories and artisan profiles automatically.
         </p>
         <form action={submitImport} className="mt-6 space-y-4">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="filename">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="filename">
               Reference name
             </label>
             <input
               id="filename"
               name="filename"
               placeholder="janakpur-warehouse-2025-01.json"
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="payload">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="payload">
               JSON payload*
             </label>
             <textarea
@@ -228,23 +228,23 @@ export default async function AdminImportsPage() {
               required
               rows={12}
               placeholder='[{"name":"Mithila Sunrise Plate","sku":"JAC-NEW-001","priceCents":3200,"images":["https://..."],"tags":["terracotta"],"stock":20,"featured":true,"published":true,"category":{"name":"Wall Decor"},"artisan":{"name":"Sita Devi Collective","location":"Janakpur"}}]'
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm font-mono"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm font-mono"
             />
           </div>
           <button
             type="submit"
-            className="rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731]"
+            className="rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
           >
             Process import
           </button>
         </form>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/90 p-8 shadow-sm">
-        <h3 className="text-xl font-semibold text-[#40111f]">Recent import history</h3>
-        <div className="mt-4 overflow-hidden rounded-2xl border border-[#f6b2c5]/60">
-          <table className="min-w-full divide-y divide-[#f6b2c5]/60 text-left text-sm">
-            <thead className="bg-[#ffe1ef]/60 text-xs uppercase tracking-[0.35em] text-[#b03d5e]">
+      <section className="rounded-3xl border border-orange-200/70 bg-white/90 p-8 shadow-sm">
+        <h3 className="text-xl font-semibold text-gray-800">Recent import history</h3>
+        <div className="mt-4 overflow-hidden rounded-2xl border border-orange-200/60">
+          <table className="min-w-full divide-y divide-orange-200/60 text-left text-sm">
+            <thead className="bg-orange-50/60 text-xs uppercase tracking-[0.35em] text-orange-600">
               <tr>
                 <th className="px-4 py-3">Filename</th>
                 <th className="px-4 py-3">Status</th>
@@ -252,10 +252,10 @@ export default async function AdminImportsPage() {
                 <th className="px-4 py-3">Created</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f6b2c5]/40 bg-white/70">
+            <tbody className="divide-y divide-orange-200/40 bg-white/70">
               {history.map((job: ImportJob) => (
                 <tr key={job.id}>
-                  <td className="px-4 py-3 text-sm text-[#40111f]">{job.filename ?? "Manual import"}</td>
+                  <td className="px-4 py-3 text-sm text-gray-800">{job.filename ?? "Manual import"}</td>
                   <td className="px-4 py-3 text-sm font-semibold">
                     <span
                       className={`rounded-full px-3 py-1 text-xs ${

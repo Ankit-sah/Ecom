@@ -28,15 +28,15 @@ export default function TermsPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Legal Information</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Terms of Service</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Legal Information</p>
+          <h1 className="text-4xl font-semibold text-gray-800">Terms of Service</h1>
           <p className="text-sm text-neutral-600">Last updated: {new Date().toLocaleDateString()}</p>
         </div>
       </section>
 
       <section className="prose prose-sm max-w-none space-y-6 text-neutral-700">
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Agreement to Terms</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Agreement to Terms</h2>
           <p>
             By accessing and using the Janakpur Art and Craft website, you agree to be bound by these Terms of Service
             and all applicable laws and regulations. If you do not agree with any of these terms, you are prohibited from
@@ -45,7 +45,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Use License</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Use License</h2>
           <p>
             Permission is granted to temporarily access and use the materials on Janakpur Art and Craft&apos;s website for
             personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of title,
@@ -60,7 +60,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Product Information</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Product Information</h2>
           <p>
             We strive to provide accurate product descriptions and images. However, we do not warrant that product
             descriptions, images, or other content on this site is accurate, complete, reliable, current, or error-free.
@@ -69,7 +69,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Pricing and Payment</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Pricing and Payment</h2>
           <p>
             All prices are listed in USD unless otherwise stated. We reserve the right to change prices at any time. You
             agree to provide current, complete, and accurate purchase and account information for all purchases made on
@@ -78,7 +78,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Orders and Acceptance</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Orders and Acceptance</h2>
           <p>
             Your order is an offer to purchase products from us. We reserve the right to accept or reject your order for
             any reason, including product availability, errors in pricing or product information, or fraud prevention.
@@ -86,7 +86,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Limitation of Liability</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Limitation of Liability</h2>
           <p>
             In no event shall Janakpur Art and Craft or its suppliers be liable for any damages (including, without
             limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or
@@ -95,7 +95,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Revisions and Errata</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Revisions and Errata</h2>
           <p>
             The materials appearing on our website could include technical, typographical, or photographic errors. We do
             not warrant that any of the materials on its website are accurate, complete, or current. We may make
@@ -104,7 +104,7 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Governing Law</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Governing Law</h2>
           <p>
             These terms and conditions are governed by and construed in accordance with the laws of Nepal, and you
             irrevocably submit to the exclusive jurisdiction of the courts in that location.
@@ -112,10 +112,10 @@ export default function TermsPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Contact Information</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Contact Information</h2>
           <p>
             If you have questions about these Terms of Service, please contact us at{" "}
-            <a href="mailto:legal@janakpurartandcraft.com" className="font-semibold text-[#8a2040] hover:underline">
+            <a href="mailto:legal@janakpurartandcraft.com" className="font-semibold text-orange-500 hover:underline">
               legal@janakpurartandcraft.com
             </a>
             .

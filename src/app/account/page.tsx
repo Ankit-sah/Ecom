@@ -23,42 +23,42 @@ export default async function AccountPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">My Account</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Welcome back, {session.user.name || "Customer"}</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">My Account</p>
+          <h1 className="text-4xl font-semibold text-gray-800">Welcome back, {session.user.name || "Customer"}</h1>
         </div>
       </section>
 
       <div className="grid gap-6 md:grid-cols-2">
         <Link
           href="/account/orders"
-          className="group rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm transition hover:shadow-lg hover:border-[#8a2040]/50"
+          className="group rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm transition hover:shadow-lg hover:border-orange-500/50"
         >
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-[#40111f] group-hover:text-[#8a2040]">Order History</h2>
+            <h2 className="text-xl font-semibold text-gray-800 group-hover:text-orange-500">Order History</h2>
             <p className="text-sm text-neutral-600">
               View your past orders, track shipments, and manage returns.
             </p>
-            <span className="inline-block text-sm font-semibold text-[#8a2040] group-hover:underline">
+            <span className="inline-block text-sm font-semibold text-orange-500 group-hover:underline">
               View Orders →
             </span>
           </div>
         </Link>
 
-        <div className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
+        <div className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
           <div className="space-y-3">
-            <h2 className="text-xl font-semibold text-[#40111f]">Account Information</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Account Information</h2>
             <div className="space-y-2 text-sm">
               <div>
-                <span className="font-medium text-[#8a2040]">Name:</span>{" "}
+                <span className="font-medium text-orange-500">Name:</span>{" "}
                 <span className="text-neutral-700">{session.user.name || "Not provided"}</span>
               </div>
               <div>
-                <span className="font-medium text-[#8a2040]">Email:</span>{" "}
+                <span className="font-medium text-orange-500">Email:</span>{" "}
                 <span className="text-neutral-700">{session.user.email}</span>
               </div>
               {session.user.phone && (
                 <div>
-                  <span className="font-medium text-[#8a2040]">Phone:</span>{" "}
+                  <span className="font-medium text-orange-500">Phone:</span>{" "}
                   <span className="text-neutral-700">{session.user.phone}</span>
                 </div>
               )}
@@ -67,30 +67,30 @@ export default async function AccountPage() {
         </div>
       </div>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-xl font-semibold text-[#40111f]">Quick Links</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-xl font-semibold text-gray-800">Quick Links</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <Link
             href="/products"
-            className="text-sm text-neutral-700 hover:text-[#8a2040] hover:underline"
+            className="text-sm text-neutral-700 hover:text-orange-500 hover:underline"
           >
             Continue Shopping →
           </Link>
           <Link
             href="/cart"
-            className="text-sm text-neutral-700 hover:text-[#8a2040] hover:underline"
+            className="text-sm text-neutral-700 hover:text-orange-500 hover:underline"
           >
             View Cart →
           </Link>
           <Link
             href="/contact"
-            className="text-sm text-neutral-700 hover:text-[#8a2040] hover:underline"
+            className="text-sm text-neutral-700 hover:text-orange-500 hover:underline"
           >
             Contact Support →
           </Link>
           <Link
             href="/faq"
-            className="text-sm text-neutral-700 hover:text-[#8a2040] hover:underline"
+            className="text-sm text-neutral-700 hover:text-orange-500 hover:underline"
           >
             FAQ →
           </Link>

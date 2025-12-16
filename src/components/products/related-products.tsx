@@ -18,10 +18,10 @@ export function RelatedProducts({ products, currentProductSlug }: RelatedProduct
   return (
     <section className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-semibold text-[#40111f]">You might also like</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">You might also like</h2>
         <Link
           href="/products"
-          className="text-sm font-semibold text-[#8a2040] transition hover:text-[#6f1731] hover:underline"
+          className="text-sm font-semibold text-orange-500 transition hover:text-orange-600 hover:underline"
         >
           View all →
         </Link>

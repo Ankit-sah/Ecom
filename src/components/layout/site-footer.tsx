@@ -27,12 +27,12 @@ export function SiteFooter() {
 
   return (
     <footer className="border-t border-[#f3b3c3] bg-white/80" aria-label="Site footer">
-      <div className="mx-auto max-w-6xl px-4 py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5">
+      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-4 sm:py-10 md:py-12">
+        <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <h2 className="text-lg font-semibold text-[#8a2040]">Janakpur Art and Craft</h2>
-            <p className="mt-3 text-sm text-neutral-600">
+            <h2 className="text-lg font-semibold text-text-bg-orange-500">Janakpur Art and Craft</h2>
+            <p className="mt-3 text-xs text-neutral-600 sm:text-sm">
               Since 1993 we&apos;ve championed Janakpur&apos;s Mithila artisans—crafting jewellery, vessels, textiles, and
               paintings exported worldwide with uncompromising quality.
             </p>
@@ -43,13 +43,13 @@ export function SiteFooter() {
 
           {/* Shop Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-[#8a2040]">Shop</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-text-bg-orange-500">Shop</h3>
             <ul className="mt-4 space-y-2">
               {footerLinks.shop.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition hover:text-[#8a2040]"
+                    className="text-sm text-neutral-600 transition hover:text-text-bg-orange-500"
                   >
                     {link.label}
                   </Link>
@@ -60,13 +60,13 @@ export function SiteFooter() {
 
           {/* About Links */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-[#8a2040]">About</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-text-bg-orange-500">About</h3>
             <ul className="mt-4 space-y-2">
               {footerLinks.about.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition hover:text-[#8a2040]"
+                    className="text-sm text-neutral-600 transition hover:text-text-bg-orange-500"
                   >
                     {link.label}
                   </Link>
@@ -77,26 +77,26 @@ export function SiteFooter() {
 
           {/* Support & Legal */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-[#8a2040]">Support</h3>
+            <h3 className="text-sm font-semibold uppercase tracking-[0.1em] text-text-bg-orange-500">Support</h3>
             <ul className="mt-4 space-y-2">
               {footerLinks.support.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition hover:text-[#8a2040]"
+                    className="text-sm text-neutral-600 transition hover:text-text-bg-orange-500"
                   >
                     {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
-            <h3 className="mt-6 text-sm font-semibold uppercase tracking-[0.1em] text-[#8a2040]">Legal</h3>
+            <h3 className="mt-6 text-sm font-semibold uppercase tracking-[0.1em] text-text-bg-orange-500">Legal</h3>
             <ul className="mt-4 space-y-2">
               {footerLinks.legal.map((link) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="text-sm text-neutral-600 transition hover:text-[#8a2040]"
+                    className="text-sm text-neutral-600 transition hover:text-text-bg-orange-500"
                   >
                     {link.label}
                   </Link>
@@ -107,7 +107,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 border-t border-[#f3b3c3] pt-8">
+        <div className="mt-8 border-t border-[#f3b3c3] pt-6 sm:mt-10 sm:pt-8 md:mt-12">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="text-sm text-neutral-600">
               © {currentYear} Janakpur Art and Craft. All rights reserved.
@@ -116,7 +116,7 @@ export function SiteFooter() {
               {/* Social Media Links - placeholder for when social accounts are available */}
               <a
                 href="#"
-                className="text-neutral-400 transition hover:text-[#8a2040]"
+                className="text-neutral-400 transition hover:text-text-bg-orange-500"
                 aria-label="Facebook"
                 title="Facebook"
               >
@@ -130,7 +130,7 @@ export function SiteFooter() {
               </a>
               <a
                 href="#"
-                className="text-neutral-400 transition hover:text-[#8a2040]"
+                className="text-neutral-400 transition hover:text-text-bg-orange-500"
                 aria-label="Instagram"
                 title="Instagram"
               >
@@ -144,7 +144,7 @@ export function SiteFooter() {
               </a>
               <a
                 href="#"
-                className="text-neutral-400 transition hover:text-[#8a2040]"
+                className="text-neutral-400 transition hover:text-text-bg-orange-500"
                 aria-label="Twitter"
                 title="Twitter"
               >

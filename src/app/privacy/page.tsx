@@ -28,15 +28,15 @@ export default function PrivacyPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Privacy & Security</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Privacy Policy</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Privacy & Security</p>
+          <h1 className="text-4xl font-semibold text-gray-800">Privacy Policy</h1>
           <p className="text-sm text-neutral-600">Last updated: {new Date().toLocaleDateString()}</p>
         </div>
       </section>
 
       <section className="prose prose-sm max-w-none space-y-6 text-neutral-700">
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Introduction</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Introduction</h2>
           <p>
             Janakpur Art and Craft (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting your privacy. This Privacy Policy
             explains how we collect, use, disclose, and safeguard your information when you visit our website and make
@@ -45,17 +45,17 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Information We Collect</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Information We Collect</h2>
           <div className="space-y-3">
             <div>
-              <h3 className="font-semibold text-[#8a2040]">Personal Information</h3>
+              <h3 className="font-semibold text-orange-500">Personal Information</h3>
               <p>
                 We collect information that you provide directly to us, including name, email address, phone number,
                 shipping and billing addresses, and payment information when you make a purchase or create an account.
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-[#8a2040]">Automatically Collected Information</h3>
+              <h3 className="font-semibold text-orange-500">Automatically Collected Information</h3>
               <p>
                 We automatically collect certain information about your device and how you interact with our website,
                 including IP address, browser type, pages viewed, and time spent on pages.
@@ -65,7 +65,7 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">How We Use Your Information</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">How We Use Your Information</h2>
           <p>We use the information we collect to:</p>
           <ul className="ml-6 list-disc space-y-2">
             <li>Process and fulfill your orders</li>
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Information Sharing</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Information Sharing</h2>
           <p>
             We do not sell your personal information. We may share your information with service providers who assist us
             in operating our website, processing payments, and fulfilling orders. These service providers are contractually
@@ -87,7 +87,7 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Data Security</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Data Security</h2>
           <p>
             We implement appropriate technical and organizational measures to protect your personal information against
             unauthorized access, alteration, disclosure, or destruction. However, no method of transmission over the
@@ -96,7 +96,7 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Your Rights</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Your Rights</h2>
           <p>Depending on your location, you may have the right to:</p>
           <ul className="ml-6 list-disc space-y-2">
             <li>Access your personal information</li>
@@ -108,7 +108,7 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Cookies</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Cookies</h2>
           <p>
             We use cookies and similar technologies to enhance your browsing experience, analyze site traffic, and
             personalize content. You can control cookies through your browser settings.
@@ -116,10 +116,10 @@ export default function PrivacyPage() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-2xl font-semibold text-[#40111f]">Contact Us</h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Contact Us</h2>
           <p>
             If you have questions about this Privacy Policy or wish to exercise your rights, please contact us at{" "}
-            <a href="mailto:privacy@janakpurartandcraft.com" className="font-semibold text-[#8a2040] hover:underline">
+            <a href="mailto:privacy@janakpurartandcraft.com" className="font-semibold text-orange-500 hover:underline">
               privacy@janakpurartandcraft.com
             </a>
             .

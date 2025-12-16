@@ -64,14 +64,14 @@ export function ProductImagesField({ initialImages = [] }: ProductImagesFieldPro
         value={images.join("\n")}
         data-testid="product-images-hidden-input"
       />
-      <label className="block text-sm font-semibold text-[#40111f]" htmlFor="product-image-upload">
+      <label className="block text-sm font-semibold text-gray-800" htmlFor="product-image-upload">
         Product images
       </label>
       <p className="text-xs text-neutral-500">
         Upload high-resolution JPG or PNG files. Uploaded images will be hosted on Vercel Blob and shared publicly.
       </p>
       <div className="flex flex-wrap items-center gap-3">
-        <label className="inline-flex cursor-pointer items-center justify-center rounded-full border border-[#f6b2c5]/70 px-4 py-2 text-sm font-semibold text-[#8a2040] transition hover:border-[#8a2040] hover:text-[#6f1731]">
+        <label className="inline-flex cursor-pointer items-center justify-center rounded-full border border-orange-200/70 px-4 py-2 text-sm font-semibold text-orange-500 transition hover:border-orange-500 hover:text-orange-600">
           <input
             id="product-image-upload"
             type="file"
@@ -90,9 +90,9 @@ export function ProductImagesField({ initialImages = [] }: ProductImagesFieldPro
           {images.map((url) => (
             <li
               key={url}
-              className="flex items-center gap-3 rounded-xl border border-[#f6b2c5]/70 bg-white/70 p-3"
+              className="flex items-center gap-3 rounded-xl border border-orange-200/70 bg-white/70 p-3"
             >
-              <div className="relative h-16 w-16 overflow-hidden rounded-xl border border-[#f6b2c5]/60">
+              <div className="relative h-16 w-16 overflow-hidden rounded-xl border border-orange-200/60">
                 <Image
                   src={url}
                   alt="Product image"
@@ -108,7 +108,7 @@ export function ProductImagesField({ initialImages = [] }: ProductImagesFieldPro
                 <button
                   type="button"
                   onClick={() => handleRemove(url)}
-                  className="rounded-full border border-[#f6b2c5]/70 px-3 py-1 text-xs font-semibold text-[#8a2040] transition hover:border-[#8a2040]"
+                  className="rounded-full border border-orange-200/70 px-3 py-1 text-xs font-semibold text-orange-500 transition hover:border-orange-500"
                 >
                   Remove
                 </button>

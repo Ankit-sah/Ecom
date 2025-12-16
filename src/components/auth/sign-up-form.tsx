@@ -83,7 +83,7 @@ export function SignUpForm() {
     <form className="space-y-5" onSubmit={handleSubmit}>
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-1">
-          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b03d5e]" htmlFor="firstName">
+          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-600" htmlFor="firstName">
             First name*
           </label>
           <input
@@ -92,12 +92,12 @@ export function SignUpForm() {
             value={form.firstName}
             onChange={handleChange}
             autoComplete="given-name"
-            className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-[#8a2040] focus:outline-none focus:ring-2 focus:ring-[#f6b2c5]/60"
+            className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200/60"
             required
           />
         </div>
         <div className="space-y-1">
-          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b03d5e]" htmlFor="lastName">
+          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-600" htmlFor="lastName">
             Last name*
           </label>
           <input
@@ -106,14 +106,14 @@ export function SignUpForm() {
             value={form.lastName}
             onChange={handleChange}
             autoComplete="family-name"
-            className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-[#8a2040] focus:outline-none focus:ring-2 focus:ring-[#f6b2c5]/60"
+            className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200/60"
             required
           />
         </div>
       </div>
 
       <div className="space-y-1">
-        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b03d5e]" htmlFor="email">
+        <label className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-600" htmlFor="email">
           Email address*
         </label>
         <input
@@ -123,14 +123,14 @@ export function SignUpForm() {
           value={form.email}
           onChange={handleChange}
           autoComplete="email"
-          className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-[#8a2040] focus:outline-none focus:ring-2 focus:ring-[#f6b2c5]/60"
+          className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200/60"
           required
         />
       </div>
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="space-y-1">
-          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b03d5e]" htmlFor="password">
+          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-600" htmlFor="password">
             Password*
           </label>
           <input
@@ -140,13 +140,13 @@ export function SignUpForm() {
             value={form.password}
             onChange={handleChange}
             autoComplete="new-password"
-            className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-[#8a2040] focus:outline-none focus:ring-2 focus:ring-[#f6b2c5]/60"
+            className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200/60"
             required
           />
           <p className="text-xs text-neutral-500">Use at least 8 characters with a mix of letters and numbers.</p>
         </div>
         <div className="space-y-1">
-          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[#b03d5e]" htmlFor="confirmPassword">
+          <label className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-600" htmlFor="confirmPassword">
             Confirm password*
           </label>
           <input
@@ -156,7 +156,7 @@ export function SignUpForm() {
             value={form.confirmPassword}
             onChange={handleChange}
             autoComplete="new-password"
-            className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-[#8a2040] focus:outline-none focus:ring-2 focus:ring-[#f6b2c5]/60"
+            className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm text-neutral-700 placeholder:text-neutral-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-200/60"
             required
           />
         </div>
@@ -173,7 +173,7 @@ export function SignUpForm() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] disabled:cursor-not-allowed disabled:bg-neutral-300"
+        className="w-full rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-neutral-300"
       >
         {isSubmitting ? "Creating account…" : "Create account"}
       </button>

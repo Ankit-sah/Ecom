@@ -113,8 +113,8 @@ export default function FAQPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Help Center</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Frequently Asked Questions</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Help Center</p>
+          <h1 className="text-4xl font-semibold text-gray-800">Frequently Asked Questions</h1>
           <p className="text-neutral-600">
             Find answers to common questions about our products, orders, shipping, and more.
           </p>
@@ -123,12 +123,12 @@ export default function FAQPage() {
 
       <div className="space-y-8">
         {faqs.map((category) => (
-          <section key={category.category} className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-            <h2 className="text-2xl font-semibold text-[#40111f]">{category.category}</h2>
+          <section key={category.category} className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+            <h2 className="text-2xl font-semibold text-gray-800">{category.category}</h2>
             <div className="mt-6 space-y-6">
               {category.questions.map((faq, index) => (
                 <div key={index} className="space-y-2">
-                  <h3 className="font-semibold text-[#8a2040]">{faq.q}</h3>
+                  <h3 className="font-semibold text-orange-500">{faq.q}</h3>
                   <p className="text-sm text-neutral-700">{faq.a}</p>
                 </div>
               ))}
@@ -137,7 +137,7 @@ export default function FAQPage() {
         ))}
       </div>
 
-      <section className="rounded-3xl border border-[#8a2040]/50 bg-[#8a2040] p-8 text-white">
+      <section className="rounded-3xl border border-orange-500/50 bg-[text-bg-orange-500] p-8 text-white">
         <h2 className="text-2xl font-semibold">Still Have Questions?</h2>
         <p className="mt-3 text-rose-100">
           Can&apos;t find what you&apos;re looking for?{" "}

@@ -31,11 +31,11 @@ export function ProductSearch() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search products..."
-          className="w-full rounded-full border border-[#f6b2c5]/70 bg-white/90 px-6 py-3 pl-12 pr-4 text-sm text-[#40111f] placeholder-neutral-400 focus:border-[#8a2040] focus:outline-none focus:ring-2 focus:ring-[#8a2040]/20"
+          className="w-full rounded-full border border-border-orange-200 bg-white/90 px-4 py-2.5 pl-10 pr-4 text-sm text-text-gray-800 placeholder-neutral-400 focus:border-text-bg-orange-500 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500/20 sm:px-6 sm:py-3 sm:pl-12"
           aria-label="Search products"
         />
         <svg
-          className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-neutral-400"
+          className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400 sm:left-4 sm:h-5 sm:w-5"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -45,7 +45,7 @@ export function ProductSearch() {
         </svg>
         {isPending && (
           <div className="absolute right-4 top-1/2 -translate-y-1/2">
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-[#8a2040] border-t-transparent" />
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-text-bg-orange-500 border-t-transparent" />
           </div>
         )}
       </div>

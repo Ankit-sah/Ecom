@@ -18,7 +18,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
 
   return (
     <nav aria-label="Breadcrumb" className="mx-auto max-w-6xl px-4">
-      <ol className="flex flex-wrap items-center gap-2 text-sm" itemScope itemType="https://schema.org/BreadcrumbList">
+      <ol className="flex flex-wrap items-center gap-1.5 text-xs sm:gap-2 sm:text-sm" itemScope itemType="https://schema.org/BreadcrumbList">
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
           
@@ -32,7 +32,7 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
             >
               {isLast ? (
                 <span
-                  className="font-medium text-[#8a2040]"
+                  className="font-medium text-text-bg-orange-500"
                   itemProp="name"
                   aria-current="page"
                 >
@@ -42,14 +42,14 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
                 <>
                   <Link
                     href={item.href}
-                    className="text-neutral-600 transition hover:text-[#8a2040]"
+                    className="text-neutral-600 transition hover:text-text-bg-orange-500"
                     itemProp="item"
                   >
                     <span itemProp="name">{item.label}</span>
                   </Link>
                   <meta itemProp="position" content={String(index + 1)} />
                   <svg
-                    className="h-4 w-4 text-neutral-400"
+                    className="h-3 w-3 text-neutral-400 sm:h-4 sm:w-4"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

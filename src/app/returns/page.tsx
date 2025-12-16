@@ -30,33 +30,33 @@ export default function ReturnsPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Return Policy</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Returns & Exchanges</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Return Policy</p>
+          <h1 className="text-4xl font-semibold text-gray-800">Returns & Exchanges</h1>
           <p className="text-neutral-600">
             We want you to be completely satisfied with your purchase. If you&apos;re not happy, we&apos;re here to help.
           </p>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Return Policy</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Return Policy</h2>
         <div className="mt-6 space-y-4 text-sm text-neutral-700">
           <div>
-            <h3 className="font-semibold text-[#8a2040]">30-Day Return Window</h3>
+            <h3 className="font-semibold text-orange-500">30-Day Return Window</h3>
             <p>
               You have 30 days from the date of delivery to return items in their original condition, unused and with
               all original packaging and tags.
             </p>
           </div>
           <div>
-            <h3 className="font-semibold text-[#8a2040]">Eligible Items</h3>
+            <h3 className="font-semibold text-orange-500">Eligible Items</h3>
             <p>
               Most items can be returned. Custom or personalized items, as well as items damaged due to misuse, are not
               eligible for return.
             </p>
           </div>
           <div>
-            <h3 className="font-semibold text-[#8a2040]">Return Process</h3>
+            <h3 className="font-semibold text-orange-500">Return Process</h3>
             <ol className="ml-4 list-decimal space-y-2">
               <li>Contact us at returns@janakpurartandcraft.com with your order number</li>
               <li>We&apos;ll provide a return authorization and shipping instructions</li>
@@ -68,8 +68,8 @@ export default function ReturnsPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Exchanges</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Exchanges</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
             We&apos;re happy to exchange items for a different size, color, or style, subject to availability. Exchanges
@@ -77,7 +77,7 @@ export default function ReturnsPage() {
           </p>
           <p>
             To request an exchange, please{" "}
-            <Link href="/contact" className="font-semibold text-[#8a2040] hover:underline">
+            <Link href="/contact" className="font-semibold text-orange-500 hover:underline">
               contact us
             </Link>{" "}
             with your order number and the item you&apos;d like to exchange for.
@@ -85,8 +85,8 @@ export default function ReturnsPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Refunds</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Refunds</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
             Refunds will be issued to the original payment method within 5-7 business days after we receive and inspect
@@ -99,8 +99,8 @@ export default function ReturnsPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Damaged or Defective Items</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Damaged or Defective Items</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
             If your item arrives damaged or defective, please contact us immediately with photos of the damage. We&apos;ll
@@ -112,7 +112,7 @@ export default function ReturnsPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#8a2040]/50 bg-[#8a2040] p-8 text-white">
+      <section className="rounded-3xl border border-orange-500/50 bg-[text-bg-orange-500] p-8 text-white">
         <h2 className="text-2xl font-semibold">Need Help?</h2>
         <p className="mt-3 text-rose-100">
           If you have questions about returns or need assistance, please{" "}

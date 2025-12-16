@@ -15,7 +15,7 @@ export function ProductCard({ product }: Props) {
   const { addItem } = useCart();
 
   return (
-    <div className="flex h-full flex-col rounded-2xl border border-[#f6b2c5]/60 bg-white/90 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-[#8a2040]/50">
+    <div className="flex h-full flex-col rounded-xl border border-orange-200/60 bg-white/90 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-orange-500/50 sm:rounded-2xl">
       <Link 
         href={`/products/${product.slug}`} 
         className="relative block aspect-square overflow-hidden rounded-t-2xl"
@@ -35,33 +35,33 @@ export function ProductCard({ product }: Props) {
           </div>
         )}
       </Link>
-      <div className="flex flex-1 flex-col gap-3 p-5">
+      <div className="flex flex-1 flex-col gap-2 p-4 sm:gap-3 sm:p-5">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             {product.category ? (
-              <span className="inline-flex items-center rounded-full bg-[#ffe1ef] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-[#b03d5e]">
+              <span className="inline-flex items-center rounded-full bg-bg-orange-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-text-orange-600">
                 {product.category.name}
               </span>
             ) : null}
             {product.artisan ? (
-              <span className="inline-flex items-center rounded-full border border-[#f6b2c5]/70 px-3 py-1 text-[11px] font-semibold text-[#8a2040]">
+              <span className="inline-flex items-center rounded-full border border-border-orange-200 px-3 py-1 text-[11px] font-semibold text-text-bg-orange-500">
                 {product.artisan.name}
               </span>
             ) : null}
           </div>
           <Link
             href={`/products/${product.slug}`}
-            className="line-clamp-2 text-lg font-semibold text-[#40111f] transition hover:text-[#8a2040]"
+            className="line-clamp-2 text-base font-semibold text-text-gray-800 transition hover:text-text-bg-orange-500 sm:text-lg"
           >
             {product.name}
           </Link>
-          <p className="text-sm text-neutral-600 line-clamp-2">{product.description}</p>
+          <p className="text-xs text-neutral-600 line-clamp-2 sm:text-sm">{product.description}</p>
           {product.tags.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               {product.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full border border-[#f6b2c5]/60 px-3 py-1 text-[11px] font-medium text-[#b03d5e]"
+                  className="rounded-full border border-border-orange-200 px-3 py-1 text-[11px] font-medium text-text-orange-600"
                 >
                   #{tag}
                 </span>
@@ -71,13 +71,13 @@ export function ProductCard({ product }: Props) {
         </div>
         <div className="mt-auto space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-base font-semibold text-[#8a2040]">
+            <span className="text-base font-semibold text-text-bg-orange-500">
               {formatCurrencyFromCents(product.priceCents)}
             </span>
             {product.stock === 0 ? (
               <span className="text-xs font-semibold text-red-600">Out of Stock</span>
             ) : product.stock <= 5 ? (
-              <span className="text-xs font-semibold text-orange-600">Only {product.stock} left</span>
+              <span className="text-xs font-semibold text-text-orange-600">Only {product.stock} left</span>
             ) : (
               <span className="text-xs text-neutral-500">In Stock</span>
             )}
@@ -86,7 +86,7 @@ export function ProductCard({ product }: Props) {
             type="button"
             onClick={() => addItem(product)}
             disabled={product.stock === 0}
-            className="w-full rounded-full bg-[#8a2040] px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731] focus:outline-none focus:ring-2 focus:ring-[#8a2040] focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+            className="w-full rounded-full bg-text-bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-text-bg-orange-500/30 transition hover:bg-text-orange-600 focus:outline-none focus:ring-2 focus:ring-text-bg-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
             aria-label={`Add ${product.name} to cart`}
           >
             {product.stock === 0 ? "Out of Stock" : "Add to cart"}

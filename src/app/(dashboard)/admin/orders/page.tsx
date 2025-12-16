@@ -103,8 +103,8 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="space-y-10">
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/90 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Orders & fulfilment</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/90 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Orders & fulfilment</h2>
         <p className="mt-2 text-sm text-neutral-600">
           Review recent sales, update their statuses, and coordinate shipments with artisan partners.
         </p>
@@ -114,14 +114,14 @@ export default async function AdminOrdersPage() {
         {orders.map((order: OrderWithRelations) => (
           <article
             key={order.id}
-            className="rounded-3xl border border-[#f6b2c5]/60 bg-white/90 p-6 shadow-sm transition hover:border-[#8a2040]/60"
+            className="rounded-3xl border border-orange-200/60 bg-white/90 p-6 shadow-sm transition hover:border-orange-500/60"
           >
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">
+                <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">
                   Order #{order.id.slice(-6).toUpperCase()}
                 </p>
-                <h3 className="text-xl font-semibold text-[#40111f]">
+                <h3 className="text-xl font-semibold text-gray-800">
                   {order.user?.name ?? order.email} • {order.user?.email ?? order.email}
                 </h3>
                 <p className="text-xs text-neutral-500">
@@ -129,7 +129,7 @@ export default async function AdminOrdersPage() {
                 </p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-semibold text-[#8a2040]">
+                <p className="text-sm font-semibold text-orange-500">
                   {formatCurrencyFromCents(order.totalCents)} ({order.currency})
                 </p>
                 <p className="text-xs text-neutral-500">
@@ -140,9 +140,9 @@ export default async function AdminOrdersPage() {
             </div>
 
             <div className="mt-4 grid gap-4 md:grid-cols-3">
-              <div className="rounded-2xl border border-[#f6b2c5]/60 bg-white p-4">
-                <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Status</h4>
-                <p className="mt-2 text-sm font-semibold text-[#40111f]">{order.status}</p>
+              <div className="rounded-2xl border border-orange-200/60 bg-white p-4">
+                <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Status</h4>
+                <p className="mt-2 text-sm font-semibold text-gray-800">{order.status}</p>
                 <form
                   action={async (formData) => {
                     "use server";
@@ -157,7 +157,7 @@ export default async function AdminOrdersPage() {
                   <select
                     name="status"
                     defaultValue={order.status}
-                    className="w-full rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-xs"
+                    className="w-full rounded-xl border border-orange-200/60 bg-white px-3 py-2 text-xs"
                   >
                     <option value="PENDING">Pending</option>
                     <option value="PAID">Paid</option>
@@ -173,20 +173,20 @@ export default async function AdminOrdersPage() {
                     name="note"
                     rows={2}
                     placeholder="Optional note for history"
-                    className="w-full rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-xs"
+                    className="w-full rounded-xl border border-orange-200/60 bg-white px-3 py-2 text-xs"
                   />
                   <button
                     type="submit"
-                    className="w-full rounded-full border border-[#f6b2c5]/70 px-4 py-2 text-xs font-semibold text-[#8a2040] hover:border-[#8a2040]"
+                    className="w-full rounded-full border border-orange-200/70 px-4 py-2 text-xs font-semibold text-orange-500 hover:border-orange-500"
                   >
                     Update status
                   </button>
                 </form>
               </div>
 
-              <div className="rounded-2xl border border-[#f6b2c5]/60 bg-white p-4">
-                <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Fulfilment</h4>
-                <p className="mt-2 text-sm font-semibold text-[#40111f]">{order.fulfillmentStage}</p>
+              <div className="rounded-2xl border border-orange-200/60 bg-white p-4">
+                <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Fulfilment</h4>
+                <p className="mt-2 text-sm font-semibold text-gray-800">{order.fulfillmentStage}</p>
                 <form
                   action={async (formData) => {
                     "use server";
@@ -201,7 +201,7 @@ export default async function AdminOrdersPage() {
                   <select
                     name="stage"
                     defaultValue={order.fulfillmentStage}
-                    className="w-full rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-xs"
+                    className="w-full rounded-xl border border-orange-200/60 bg-white px-3 py-2 text-xs"
                   >
                     <option value="NOT_STARTED">Not started</option>
                     <option value="PREPARING">Preparing</option>
@@ -212,11 +212,11 @@ export default async function AdminOrdersPage() {
                     name="trackingNumber"
                     defaultValue={order.trackingNumber ?? ""}
                     placeholder="Tracking number"
-                    className="w-full rounded-xl border border-[#f6b2c5]/60 bg-white px-3 py-2 text-xs"
+                    className="w-full rounded-xl border border-orange-200/60 bg-white px-3 py-2 text-xs"
                   />
                   <button
                     type="submit"
-                    className="w-full rounded-full border border-[#f6b2c5]/70 px-4 py-2 text-xs font-semibold text-[#8a2040] hover:border-[#8a2040]"
+                    className="w-full rounded-full border border-orange-200/70 px-4 py-2 text-xs font-semibold text-orange-500 hover:border-orange-500"
                   >
                     Save fulfilment
                   </button>
@@ -228,11 +228,11 @@ export default async function AdminOrdersPage() {
                 ) : null}
               </div>
 
-              <div className="rounded-2xl border border-[#f6b2c5]/60 bg-white p-4 text-xs text-neutral-600">
-                <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Shipping address</h4>
+              <div className="rounded-2xl border border-orange-200/60 bg-white p-4 text-xs text-neutral-600">
+                <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Shipping address</h4>
                 {order.shippingAddress ? (
                   <address className="not-italic">
-                    <p className="font-semibold text-[#40111f]">{order.shippingAddress.fullName}</p>
+                    <p className="font-semibold text-gray-800">{order.shippingAddress.fullName}</p>
                     <p>{order.shippingAddress.addressLine1}</p>
                     {order.shippingAddress.addressLine2 ? <p>{order.shippingAddress.addressLine2}</p> : null}
                     <p>
@@ -249,8 +249,8 @@ export default async function AdminOrdersPage() {
 
             <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {order.items.map((item: OrderWithRelations["items"][number]) => (
-                <div key={item.id} className="rounded-2xl border border-[#f6b2c5]/60 bg-white/70 p-4 text-xs text-neutral-600">
-                  <p className="font-semibold text-[#40111f]">{item.product.name}</p>
+                <div key={item.id} className="rounded-2xl border border-orange-200/60 bg-white/70 p-4 text-xs text-neutral-600">
+                  <p className="font-semibold text-gray-800">{item.product.name}</p>
                   <p>SKU {item.product.sku}</p>
                   <p>
                     Qty {item.quantity} × {formatCurrencyFromCents(item.unitPrice)}
@@ -261,8 +261,8 @@ export default async function AdminOrdersPage() {
               ))}
             </div>
 
-            <div className="mt-6 rounded-2xl border border-[#f6b2c5]/50 bg-white/60 p-4 text-xs text-neutral-500">
-              <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Recent status history</h4>
+            <div className="mt-6 rounded-2xl border border-orange-200/50 bg-white/60 p-4 text-xs text-neutral-500">
+              <h4 className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Recent status history</h4>
               <ul className="mt-2 space-y-1">
                 {order.statusHistory.map((entry: OrderWithRelations["statusHistory"][number]) => (
                   <li key={entry.id}>
@@ -276,7 +276,7 @@ export default async function AdminOrdersPage() {
             {order.stripeSessionId ? (
               <div className="mt-4 text-xs text-neutral-500">
                 Stripe session: {order.stripeSessionId}{" "}
-                <Link href={`https://dashboard.stripe.com/search?query=${order.stripeSessionId}`} className="text-[#8a2040] underline">
+                <Link href={`https://dashboard.stripe.com/search?query=${order.stripeSessionId}`} className="text-orange-500 underline">
                   View in Stripe
                 </Link>
               </div>

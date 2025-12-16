@@ -107,17 +107,17 @@ export default async function OrdersPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Order History</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">My Orders</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Order History</p>
+          <h1 className="text-4xl font-semibold text-gray-800">My Orders</h1>
         </div>
       </section>
 
       {orders.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/70 p-16 text-center">
+        <div className="rounded-3xl border border-dashed border-orange-500/40 bg-white/70 p-16 text-center">
           <p className="text-sm text-neutral-600 mb-4">You haven&apos;t placed any orders yet.</p>
           <Link
             href="/products"
-            className="inline-block rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731]"
+            className="inline-block rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
           >
             Start Shopping
           </Link>
@@ -127,12 +127,12 @@ export default async function OrdersPage() {
           {orders.map((order) => (
             <div
               key={order.id}
-              className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-6 shadow-sm"
+              className="rounded-3xl border border-orange-200/70 bg-white/85 p-6 shadow-sm"
             >
               <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
                 <div className="space-y-2">
                   <div className="flex items-center gap-4">
-                    <h3 className="text-lg font-semibold text-[#40111f]">
+                    <h3 className="text-lg font-semibold text-gray-800">
                       Order #{order.id.slice(-8).toUpperCase()}
                     </h3>
                     <span
@@ -158,12 +158,12 @@ export default async function OrdersPage() {
                   </p>
                   {order.trackingNumber && (
                     <p className="text-sm text-neutral-600">
-                      Tracking: <span className="font-medium text-[#8a2040]">{order.trackingNumber}</span>
+                      Tracking: <span className="font-medium text-orange-500">{order.trackingNumber}</span>
                     </p>
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-semibold text-[#8a2040]">
+                  <p className="text-lg font-semibold text-orange-500">
                     {formatCurrencyFromCents(order.totalCents)}
                   </p>
                   <p className="text-xs text-neutral-500">
@@ -173,13 +173,13 @@ export default async function OrdersPage() {
               </div>
 
               {order.items && order.items.length > 0 && (
-                <div className="mt-4 border-t border-[#f6b2c5]/50 pt-4">
+                <div className="mt-4 border-t border-orange-200/50 pt-4">
                   <div className="space-y-2">
                     {order.items.map((item) => (
                       <div key={item.id} className="flex items-center justify-between text-sm">
                         <Link
                           href={`/products/${item.product.slug}`}
-                          className="text-neutral-700 hover:text-[#8a2040] hover:underline"
+                          className="text-neutral-700 hover:text-orange-500 hover:underline"
                         >
                           {item.product.name} × {item.quantity}
                         </Link>
@@ -193,8 +193,8 @@ export default async function OrdersPage() {
               )}
 
               {order.shippingAddress && (
-                <div className="mt-4 border-t border-[#f6b2c5]/50 pt-4">
-                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#b03d5e]">Shipping Address</p>
+                <div className="mt-4 border-t border-orange-200/50 pt-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-orange-600">Shipping Address</p>
                   <p className="mt-1 text-sm text-neutral-700">
                     {order.shippingAddress.fullName}
                     <br />

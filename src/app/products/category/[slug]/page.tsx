@@ -91,8 +91,8 @@ export default async function CategoryPage({ params }: PageProps) {
 
         <section className="space-y-6">
           <div className="space-y-3">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">{category.name}</p>
-            <h1 className="text-4xl font-semibold text-[#40111f]">{category.name}</h1>
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">{category.name}</p>
+            <h1 className="text-4xl font-semibold text-gray-800">{category.name}</h1>
             {category.description && (
               <p className="max-w-2xl text-sm text-neutral-600">{category.description}</p>
             )}
@@ -100,10 +100,10 @@ export default async function CategoryPage({ params }: PageProps) {
         </section>
 
         {products.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-[#8a2040]/40 bg-white/70 p-16 text-center">
+          <div className="rounded-3xl border border-dashed border-orange-500/40 bg-white/70 p-16 text-center">
             <p className="text-sm text-neutral-600">
               No products found in this category.{" "}
-              <Link href="/products" className="font-semibold text-[#8a2040] underline-offset-2 hover:underline">
+              <Link href="/products" className="font-semibold text-orange-500 underline-offset-2 hover:underline">
                 Browse all products
               </Link>
               .

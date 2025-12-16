@@ -27,12 +27,12 @@ export async function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#f6b2c5] bg-white/85 shadow-sm backdrop-blur">
-      <div className="relative mx-auto max-w-6xl px-4 py-4">
+    <header className="sticky top-0 z-50 border-b border-border-orange-200 bg-white/85 shadow-sm backdrop-blur">
+      <div className="relative mx-auto max-w-6xl px-3 py-3 sm:px-4 sm:py-4">
         <div className="flex items-center justify-between gap-4">
           <Link 
             href="/" 
-            className="text-lg font-semibold tracking-tight text-[#8a2040] sm:text-xl"
+            className="text-lg font-semibold tracking-tight text-text-bg-orange-500 sm:text-xl"
             aria-label="Janakpur Art and Craft - Home"
           >
             Janakpur Art & Craft
@@ -43,7 +43,7 @@ export async function SiteHeader() {
               <Link 
                 key={item.href} 
                 href={item.href} 
-                className="transition hover:text-[#8a2040]"
+                className="transition hover:text-text-bg-orange-500"
                 aria-label={item.label}
               >
                 {item.label}

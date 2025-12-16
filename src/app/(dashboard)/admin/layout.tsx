@@ -14,26 +14,26 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#fff7ec] via-[#fce1d2] to-[#ffd1e3]">
-      <header className="border-b border-[#f6b2c5]/70 bg-white/90 backdrop-blur">
+      <header className="border-b border-orange-200/70 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-6 py-4">
           <div>
-            <h1 className="text-xl font-semibold text-[#40111f]">Janakpur Art and Craft · Admin</h1>
-            <p className="text-xs uppercase tracking-[0.35em] text-[#b03d5e]">Role: {roleLabel}</p>
+            <h1 className="text-xl font-semibold text-gray-800">Janakpur Art and Craft · Admin</h1>
+            <p className="text-xs uppercase tracking-[0.35em] text-orange-600">Role: {roleLabel}</p>
           </div>
-          <nav className="flex items-center gap-4 text-sm font-semibold text-[#8a2040]">
-            <Link href="/admin" className="hover:text-[#6f1731]">
+          <nav className="flex items-center gap-4 text-sm font-semibold text-orange-500">
+            <Link href="/admin" className="hover:text-orange-600">
               Overview
             </Link>
-            <Link href="/admin/products" className="hover:text-[#6f1731]">
+            <Link href="/admin/products" className="hover:text-orange-600">
               Catalogue
             </Link>
-            <Link href="/admin/orders" className="hover:text-[#6f1731]">
+            <Link href="/admin/orders" className="hover:text-orange-600">
               Orders
             </Link>
-            <Link href="/admin/imports" className="hover:text-[#6f1731]">
+            <Link href="/admin/imports" className="hover:text-orange-600">
               Imports & Audits
             </Link>
-            <Link href="/" className="rounded-full border border-[#f6b2c5]/60 px-3 py-1 text-xs hover:border-[#8a2040]">
+            <Link href="/" className="rounded-full border border-orange-200/60 px-3 py-1 text-xs hover:border-orange-500">
               View Storefront
             </Link>
           </nav>

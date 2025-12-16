@@ -29,20 +29,20 @@ export default function ShippingPage() {
 
       <section className="space-y-6">
         <div className="space-y-3">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-[#b03d5e]">Delivery Information</p>
-          <h1 className="text-4xl font-semibold text-[#40111f]">Shipping & Delivery</h1>
+          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Delivery Information</p>
+          <h1 className="text-4xl font-semibold text-gray-800">Shipping & Delivery</h1>
           <p className="text-neutral-600">
             We carefully package and ship each handcrafted piece to ensure it arrives safely at your doorstep.
           </p>
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Shipping Rates</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Shipping Rates</h2>
         <div className="mt-6 space-y-4 text-sm">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <h3 className="font-semibold text-[#8a2040]">Nepal Domestic</h3>
+              <h3 className="font-semibold text-orange-500">Nepal Domestic</h3>
               <p className="text-neutral-700">
                 Standard shipping: NPR 200-500
                 <br />
@@ -52,7 +52,7 @@ export default function ShippingPage() {
               </p>
             </div>
             <div className="space-y-2">
-              <h3 className="font-semibold text-[#8a2040]">International</h3>
+              <h3 className="font-semibold text-orange-500">International</h3>
               <p className="text-neutral-700">
                 Standard: $15-30 USD
                 <br />
@@ -69,19 +69,19 @@ export default function ShippingPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Processing & Delivery Times</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Processing & Delivery Times</h2>
         <div className="mt-6 space-y-4 text-sm text-neutral-700">
           <div>
-            <h3 className="font-semibold text-[#8a2040]">Order Processing</h3>
+            <h3 className="font-semibold text-orange-500">Order Processing</h3>
             <p>Orders are typically processed within 1-3 business days. Custom or made-to-order items may take 2-4 weeks.</p>
           </div>
           <div>
-            <h3 className="font-semibold text-[#8a2040]">Domestic Delivery (Nepal)</h3>
+            <h3 className="font-semibold text-orange-500">Domestic Delivery (Nepal)</h3>
             <p>Standard shipping: 3-7 business days | Express: 1-3 business days</p>
           </div>
           <div>
-            <h3 className="font-semibold text-[#8a2040]">International Delivery</h3>
+            <h3 className="font-semibold text-orange-500">International Delivery</h3>
             <p>
               Standard: 7-21 business days | Express: 3-7 business days
               <br />
@@ -91,8 +91,8 @@ export default function ShippingPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Packaging & Care</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Packaging & Care</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
             Each handcrafted piece is carefully wrapped in protective materials and shipped in sturdy boxes to ensure it
@@ -105,8 +105,8 @@ export default function ShippingPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/85 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Tracking Your Order</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Tracking Your Order</h2>
         <div className="mt-6 space-y-3 text-sm text-neutral-700">
           <p>
             Once your order ships, you&apos;ll receive a tracking number via email. You can use this to monitor your package&apos;s
@@ -118,7 +118,7 @@ export default function ShippingPage() {
         </div>
       </section>
 
-      <section className="rounded-3xl border border-[#8a2040]/50 bg-[#8a2040] p-8 text-white">
+      <section className="rounded-3xl border border-orange-500/50 bg-[text-bg-orange-500] p-8 text-white">
         <h2 className="text-2xl font-semibold">Questions About Shipping?</h2>
         <p className="mt-3 text-rose-100">
           If you have specific questions about shipping to your location or need expedited delivery, please{" "}

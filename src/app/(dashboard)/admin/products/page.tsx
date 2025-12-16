@@ -216,47 +216,47 @@ export default async function AdminProductsPage() {
 
   return (
     <div className="space-y-12">
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/90 p-8 shadow-sm">
-        <h2 className="text-2xl font-semibold text-[#40111f]">Add a new catalogue item</h2>
+      <section className="rounded-3xl border border-orange-200/70 bg-white/90 p-8 shadow-sm">
+        <h2 className="text-2xl font-semibold text-gray-800">Add a new catalogue item</h2>
         <p className="mt-2 text-sm text-neutral-600">
           Use this form to create new Mithila products. Provide high-quality image URLs and tags to help with search.
         </p>
         <form action={createProduct} className="mt-6 grid gap-4 md:grid-cols-2">
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="name">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="name">
               Name*
             </label>
             <input
               id="name"
               name="name"
               required
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="sku">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="sku">
               SKU*
             </label>
             <input
               id="sku"
               name="sku"
               required
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm uppercase tracking-widest"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm uppercase tracking-widest"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="slug">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="slug">
               Slug
             </label>
             <input
               id="slug"
               name="slug"
               placeholder="auto-generated if left blank"
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="priceCents">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="priceCents">
               Price (in cents)*
             </label>
             <input
@@ -265,11 +265,11 @@ export default async function AdminProductsPage() {
               type="number"
               required
               min="0"
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="stock">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="stock">
               Stock quantity*
             </label>
             <input
@@ -278,44 +278,44 @@ export default async function AdminProductsPage() {
               type="number"
               required
               min="0"
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="tags">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="tags">
               Tags (comma separated)
             </label>
             <input
               id="tags"
               name="tags"
               placeholder="terracotta, wall decor, ceremonial"
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="space-y-2 md:col-span-2">
-            <label className="block text-sm font-semibold text-[#40111f]" htmlFor="description">
+            <label className="block text-sm font-semibold text-gray-800" htmlFor="description">
               Description
             </label>
             <textarea
               id="description"
               name="description"
               rows={3}
-              className="w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             />
           </div>
           <div className="md:col-span-2">
             <ProductImagesField />
           </div>
-          <fieldset className="space-y-2 rounded-2xl border border-[#f6b2c5]/70 bg-white/60 p-4">
-            <legend className="px-2 text-sm font-semibold text-[#40111f]">Category</legend>
-            <label className="block text-xs font-semibold text-[#8a2040]" htmlFor="categoryId">
+          <fieldset className="space-y-2 rounded-2xl border border-orange-200/70 bg-white/60 p-4">
+            <legend className="px-2 text-sm font-semibold text-gray-800">Category</legend>
+            <label className="block text-xs font-semibold text-orange-500" htmlFor="categoryId">
               Select existing category
             </label>
             <select
               id="categoryId"
               name="categoryId"
               defaultValue=""
-              className="mt-1 w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             >
               <option value="">-- No category --</option>
               {categories.map((category: Category) => (
@@ -331,25 +331,25 @@ export default async function AdminProductsPage() {
               <input
                 name="categoryName"
                 placeholder="New category name"
-                className="rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+                className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
               />
               <input
                 name="categorySlug"
                 placeholder="custom-slug (optional)"
-                className="rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+                className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
               />
             </div>
           </fieldset>
-          <fieldset className="space-y-2 rounded-2xl border border-[#f6b2c5]/70 bg-white/60 p-4">
-            <legend className="px-2 text-sm font-semibold text-[#40111f]">Artisan</legend>
-            <label className="block text-xs font-semibold text-[#8a2040]" htmlFor="artisanId">
+          <fieldset className="space-y-2 rounded-2xl border border-orange-200/70 bg-white/60 p-4">
+            <legend className="px-2 text-sm font-semibold text-gray-800">Artisan</legend>
+            <label className="block text-xs font-semibold text-orange-500" htmlFor="artisanId">
               Select existing artisan
             </label>
             <select
               id="artisanId"
               name="artisanId"
               defaultValue=""
-              className="mt-1 w-full rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+              className="mt-1 w-full rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
             >
               <option value="">-- No artisan --</option>
               {artisans.map((artisan: Artisan) => (
@@ -365,35 +365,35 @@ export default async function AdminProductsPage() {
               <input
                 name="artisanName"
                 placeholder="Artisan or collective name"
-                className="rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm md:col-span-2"
+                className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm md:col-span-2"
               />
               <input
                 name="artisanLocation"
                 placeholder="Location"
-                className="rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+                className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
               />
               <textarea
                 name="artisanBio"
                 rows={2}
                 placeholder="Short bio"
-                className="md:col-span-3 rounded-xl border border-[#f6b2c5]/70 bg-white px-3 py-2 text-sm"
+                className="md:col-span-3 rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm"
               />
             </div>
           </fieldset>
           <div className="flex items-center gap-4 md:col-span-2">
-            <label className="inline-flex items-center gap-2 text-sm font-semibold text-[#40111f]">
-              <input type="checkbox" name="featured" className="h-4 w-4 rounded border-[#f6b2c5]/70 text-[#8a2040]" />{" "}
+            <label className="inline-flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <input type="checkbox" name="featured" className="h-4 w-4 rounded border-orange-200/70 text-orange-500" />{" "}
               Featured
             </label>
-            <label className="inline-flex items-center gap-2 text-sm font-semibold text-[#40111f]">
-              <input type="checkbox" name="published" className="h-4 w-4 rounded border-[#f6b2c5]/70 text-[#8a2040]" />{" "}
+            <label className="inline-flex items-center gap-2 text-sm font-semibold text-gray-800">
+              <input type="checkbox" name="published" className="h-4 w-4 rounded border-orange-200/70 text-orange-500" />{" "}
               Published
             </label>
           </div>
           <div className="md:col-span-2">
             <button
               type="submit"
-              className="rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731]"
+              className="rounded-full bg-[text-bg-orange-500] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[text-bg-orange-500]/30 transition hover:bg-orange-600"
             >
               Create product
             </button>
@@ -401,24 +401,24 @@ export default async function AdminProductsPage() {
         </form>
       </section>
 
-      <section className="rounded-3xl border border-[#f6b2c5]/70 bg-white/90 p-8 shadow-sm">
+      <section className="rounded-3xl border border-orange-200/70 bg-white/90 p-8 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-semibold text-[#40111f]">Catalogue overview</h2>
+            <h2 className="text-2xl font-semibold text-gray-800">Catalogue overview</h2>
             <p className="text-sm text-neutral-600">
               Manage visibility, feature placement, and stock for each artisan-made item.
             </p>
           </div>
           <Link
             href="/products"
-            className="rounded-full border border-[#f6b2c5]/70 px-4 py-2 text-sm font-semibold text-[#8a2040] hover:border-[#8a2040]"
+            className="rounded-full border border-orange-200/70 px-4 py-2 text-sm font-semibold text-orange-500 hover:border-orange-500"
           >
             View live catalogue
           </Link>
         </div>
-        <div className="mt-6 overflow-hidden rounded-2xl border border-[#f6b2c5]/60">
-          <table className="min-w-full divide-y divide-[#f6b2c5]/60 text-left text-sm">
-            <thead className="bg-[#ffe1ef]/60 text-xs uppercase tracking-[0.35em] text-[#b03d5e]">
+        <div className="mt-6 overflow-hidden rounded-2xl border border-orange-200/60">
+          <table className="min-w-full divide-y divide-orange-200/60 text-left text-sm">
+            <thead className="bg-orange-50/60 text-xs uppercase tracking-[0.35em] text-orange-600">
               <tr>
                 <th className="px-4 py-3">Product</th>
                 <th className="px-4 py-3">Category</th>
@@ -429,12 +429,12 @@ export default async function AdminProductsPage() {
                 <th className="px-4 py-3 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#f6b2c5]/40 bg-white/70">
+            <tbody className="divide-y divide-orange-200/40 bg-white/70">
               {products.map((product: Product) => (
                 <tr key={product.id}>
                   <td className="px-4 py-4">
                     <div className="space-y-1">
-                      <p className="font-semibold text-[#40111f]">{product.name}</p>
+                      <p className="font-semibold text-gray-800">{product.name}</p>
                       <p className="text-xs text-neutral-500">
                         SKU {product.sku} • Updated{" "}
                         {new Date(product.updatedAt).toLocaleDateString(undefined, {
@@ -479,8 +479,8 @@ export default async function AdminProductsPage() {
                           type="submit"
                           className={`rounded-full px-3 py-1 text-xs font-semibold ${
                             product.featured
-                              ? "bg-[#ffe1ef] text-[#8a2040]"
-                              : "border border-[#f6b2c5]/60 text-neutral-600"
+                              ? "bg-orange-50 text-orange-500"
+                              : "border border-orange-200/60 text-neutral-600"
                           }`}
                         >
                           {product.featured ? "Featured" : "Standard"}
@@ -489,14 +489,14 @@ export default async function AdminProductsPage() {
                     </div>
                   </td>
                   <td className="px-4 py-4 text-sm text-neutral-600">{product.stock}</td>
-                  <td className="px-4 py-4 text-sm font-semibold text-[#8a2040]">
+                  <td className="px-4 py-4 text-sm font-semibold text-orange-500">
                     {formatCurrencyFromCents(product.priceCents)}
                   </td>
                   <td className="px-4 py-4 text-right text-xs text-neutral-500">
                     <div className="flex justify-end gap-2">
                       <Link
                         href={`/products/${product.slug}`}
-                        className="rounded-full border border-[#f6b2c5]/70 px-3 py-1 font-semibold text-[#8a2040] hover:border-[#8a2040]"
+                        className="rounded-full border border-orange-200/70 px-3 py-1 font-semibold text-orange-500 hover:border-orange-500"
                       >
                         View
                       </Link>

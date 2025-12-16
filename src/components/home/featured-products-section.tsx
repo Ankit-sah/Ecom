@@ -23,18 +23,18 @@ const itemVariants = {
 
 export function FeaturedProductsSection({ products }: FeaturedProductsSectionProps) {
   return (
-    <section className="mx-auto max-w-6xl space-y-10 px-4">
+    <section className="mx-auto max-w-6xl space-y-6 px-4 sm:space-y-8 md:space-y-10">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <FadeIn>
           <div>
-            <h2 className="text-2xl font-semibold text-[#40111f]">Featured Mithila creations</h2>
-            <p className="text-sm text-neutral-600">
+            <h2 className="text-xl font-semibold text-text-gray-800 sm:text-2xl">Featured Mithila creations</h2>
+            <p className="text-xs text-neutral-600 sm:text-sm">
               Handpicked treasures that celebrate ancestral motifs, natural dyes, and the spirit of Janakpur.
             </p>
           </div>
         </FadeIn>
         <FadeIn delay={0.1} direction="left">
-          <Link href="/products" className="text-sm font-semibold text-[#8a2040] transition hover:text-[#6f1731]">
+          <Link href="/products" className="text-sm font-semibold text-text-bg-orange-500 transition hover:text-text-orange-600">
             View all
           </Link>
         </FadeIn>
@@ -46,7 +46,7 @@ export function FeaturedProductsSection({ products }: FeaturedProductsSectionPro
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {products.map((product) => (
             <motion.div key={product.id} variants={itemVariants}>
@@ -55,7 +55,7 @@ export function FeaturedProductsSection({ products }: FeaturedProductsSectionPro
           ))}
         </motion.div>
       ) : (
-        <p className="rounded-3xl border border-dashed border-[#8a2040]/30 bg-white/70 p-10 text-sm text-neutral-600">
+        <p className="rounded-3xl border border-dashed border-orange-500/30 bg-white/70 p-10 text-sm text-neutral-600">
           Our artisans are crafting new pieces. Please check back soon to discover the next chapter of Mithila art.
         </p>
       )}

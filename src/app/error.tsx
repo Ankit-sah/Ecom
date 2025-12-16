@@ -19,8 +19,8 @@ export default function Error({
     <div className="flex min-h-[70vh] items-center justify-center px-4 py-24">
       <div className="w-full max-w-md space-y-8 text-center">
         <div className="space-y-4">
-          <h1 className="text-6xl font-semibold text-[#8a2040]">500</h1>
-          <h2 className="text-3xl font-semibold text-[#40111f]">Something went wrong</h2>
+          <h1 className="text-6xl font-semibold text-text-bg-orange-500">500</h1>
+          <h2 className="text-3xl font-semibold text-text-gray-800">Something went wrong</h2>
           <p className="text-neutral-600">
             We&apos;re sorry, but something unexpected happened. Our team has been notified and is working to fix the issue.
           </p>
@@ -32,13 +32,13 @@ export default function Error({
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
           <button
             onClick={reset}
-            className="rounded-full bg-[#8a2040] px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-[#8a2040]/30 transition hover:bg-[#6f1731]"
+            className="rounded-full bg-text-bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-text-bg-orange-500/30 transition hover:bg-text-orange-600"
           >
             Try Again
           </button>
           <Link
             href="/"
-            className="rounded-full border border-[#8a2040]/40 px-6 py-3 text-sm font-semibold text-[#8a2040] transition hover:border-[#8a2040] hover:text-[#6f1731]"
+            className="rounded-full border border-text-bg-orange-500/40 px-6 py-3 text-sm font-semibold text-text-bg-orange-500 transition hover:border-text-bg-orange-500 hover:text-text-orange-600"
           >
             Go Home
           </Link>
@@ -47,7 +47,7 @@ export default function Error({
         <div className="pt-8">
           <p className="text-sm text-neutral-600">
             Need help?{" "}
-            <Link href="/contact" className="font-semibold text-[#8a2040] hover:underline">
+            <Link href="/contact" className="font-semibold text-text-bg-orange-500 hover:underline">
               Contact us
             </Link>
           </p>
