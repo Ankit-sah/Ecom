@@ -12,20 +12,55 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/* Disable dark mode to prevent text color issues on mobile */
+/* @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+} */
 
 html {
   scroll-behavior: smooth;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+  /* Ensure proper text rendering on mobile */
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   overflow-x: hidden;
+  /* Ensure text is readable on mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent text selection issues on mobile */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Ensure proper text colors on all devices */
+* {
+  color: inherit;
+}
+
+/* Improved color scheme for better visibility */
+:root {
+  --primary-color: #F97316; /* Vibrant orange-500 - coral/terracotta */
+  --primary-hover: #EA580C; /* Orange-600 */
+  --primary-light: #FFF7ED; /* Orange-50 */
+  --text-primary: #1F2937; /* Gray-800 - better contrast */
+  --text-secondary: #4B5563; /* Gray-600 */
+  --text-accent: #F97316; /* Same as primary */
+}
+
+/* Fix for mobile viewport */
+@supports (-webkit-touch-callout: none) {
+  body {
+    /* iOS specific fixes */
+    min-height: -webkit-fill-available;
+  }
 }
