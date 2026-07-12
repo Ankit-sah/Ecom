@@ -3,9 +3,14 @@ import Script from "next/script";
 
 import { ProductDetailActions } from "@/components/products/product-detail-actions";
 import { RelatedProducts } from "@/components/products/related-products";
+import { ProductReviews } from "@/components/products/product-reviews";
+import { ProductRecommendations } from "@/components/products/product-recommendations";
+import { SocialShare } from "@/components/products/social-share";
+import { StockAlertButton } from "@/components/products/stock-alert-button";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { OptimizedImage } from "@/components/products/optimized-image";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/product-service";
+import { getProductRecommendations } from "@/lib/recommendations";
 import { getCanonicalUrl, generateProductSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 import { formatCurrencyFromCents } from "@/utils/format";
 
@@ -91,13 +96,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
   }
   const productUrl = getCanonicalUrl(`/products/${slug}`);
   
-  const [relatedProducts] = await Promise.all([
+  const [relatedProducts, recommendations] = await Promise.all([
     getRelatedProducts(
       product.id,
       product.category?.id || null,
       product.artisan?.id || null,
       4
     ),
+    getProductRecommendations(product.id, 4),
   ]);
   
   const productSchema = generateProductSchema(product);
@@ -179,9 +185,13 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
             <h1 className="text-2xl font-semibold text-gray-800 sm:text-3xl md:text-4xl">{product.name}</h1>
             <p className="text-xs text-neutral-600 sm:text-sm">{product.description}</p>
-            <p className="text-sm font-medium text-neutral-500">
-              Catalog slug: <span className="text-orange-500">{product.slug}</span>
-            </p>
+            <div className="mt-4">
+              <SocialShare
+                productName={product.name}
+                productUrl={`${process.env.NEXT_PUBLIC_APP_URL || "https://ecom-one-sandy.vercel.app"}/products/${product.slug}`}
+                productImage={product.images[0]}
+              />
+            </div>
           </div>
 
           <ProductDetailActions product={product} />
@@ -227,9 +237,14 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Availability</dt>
             <dd className="mt-2">
               {product.stock === 0 ? (
-                <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-700">
-                  Out of Stock
-                </span>
+                <div className="space-y-3">
+                  <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-sm font-semibold text-red-700">
+                    Out of Stock
+                  </span>
+                  <div className="mt-3">
+                    <StockAlertButton productId={product.id} productName={product.name} />
+                  </div>
+                </div>
               ) : product.stock <= 5 ? (
                 <span className="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
                   Only {product.stock} left in stock
@@ -257,6 +272,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
       {relatedProducts.length > 0 && (
         <RelatedProducts products={relatedProducts} currentProductSlug={slug} />
       )}
+
+      {recommendations.length > 0 && (
+        <ProductRecommendations products={recommendations} title="Recommended for you" />
+      )}
+
+      {/* Product Reviews */}
+      <div className="mt-12">
+        <h2 className="mb-6 text-2xl font-semibold text-gray-800">Customer Reviews</h2>
+        <ProductReviews productId={product.id} />
+      </div>
     </div>
     </>
   );

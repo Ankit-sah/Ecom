@@ -33,6 +33,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/imports" className="hover:text-orange-600">
               Imports & Audits
             </Link>
+            <Link href="/admin/coupons" className="hover:text-orange-600">
+              Coupons
+            </Link>
+            <Link href="/admin/reviews" className="hover:text-orange-600">
+              Reviews
+            </Link>
             <Link href="/" className="rounded-full border border-orange-200/60 px-3 py-1 text-xs hover:border-orange-500">
               View Storefront
             </Link>

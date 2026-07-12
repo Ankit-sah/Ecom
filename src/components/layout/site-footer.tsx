@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { NewsletterSignup } from "@/components/newsletter-signup";
+
 const footerLinks = {
   shop: [
     { label: "All Products", href: "/products" },
@@ -104,6 +106,11 @@ export function SiteFooter() {
               ))}
             </ul>
           </div>
+        </div>
+
+        {/* Newsletter Section */}
+        <div className="mt-8 border-t border-[#f3b3c3] pt-6 sm:mt-10 sm:pt-8">
+          <NewsletterSignup variant="inline" source="footer" />
         </div>
 
         {/* Bottom Bar */}

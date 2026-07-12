@@ -29,6 +29,7 @@ export async function POST(request: Request) {
       }>;
       shippingMethod?: "domestic" | "international";
       shippingCents?: number;
+      couponCode?: string;
       shippingAddress?: {
         fullName: string;
         phone?: string;
@@ -107,7 +108,42 @@ export async function POST(request: Request) {
       (shippingMethod === "domestic"
         ? Math.max(800, Math.round(subtotalCents * 0.05))
         : Math.max(2500, Math.round(subtotalCents * 0.12)));
-    const totalCents = subtotalCents + taxCents + computedShippingCents;
+    
+    // Apply coupon if provided
+    let discountCents = 0;
+    let couponId: string | null = null;
+    if (body.couponCode) {
+      const coupon = await prisma.coupon.findUnique({
+        where: { code: body.couponCode.toUpperCase() },
+      });
+      
+      if (coupon && coupon.active) {
+        const now = new Date();
+        if (now >= coupon.validFrom && now <= coupon.validUntil) {
+          if (coupon.type === "PERCENTAGE") {
+            discountCents = Math.round((subtotalCents * coupon.value) / 100);
+            if (coupon.maxDiscount) {
+              discountCents = Math.min(discountCents, coupon.maxDiscount);
+            }
+          } else if (coupon.type === "FIXED") {
+            discountCents = coupon.value;
+          }
+          // FREE_SHIPPING is handled by setting shipping to 0
+          if (coupon.type === "FREE_SHIPPING") {
+            // Will be handled in shipping calculation
+          }
+          couponId = coupon.id;
+        }
+      }
+    }
+    
+    const finalShippingCents = body.couponCode && couponId
+      ? (await prisma.coupon.findUnique({ where: { id: couponId } }))?.type === "FREE_SHIPPING"
+        ? 0
+        : computedShippingCents
+      : computedShippingCents;
+    
+    const totalCents = Math.max(0, subtotalCents + taxCents + finalShippingCents - discountCents);
 
     const shippingLineItem = {
       price_data: {
@@ -170,7 +206,7 @@ export async function POST(request: Request) {
         userId: session.user.id,
         subtotalCents,
         taxCents,
-        shippingCents: computedShippingCents,
+        shippingCents: finalShippingCents,
         totalCents,
         stripeSessionId: checkoutSession.id,
         shippingAddressId: shippingAddressRecord.id,

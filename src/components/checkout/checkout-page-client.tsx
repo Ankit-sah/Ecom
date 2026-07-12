@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useCart } from "@/providers/cart-provider";
 import { formatCurrencyFromCents } from "@/utils/format";
+import { CouponInput } from "@/components/checkout/coupon-input";
 
 const getStripe = (): Promise<StripeJs | null> => {
   if (typeof window === "undefined" || !process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
@@ -44,18 +45,22 @@ export function CheckoutPageClient() {
     country: "NP",
   });
 
+  const [discountCents, setDiscountCents] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const [freeShipping, setFreeShipping] = useState(false);
+
   const taxEstimateCents = useMemo(() => Math.round(subtotalCents * 0.08), [subtotalCents]);
   const shippingCents = useMemo(() => {
-    if (items.length === 0) {
+    if (items.length === 0 || freeShipping) {
       return 0;
     }
     const base = shippingMethod === "domestic" ? 800 : 2500;
     const variableRate = shippingMethod === "domestic" ? 0.05 : 0.12;
     return Math.max(base, Math.round(subtotalCents * variableRate));
-  }, [items.length, shippingMethod, subtotalCents]);
+  }, [items.length, shippingMethod, subtotalCents, freeShipping]);
   const totalCents = useMemo(
-    () => subtotalCents + taxEstimateCents + shippingCents,
-    [subtotalCents, taxEstimateCents, shippingCents],
+    () => Math.max(0, subtotalCents + taxEstimateCents + shippingCents - discountCents),
+    [subtotalCents, taxEstimateCents, shippingCents, discountCents],
   );
 
   // Redirect to success page if we have a session_id (from Stripe redirect)
@@ -308,11 +313,31 @@ export function CheckoutPageClient() {
           <h2 className="text-xl font-semibold text-gray-800">Order summary</h2>
           <p className="text-sm text-neutral-600">Items ({totalQuantity})</p>
         </div>
+        <CouponInput
+          onCouponApplied={(discount, code, freeShip) => {
+            setDiscountCents(discount);
+            setAppliedCoupon(code);
+            setFreeShipping(freeShip);
+          }}
+          onCouponRemoved={() => {
+            setDiscountCents(0);
+            setAppliedCoupon(null);
+            setFreeShipping(false);
+          }}
+          appliedCoupon={appliedCoupon}
+          totalCents={subtotalCents + taxEstimateCents + shippingCents}
+        />
         <dl className="space-y-3 text-sm text-neutral-700">
           <div className="flex items-center justify-between">
             <dt>Subtotal</dt>
             <dd className="font-semibold text-orange-500">{formatCurrencyFromCents(subtotalCents)}</dd>
           </div>
+          {discountCents > 0 && (
+            <div className="flex items-center justify-between text-green-600">
+              <dt>Discount</dt>
+              <dd className="font-semibold">-{formatCurrencyFromCents(discountCents)}</dd>
+            </div>
+          )}
           <div className="flex items-center justify-between">
             <dt>Estimated tax</dt>
             <dd className="font-semibold text-orange-500">{formatCurrencyFromCents(taxEstimateCents)}</dd>
@@ -320,7 +345,13 @@ export function CheckoutPageClient() {
           <div className="flex items-center justify-between">
             <dt>Shipping</dt>
             <dd className="font-semibold text-orange-500">
-              {items.length > 0 ? formatCurrencyFromCents(shippingCents) : "—"}
+              {freeShipping ? (
+                <span className="text-green-600">FREE</span>
+              ) : items.length > 0 ? (
+                formatCurrencyFromCents(shippingCents)
+              ) : (
+                "—"
+              )}
             </dd>
           </div>
           <div className="flex items-center justify-between border-t border-orange-200/60 pt-3 text-base font-semibold text-gray-800">

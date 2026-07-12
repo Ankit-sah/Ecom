@@ -38,9 +38,13 @@ model Product {
   createdBy     String?
   lastUpdatedBy String?
 
-  orderItems   OrderItem[]
-  inventoryLog ProductInventoryEvent[]
-  auditLog     ProductAuditLog[]
+  orderItems    OrderItem[]
+  inventoryLog  ProductInventoryEvent[]
+  auditLog      ProductAuditLog[]
+  reviews       ProductReview[]
+  wishlists     Wishlist[]
+  subscriptions Subscription[]
+  stockAlerts   StockAlert[]
 }
 
 model ProductCategory {
@@ -113,9 +117,12 @@ model Order {
   createdAt         DateTime         @default(now())
   updatedAt         DateTime         @updatedAt
 
-  items         OrderItem[]
-  statusHistory OrderStatusHistory[]
-  shipment      OrderShipment?
+  items               OrderItem[]
+  statusHistory       OrderStatusHistory[]
+  shipment            OrderShipment?
+  couponRedemption    CouponRedemption?
+  giftCardRedemption  GiftCardRedemption?
+  loyaltyTransactions LoyaltyTransaction[]
 }
 
 model OrderItem {
@@ -145,19 +152,31 @@ enum FulfillmentStage {
 }
 
 model User {
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  role          UserRole  @default(CUSTOMER)
-  phone         String?
-  createdAt     DateTime? @default(now())
-  updatedAt     DateTime? @updatedAt
-  accounts      Account[]
-  sessions      Session[]
-  orders        Order[]
-  addresses     Address[]
+  id               String              @id @default(auto()) @map("_id") @db.ObjectId
+  name             String?
+  email            String?             @unique
+  emailVerified    DateTime?
+  image            String?
+  role             UserRole            @default(CUSTOMER)
+  phone            String?
+  createdAt        DateTime?           @default(now())
+  updatedAt        DateTime?           @updatedAt
+  accounts         Account[]
+  sessions         Session[]
+  orders           Order[]
+  addresses        Address[]
+  reviews          ProductReview[]
+  wishlists        Wishlist[]
+  subscriptions    Subscription[]
+  stockAlerts      StockAlert[]
+  loyaltyPoints    LoyaltyPoints?
+  referrals        Referral[]          @relation("Referrer")
+  referredBy       Referral[]          @relation("Referee")
+  giftCards        GiftCard[]          @relation("GiftCardPurchases")
+  comparisons      ProductComparison[]
+  searchHistory    SearchHistory[]
+  abandonedCarts   AbandonedCart[]
+  CouponRedemption CouponRedemption[]
 }
 
 enum UserRole {
@@ -263,4 +282,313 @@ enum ImportStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+// Product Reviews & Ratings
+model ProductReview {
+  id        String       @id @default(auto()) @map("_id") @db.ObjectId
+  product   Product      @relation(fields: [productId], references: [id])
+  productId String       @db.ObjectId
+  user      User         @relation(fields: [userId], references: [id])
+  userId    String       @db.ObjectId
+  rating    Int // 1-5
+  title     String?
+  comment   String?
+  images    String[] // User-uploaded review images
+  verified  Boolean      @default(false) // Verified purchase
+  helpful   Int          @default(0) // Helpful votes count
+  status    ReviewStatus @default(PENDING)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@unique([productId, userId]) // One review per user per product
+  @@index([productId, status])
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Wishlist/Favorites
+model Wishlist {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @db.ObjectId
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+}
+
+// Discount Codes & Promotions
+model Coupon {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  code        String     @unique
+  description String?
+  type        CouponType
+  value       Int // Percentage (0-100) or fixed amount in cents
+  minPurchase Int?       @default(0) // Minimum purchase in cents
+  maxDiscount Int? // Maximum discount in cents (for percentage)
+  usageLimit  Int? // Total usage limit
+  usedCount   Int        @default(0)
+  userLimit   Int?       @default(1) // Usage limit per user
+  validFrom   DateTime
+  validUntil  DateTime
+  active      Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  redemptions CouponRedemption[]
+
+  @@index([code, active])
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
+  FREE_SHIPPING
+}
+
+model CouponRedemption {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  coupon    Coupon   @relation(fields: [couponId], references: [id])
+  couponId  String   @db.ObjectId
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   String   @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.ObjectId
+  discount  Int // Actual discount applied in cents
+  createdAt DateTime @default(now())
+
+  @@unique([orderId])
+  @@index([couponId, userId])
+}
+
+// Gift Cards
+model GiftCard {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  code           String         @unique
+  amountCents    Int
+  balanceCents   Int // Remaining balance
+  currency       String         @default("USD")
+  purchasedBy    User?          @relation("GiftCardPurchases", fields: [purchasedById], references: [id])
+  purchasedById  String?        @db.ObjectId
+  recipientEmail String?
+  recipientName  String?
+  message        String?
+  status         GiftCardStatus @default(ACTIVE)
+  expiresAt      DateTime?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  redemptions GiftCardRedemption[]
+
+  @@index([code, status])
+}
+
+enum GiftCardStatus {
+  ACTIVE
+  REDEEMED
+  EXPIRED
+  CANCELLED
+}
+
+model GiftCardRedemption {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  giftCard   GiftCard @relation(fields: [giftCardId], references: [id])
+  giftCardId String   @db.ObjectId
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    String   @db.ObjectId
+  amountUsed Int // Amount used in cents
+  createdAt  DateTime @default(now())
+
+  @@unique([orderId])
+}
+
+// Subscriptions/Recurring Orders
+model Subscription {
+  id                   String                @id @default(auto()) @map("_id") @db.ObjectId
+  user                 User                  @relation(fields: [userId], references: [id])
+  userId               String                @db.ObjectId
+  product              Product               @relation(fields: [productId], references: [id])
+  productId            String                @db.ObjectId
+  quantity             Int                   @default(1)
+  frequency            SubscriptionFrequency
+  status               SubscriptionStatus    @default(ACTIVE)
+  stripeSubscriptionId String?               @unique
+  nextBillingDate      DateTime
+  lastBillingDate      DateTime?
+  cancelledAt          DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  @@index([userId, status])
+}
+
+enum SubscriptionFrequency {
+  WEEKLY
+  MONTHLY
+  QUARTERLY
+  YEARLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+}
+
+// Inventory Alerts
+model StockAlert {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  product    Product   @relation(fields: [productId], references: [id])
+  productId  String    @db.ObjectId
+  user       User?     @relation(fields: [userId], references: [id])
+  userId     String?   @db.ObjectId
+  email      String
+  notified   Boolean   @default(false)
+  createdAt  DateTime  @default(now())
+  notifiedAt DateTime?
+
+  @@unique([productId, email])
+  @@index([productId, notified])
+}
+
+// Newsletter & Email Marketing
+model NewsletterSubscriber {
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
+  email          String           @unique
+  name           String?
+  status         SubscriberStatus @default(ACTIVE)
+  source         String? // Where they subscribed from
+  tags           String[] // For segmentation
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+  lastEmailAt    DateTime?
+
+  @@index([email, status])
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+}
+
+// Loyalty Program
+model LoyaltyPoints {
+  id             String      @id @default(auto()) @map("_id") @db.ObjectId
+  user           User        @relation(fields: [userId], references: [id])
+  userId         String      @unique @db.ObjectId
+  points         Int         @default(0)
+  tier           LoyaltyTier @default(BRONZE)
+  lifetimePoints Int         @default(0)
+  updatedAt      DateTime    @updatedAt
+
+  transactions LoyaltyTransaction[]
+}
+
+enum LoyaltyTier {
+  BRONZE
+  SILVER
+  GOLD
+  PLATINUM
+}
+
+model LoyaltyTransaction {
+  id          String                 @id @default(auto()) @map("_id") @db.ObjectId
+  loyalty     LoyaltyPoints          @relation(fields: [loyaltyId], references: [id])
+  loyaltyId   String                 @db.ObjectId
+  points      Int // Positive for earned, negative for redeemed
+  type        LoyaltyTransactionType
+  order       Order?                 @relation(fields: [orderId], references: [id])
+  orderId     String?                @db.ObjectId
+  description String?
+  createdAt   DateTime               @default(now())
+
+  @@index([loyaltyId, createdAt])
+}
+
+enum LoyaltyTransactionType {
+  EARNED_PURCHASE
+  EARNED_REFERRAL
+  EARNED_REVIEW
+  REDEEMED
+  EXPIRED
+  ADJUSTMENT
+}
+
+// Referral Program
+model Referral {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  referrer     User           @relation("Referrer", fields: [referrerId], references: [id])
+  referrerId   String         @db.ObjectId
+  referee      User?          @relation("Referee", fields: [refereeId], references: [id])
+  refereeId    String?        @db.ObjectId
+  refereeEmail String?
+  code         String         @unique
+  status       ReferralStatus @default(PENDING)
+  rewardGiven  Boolean        @default(false)
+  createdAt    DateTime       @default(now())
+  completedAt  DateTime?
+
+  @@index([referrerId, status])
+}
+
+enum ReferralStatus {
+  PENDING
+  COMPLETED
+  REWARDED
+}
+
+// Product Comparison
+model ProductComparison {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.ObjectId
+  sessionId String? // For guest comparisons
+  products  String[] // Array of product IDs
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([sessionId])
+}
+
+// Search History
+model SearchHistory {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.ObjectId
+  sessionId String? // For guest searches
+  query     String
+  results   Int // Number of results
+  clicked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([sessionId, createdAt])
+}
+
+// Abandoned Cart
+model AbandonedCart {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  user       User?    @relation(fields: [userId], references: [id])
+  userId     String?  @db.ObjectId
+  email      String
+  sessionId  String?
+  items      Json // Cart items as JSON
+  totalCents Int
+  emailed    Boolean  @default(false)
+  recovered  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([email, emailed])
+  @@index([userId])
 }

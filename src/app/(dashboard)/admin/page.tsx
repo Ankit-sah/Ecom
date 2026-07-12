@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { formatCurrencyFromCents } from "@/utils/format";
 
 async function getOverview() {
-  const [productCount, publishedCount, orderStats, artisans, pendingImports] = await Promise.all([
+  const [productCount, publishedCount, orderStats, artisans, pendingImports, reviewsPending, couponsActive, wishlistCount] = await Promise.all([
     prisma.product.count(),
     prisma.product.count({ where: { published: true } }),
     prisma.order.aggregate({
@@ -11,6 +11,9 @@ async function getOverview() {
     }),
     prisma.artisan.count(),
     prisma.catalogImportJob.count({ where: { status: { in: ["PENDING", "PROCESSING"] } } }),
+    prisma.productReview.count({ where: { status: "PENDING" } }),
+    prisma.coupon.count({ where: { active: true } }),
+    prisma.wishlist.count(),
   ]);
 
   const activeOrders = await prisma.order.count({
@@ -27,6 +30,9 @@ async function getOverview() {
     },
     artisans,
     pendingImports,
+    reviewsPending,
+    couponsActive,
+    wishlistCount,
   };
 }
 
@@ -64,6 +70,21 @@ export default async function AdminOverviewPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Import jobs</p>
             <p className="mt-2 text-3xl font-semibold text-gray-800">{overview.pendingImports}</p>
             <p className="text-xs text-neutral-600">Uploads pending processing.</p>
+          </div>
+          <div className="rounded-2xl border border-orange-200/60 bg-white p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Reviews</p>
+            <p className="mt-2 text-3xl font-semibold text-gray-800">{overview.reviewsPending}</p>
+            <p className="text-xs text-neutral-600">Pending moderation.</p>
+          </div>
+          <div className="rounded-2xl border border-orange-200/60 bg-white p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Coupons</p>
+            <p className="mt-2 text-3xl font-semibold text-gray-800">{overview.couponsActive}</p>
+            <p className="text-xs text-neutral-600">Active promotions.</p>
+          </div>
+          <div className="rounded-2xl border border-orange-200/60 bg-white p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Wishlists</p>
+            <p className="mt-2 text-3xl font-semibold text-gray-800">{overview.wishlistCount}</p>
+            <p className="text-xs text-neutral-600">Total wishlist items.</p>
           </div>
         </div>
       </section>

@@ -21,8 +21,9 @@ export async function SiteHeader() {
 
   const links = isAdmin ? [...navItems, { href: "/admin", label: "Admin" }] : navItems;
   
-  // Add account link if user is logged in
+  // Add account and wishlist links if user is logged in
   if (session?.user && !isAdmin) {
+    links.push({ href: "/wishlist", label: "Wishlist" });
     links.push({ href: "/account", label: "Account" });
   }
 

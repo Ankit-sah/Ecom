@@ -21,3 +21,5 @@ export async function GET() {
       : "❌ Email is not configured. Add to .env: EMAIL_ENABLED=true, EMAIL_PROVIDER=resend, RESEND_API_KEY=your_key",
   });
 }
+
+

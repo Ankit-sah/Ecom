@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import { prisma } from "@/lib/prisma";
 import { deductStockFromOrder, restoreStockFromOrder } from "@/lib/inventory";
 import { sendOrderConfirmationEmail } from "@/lib/email";
+import { saveAbandonedCart } from "@/lib/abandoned-cart";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
 
@@ -115,6 +116,57 @@ export async function POST(request: Request) {
           } catch (error) {
             console.error(`Failed to send order confirmation email for order ${order.id}:`, error);
             // Don't fail the webhook if email fails
+          }
+
+          // Award loyalty points (1 point per dollar spent)
+          if (order.userId) {
+            try {
+              const pointsEarned = Math.floor(order.totalCents / 100);
+              
+              let loyalty = await prisma.loyaltyPoints.findUnique({
+                where: { userId: order.userId },
+              });
+
+              if (!loyalty) {
+                loyalty = await prisma.loyaltyPoints.create({
+                  data: {
+                    userId: order.userId,
+                    points: pointsEarned,
+                    tier: "BRONZE",
+                    lifetimePoints: pointsEarned,
+                  },
+                });
+              } else {
+                const newLifetimePoints = loyalty.lifetimePoints + pointsEarned;
+                // Update tier based on lifetime points
+                let newTier = loyalty.tier;
+                if (newLifetimePoints >= 10000) newTier = "PLATINUM";
+                else if (newLifetimePoints >= 5000) newTier = "GOLD";
+                else if (newLifetimePoints >= 2000) newTier = "SILVER";
+
+                loyalty = await prisma.loyaltyPoints.update({
+                  where: { userId: order.userId },
+                  data: {
+                    points: { increment: pointsEarned },
+                    lifetimePoints: newLifetimePoints,
+                    tier: newTier,
+                  },
+                });
+              }
+
+              await prisma.loyaltyTransaction.create({
+                data: {
+                  loyaltyId: loyalty.id,
+                  points: pointsEarned,
+                  type: "EARNED_PURCHASE",
+                  orderId: order.id,
+                  description: `Earned ${pointsEarned} points from order #${order.id.slice(-8).toUpperCase()}`,
+                },
+              });
+            } catch (error) {
+              console.error(`Failed to award loyalty points for order ${order.id}:`, error);
+              // Don't fail the webhook if loyalty points fail
+            }
           }
         }
         break;

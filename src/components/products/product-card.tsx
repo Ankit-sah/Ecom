@@ -6,6 +6,7 @@ import { useCart } from "@/providers/cart-provider";
 import type { Product } from "@/types/product";
 import { formatCurrencyFromCents } from "@/utils/format";
 import { OptimizedImage } from "@/components/products/optimized-image";
+import { CompareButton } from "@/components/products/compare-button";
 
 type Props = {
   product: Product;
@@ -82,15 +83,18 @@ export function ProductCard({ product }: Props) {
               <span className="text-xs text-neutral-500">In Stock</span>
             )}
           </div>
-          <button
-            type="button"
-            onClick={() => addItem(product)}
-            disabled={product.stock === 0}
-            className="w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
-            aria-label={`Add ${product.name} to cart`}
-          >
-            {product.stock === 0 ? "Out of Stock" : "Add to cart"}
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => addItem(product)}
+              disabled={product.stock === 0}
+              className="flex-1 rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+              aria-label={`Add ${product.name} to cart`}
+            >
+              {product.stock === 0 ? "Out of Stock" : "Add to cart"}
+            </button>
+            <CompareButton productId={product.id} variant="icon" />
+          </div>
         </div>
       </div>
     </div>

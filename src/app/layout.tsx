@@ -10,6 +10,8 @@ import { authOptions } from "@/lib/auth";
 import { getBaseUrl } from "@/lib/structured-data";
 import { CartProvider } from "@/providers/cart-provider";
 import { AuthProvider } from "@/providers/session-provider";
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt";
+import { CookieConsent } from "@/components/gdpr/cookie-consent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -104,6 +106,11 @@ export default async function RootLayout({
       <head>
         <link rel="preconnect" href="https://images.unsplash.com" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#F97316" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Janakpur Art" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-gradient-to-br from-[#fff7ec] via-[#ffe8c5] to-[#ffd1e3] antialiased text-gray-800`}
@@ -121,6 +128,8 @@ export default async function RootLayout({
               <SiteHeader />
               <main id="main-content" className="flex-1">{children}</main>
               <SiteFooter />
+              <PWAInstallPrompt />
+              <CookieConsent />
             </div>
           </CartProvider>
         </AuthProvider>
