@@ -17,49 +17,52 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0, y: 18 },
   visible: { opacity: 1, y: 0 },
 };
 
 export function FeaturedProductsSection({ products }: FeaturedProductsSectionProps) {
   return (
-    <section className="mx-auto max-w-6xl space-y-6 px-4 sm:space-y-8 md:space-y-10">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <FadeIn>
-          <div>
-            <h2 className="text-xl font-semibold text-gray-800 sm:text-2xl">Featured Mithila creations</h2>
-            <p className="text-xs text-neutral-600 sm:text-sm">
+    <section className="paper-texture border-b border-[#ddcfbb]">
+      <div className="mx-auto grid max-w-[1440px] gap-8 px-6 py-12 sm:px-10 lg:grid-cols-[0.72fr_1.28fr] lg:px-16 lg:py-16 xl:px-20">
+        <FadeIn className="flex items-center">
+          <div className="max-w-md">
+            <div className="mb-4 flex items-center gap-4">
+              <span className="h-px w-10 bg-[#b9472f]" />
+            </div>
+            <h2 className="font-editorial text-4xl leading-tight text-[#181b19] sm:text-5xl">Featured Mithila creations</h2>
+            <p className="mt-4 text-sm leading-7 text-[#625d54] sm:text-base">
               Handpicked treasures that celebrate ancestral motifs, natural dyes, and the spirit of Janakpur.
             </p>
+            <Link
+              href="/products"
+              className="mt-6 inline-flex items-center border-b border-[#b9472f] pb-1 text-sm font-semibold text-[#b9472f] transition hover:text-[#923622]"
+            >
+              View all <span className="ml-2" aria-hidden="true">→</span>
+            </Link>
           </div>
         </FadeIn>
-        <FadeIn delay={0.1} direction="left">
-          <Link href="/products" className="text-sm font-semibold text-orange-500 transition hover:text-orange-600">
-            View all
-          </Link>
-        </FadeIn>
-      </div>
 
-      {products.length > 0 ? (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {products.map((product) => (
-            <motion.div key={product.id} variants={itemVariants}>
-              <ProductCard product={product} />
-            </motion.div>
-          ))}
-        </motion.div>
-      ) : (
-        <p className="rounded-3xl border border-dashed border-orange-500/30 bg-white/70 p-10 text-sm text-neutral-600">
-          Our artisans are crafting new pieces. Please check back soon to discover the next chapter of Mithila art.
-        </p>
-      )}
+        {products.length > 0 ? (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            className="grid gap-5 sm:grid-cols-2"
+          >
+            {products.slice(0, 2).map((product) => (
+              <motion.div key={product.id} variants={itemVariants}>
+                <ProductCard product={product} />
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <p className="border border-dashed border-[#c6b49d] bg-[#fbf6ed] p-10 text-sm text-[#68645c]">
+            Our artisans are crafting new pieces. Please check back soon to discover the next chapter of Mithila art.
+          </p>
+        )}
+      </div>
     </section>
   );
 }
-
