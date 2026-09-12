@@ -23,11 +23,11 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
       />
-      <div className="space-y-12 pb-12 sm:space-y-16 sm:pb-16 md:space-y-24 md:pb-24">
+      <main>
         <HeroSection />
         <StorySection />
         <FeaturedProductsSection products={featuredProducts} />
-      </div>
+      </main>
     </>
   );
 }

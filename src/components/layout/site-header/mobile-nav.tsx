@@ -14,44 +14,38 @@ type MobileNavProps = {
 };
 
 const navItems = [
-  { href: "/", label: "Home" },
-  { href: "/products", label: "Products" },
-  { href: "/checkout", label: "Checkout" },
+  { href: "/products", label: "All Products" },
+  { href: "/products?filter=featured", label: "Featured" },
+  { href: "/products", label: "Categories" },
+  { href: "/about", label: "Our Story" },
+  { href: "/artisans", label: "Artisans" },
+  { href: "/contact", label: "Contact" },
+  { href: "/shipping", label: "Shipping" },
+  { href: "/returns", label: "Returns" },
+  { href: "/faq", label: "FAQ" },
 ];
 
 export function MobileNav({ session, isAdmin }: MobileNavProps) {
   const [open, setOpen] = useState(false);
-
   const links = isAdmin ? [...navItems, { href: "/admin", label: "Admin" }] : navItems;
 
   return (
-    <div className="flex items-center gap-2 md:hidden">
-      <CartButton variant="compact" showLabel={false} />
-      <AuthActions session={session} variant="minimal" />
+    <div className="flex items-center gap-2 xl:hidden">
+      <div className="hidden md:block xl:hidden">
+        <CartButton variant="compact" showLabel={false} />
+      </div>
       <button
         type="button"
-        className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-orange-200/70 bg-white/90 shadow-sm transition hover:border-orange-500"
+        className="relative z-50 flex h-10 w-10 items-center justify-center border border-[#d6c5af] bg-[#fbf6ed] transition hover:border-[#b9472f]"
         aria-expanded={open}
         aria-label="Toggle navigation"
         onClick={() => setOpen((prev) => !prev)}
       >
         <span className="sr-only">Menu</span>
-        <div className="relative h-5 w-5">
-          <span
-            className={`absolute left-0 top-0 block h-0.5 w-5 rounded-full bg-orange-500 transition-all duration-300 ${
-              open ? "top-2 rotate-45" : "top-0"
-            }`}
-          />
-          <span
-            className={`absolute left-0 top-2 block h-0.5 w-5 rounded-full bg-orange-500 transition-all duration-300 ${
-              open ? "opacity-0" : "opacity-100"
-            }`}
-          />
-          <span
-            className={`absolute left-0 top-4 block h-0.5 w-5 rounded-full bg-orange-500 transition-all duration-300 ${
-              open ? "top-2 -rotate-45" : "top-4"
-            }`}
-          />
+        <div className="relative h-4 w-5">
+          <span className={`absolute left-0 block h-px w-5 bg-[#31554d] transition-all ${open ? "top-2 rotate-45" : "top-0"}`} />
+          <span className={`absolute left-0 top-2 block h-px w-5 bg-[#31554d] transition-all ${open ? "opacity-0" : "opacity-100"}`} />
+          <span className={`absolute left-0 block h-px w-5 bg-[#31554d] transition-all ${open ? "top-2 -rotate-45" : "top-4"}`} />
         </div>
       </button>
 
@@ -59,37 +53,33 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
         {open ? (
           <>
             <motion.div
-              className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-[#162d28]/20 backdrop-blur-sm"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
               onClick={() => setOpen(false)}
             />
             <motion.div
-              initial={{ opacity: 0, y: -12 }}
+              initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.18 }}
-              className="pointer-events-none fixed inset-x-0 top-[72px] z-50 px-4 sm:top-[80px]"
+              exit={{ opacity: 0, y: -10 }}
+              className="fixed inset-x-4 top-[72px] z-50 border border-[#d6c5af] bg-[#fbf6ed] p-5 shadow-2xl sm:left-auto sm:right-6 sm:w-[360px]"
             >
-              <div className="pointer-events-auto mx-auto max-w-sm rounded-3xl border border-orange-200/70 bg-white p-6 shadow-2xl backdrop-blur">
-                <nav className="flex flex-col gap-2 text-sm font-semibold text-gray-800">
-                  {links.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setOpen(false)}
-                      className="rounded-2xl border border-transparent px-4 py-3 transition hover:border-orange-200 hover:bg-orange-50 active:bg-orange-100"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </nav>
-                <div className="mt-4 flex flex-col gap-2 border-t border-orange-100 pt-4">
-                  <CartButton variant="compact" />
-                  <AuthActions session={session} variant="minimal" />
-                </div>
+              <nav className="grid grid-cols-2 gap-x-5 gap-y-1 text-sm text-[#2e342f]">
+                {links.map((item) => (
+                  <Link
+                    key={`${item.href}-${item.label}`}
+                    href={item.href}
+                    onClick={() => setOpen(false)}
+                    className="border-b border-[#e3d8c9] py-3 transition hover:text-[#b9472f]"
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+              <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#d6c5af] pt-4">
+                <AuthActions session={session} variant="minimal" />
+                <CartButton variant="compact" />
               </div>
             </motion.div>
           </>
@@ -98,4 +88,3 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
     </div>
   );
 }
-

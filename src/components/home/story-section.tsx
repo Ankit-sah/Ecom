@@ -2,74 +2,89 @@
 
 import { FadeIn } from "@/components/ui/fade-in";
 
+const qualities = [
+  {
+    title: "Generational craftsmanship",
+    description: "Handmade works crafted by artisans who uphold traditional Mithila motifs.",
+    icon: "✦",
+  },
+  {
+    title: "Ethical sourcing",
+    description: "Steady income opportunities for women-led collectives and underrepresented communities.",
+    icon: "◉",
+  },
+  {
+    title: "Global trust",
+    description: "Delivering museum-grade Mithila art to clients worldwide with meticulous attention to detail.",
+    icon: "◎",
+  },
+];
+
 export function StorySection() {
   return (
-    <section className="mx-auto grid max-w-6xl gap-6 px-4 sm:gap-8 md:gap-10 md:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-      <FadeIn className="h-full">
-        <div className="flex h-full flex-col justify-between space-y-4 rounded-2xl border border-orange-200/60 bg-white p-6 shadow-sm transition hover:shadow-md sm:rounded-[32px] sm:space-y-5 sm:p-8 md:p-10">
-          <div className="space-y-5">
-            <p className="text-xs font-bold uppercase tracking-[0.35em] text-orange-600">
-              Our Story
-            </p>
-            <h2 className="text-2xl font-bold tracking-tight text-gray-800 sm:text-3xl md:text-4xl">
+    <section className="paper-texture border-y border-[#ddcfbb]">
+      <div className="mx-auto grid max-w-[1440px] gap-0 lg:grid-cols-[0.72fr_1.18fr_0.82fr]">
+        <FadeIn className="min-h-[420px] lg:min-h-full">
+          <div
+            className="h-full min-h-[420px] bg-cover bg-center"
+            style={{
+              backgroundImage:
+                "linear-gradient(to top, rgba(24,63,55,.12), rgba(24,63,55,0)), url('https://images.unsplash.com/photo-1598965402089-897ce52e835b?auto=format&fit=crop&w=1200&q=82')",
+            }}
+            aria-hidden="true"
+          />
+        </FadeIn>
+
+        <FadeIn delay={0.08} className="flex items-center">
+          <div className="px-6 py-12 sm:px-10 lg:px-12 lg:py-16 xl:px-14">
+            <div className="mb-5 flex items-center gap-4">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.34em] text-[#31554d]">Our Story</span>
+              <span className="h-px w-10 bg-[#b9472f]" />
+            </div>
+            <h2 className="font-editorial text-3xl leading-tight text-[#181b19] sm:text-4xl lg:text-[44px]">
               Rooted in Janakpur’s cultural renaissance
             </h2>
-            <div className="space-y-4 text-sm leading-relaxed text-neutral-700 sm:text-base">
+            <div className="mt-6 space-y-5 text-sm leading-7 text-[#625d54] sm:text-base">
               <p>
-                Founded in 1993, Janakpur Art and Craft preserves traditional Mithila artistry while empowering artisan families
-                across Nepal. From humble beginnings in Shankhamul, the collective now exports heritage jewellery, vessels,
-                textiles, and paintings worldwide.
+                Founded in 1993, Janakpur Art and Craft preserves traditional Mithila artistry while empowering artisan families across Nepal. From humble beginnings in Shankhamul, the collective now exports heritage jewellery, vessels, textiles, and paintings worldwide.
               </p>
               <p>
-                By partnering with communities and cultural societies throughout Janakpur, we secure steady livelihoods and
-                fair wages for the artisans who keep Mithila’s stories alive in every brushstroke.
+                By partnering with communities and cultural societies throughout Janakpur, we secure steady livelihoods and fair wages for the artisans who keep Mithila’s stories alive in every brushstroke.
               </p>
             </div>
-          </div>
 
-          <div className="flex flex-wrap gap-3 pt-4">
-            {["Established 1993", "Family-led collective", "Exporting worldwide"].map((text) => (
-              <span
-                key={text}
-                className="rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-xs font-bold uppercase tracking-wide text-orange-600"
-              >
-                {text}
-              </span>
-            ))}
+            <div className="mt-8 grid gap-3 sm:grid-cols-3">
+              {["Established 1993", "Family-led collective", "Exporting worldwide"].map((text) => (
+                <div
+                  key={text}
+                  className="border border-[#ddcfbb] bg-[#f7efe2] px-4 py-3 text-center text-xs font-semibold text-[#31554d]"
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </FadeIn>
+        </FadeIn>
 
-      <FadeIn delay={0.2} className="h-full">
-        <div className="flex h-full flex-col justify-center gap-5 rounded-2xl border border-orange-200/60 bg-white p-6 shadow-sm transition hover:shadow-md sm:rounded-[32px] sm:gap-6 sm:p-8 md:p-10">
-          <h3 className="text-xl font-bold text-gray-800 sm:text-2xl">
-            Commitment to quality
-          </h3>
-          <ul className="space-y-5 text-sm text-neutral-700 sm:space-y-6 sm:text-base">
-            <li className="flex gap-4">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[orange-500]" />
-              <div>
-                <span className="block font-bold text-orange-500">Generational craftsmanship</span>
-                Handmade works crafted by artisans who uphold traditional Mithila motifs.
-              </div>
-            </li>
-            <li className="flex gap-4">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[orange-500]" />
-              <div>
-                <span className="block font-bold text-orange-500">Ethical sourcing</span>
-                Steady income opportunities for women-led collectives and underrepresented communities.
-              </div>
-            </li>
-            <li className="flex gap-4">
-              <div className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[orange-500]" />
-              <div>
-                <span className="block font-bold text-orange-500">Global trust</span>
-                Delivering museum-grade Mithila art to clients worldwide with meticulous attention to detail.
-              </div>
-            </li>
-          </ul>
-        </div>
-      </FadeIn>
+        <FadeIn delay={0.16} className="flex items-center border-t border-[#ddcfbb] bg-[#faf5ec] lg:border-l lg:border-t-0">
+          <div className="w-full px-6 py-10 sm:px-10 lg:px-8 xl:px-10">
+            <h3 className="font-editorial text-2xl text-[#181b19] sm:text-3xl">Commitment to quality</h3>
+            <div className="mt-5 divide-y divide-[#ddcfbb] border-y border-[#ddcfbb]">
+              {qualities.map((item) => (
+                <div key={item.title} className="flex gap-4 py-5">
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#efe2cc] text-lg text-[#31554d]">
+                    {item.icon}
+                  </div>
+                  <div>
+                    <h4 className="font-editorial text-lg font-semibold text-[#1c201e]">{item.title}</h4>
+                    <p className="mt-1 text-sm leading-6 text-[#68645c]">{item.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      </div>
     </section>
   );
 }
