@@ -15,10 +15,10 @@ export function ProductCard({ product }: Props) {
   const { addItem } = useCart();
 
   return (
-    <div className="grid h-full overflow-hidden border border-[#ddcfbb] bg-[#fffdfa] shadow-[0_16px_40px_rgba(58,42,24,0.06)] transition hover:-translate-y-0.5 hover:shadow-[0_20px_46px_rgba(58,42,24,0.1)] sm:grid-cols-[0.92fr_1.08fr]">
+    <div className="flex h-full flex-col rounded-xl border border-orange-200/60 bg-white/90 shadow-sm transition hover:-translate-y-1 hover:shadow-lg hover:border-orange-500/50 sm:rounded-2xl">
       <Link
         href={`/products/${product.slug}`}
-        className="relative block min-h-[260px] overflow-hidden bg-[#efe5d5] sm:min-h-full"
+        className="relative block aspect-square overflow-hidden rounded-t-2xl"
         aria-label={`View details for ${product.name}`}
       >
         {product.images.length > 0 ? (
@@ -27,63 +27,65 @@ export function ProductCard({ product }: Props) {
             alt={`${product.name}${product.category ? ` - ${product.category.name}` : ""}${product.artisan ? ` by ${product.artisan.name}` : ""}`}
             fill
             context="card"
-            className="object-cover transition duration-500 hover:scale-[1.03]"
+            className="object-cover transition duration-500 hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-[#efe5d5] text-sm font-medium text-[#777064]" aria-label="No image available">
+          <div className="flex h-full items-center justify-center bg-neutral-100 text-sm font-medium text-neutral-500" aria-label="No image available">
             No image
           </div>
         )}
       </Link>
-
-      <div className="flex min-w-0 flex-col p-5 sm:p-6">
-        <div className="text-[11px] leading-5 text-[#70695f]">
-          {product.category ? <div>{product.category.name}</div> : null}
-          {product.artisan ? <div className="font-medium text-[#3f4a45]">{product.artisan.name}</div> : null}
-        </div>
-
-        <Link
-          href={`/products/${product.slug}`}
-          className="font-editorial mt-3 line-clamp-2 text-2xl leading-tight text-[#1b1f1d] transition hover:text-[#b9472f]"
-        >
-          {product.name}
-        </Link>
-
-        <p className="mt-2 line-clamp-3 text-sm leading-6 text-[#68645c]">{product.description}</p>
-
-        {product.tags.length > 0 ? (
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {product.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="bg-[#efe7db] px-2 py-1 text-[10px] font-medium text-[#696158]">
-                #{tag}
+      <div className="flex flex-1 flex-col gap-2 p-4 sm:gap-3 sm:p-5">
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            {product.category ? (
+              <span className="inline-flex items-center rounded-full bg-orange-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.25em] text-orange-600">
+                {product.category.name}
               </span>
-            ))}
+            ) : null}
+            {product.artisan ? (
+              <span className="inline-flex items-center rounded-full border border-orange-200 px-3 py-1 text-[11px] font-semibold text-orange-500">
+                {product.artisan.name}
+              </span>
+            ) : null}
           </div>
-        ) : null}
-
-        <div className="mt-auto pt-5">
-          <div className="flex items-end justify-between gap-3">
-            <div>
-              <div className="font-editorial text-2xl font-semibold text-[#191d1b]">{formatCurrencyFromCents(product.priceCents)}</div>
-              {product.stock === 0 ? (
-                <span className="text-xs font-semibold text-red-700">Out of Stock</span>
-              ) : product.stock <= 5 ? (
-                <span className="text-xs font-semibold text-[#a75a20]">Only {product.stock} left</span>
-              ) : (
-                <span className="text-xs font-semibold text-[#1d7a45]">In Stock</span>
-              )}
+          <Link
+            href={`/products/${product.slug}`}
+            className="line-clamp-2 text-base font-semibold text-gray-800 transition hover:text-orange-500 sm:text-lg"
+          >
+            {product.name}
+          </Link>
+          <p className="text-xs text-neutral-600 line-clamp-2 sm:text-sm">{product.description}</p>
+          {product.tags.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {product.tags.slice(0, 3).map((tag) => (
+                <span key={tag} className="rounded-full border border-orange-200 px-3 py-1 text-[11px] font-medium text-orange-600">
+                  #{tag}
+                </span>
+              ))}
             </div>
-
-            <button
-              type="button"
-              onClick={() => addItem(product)}
-              disabled={product.stock === 0}
-              className="shrink-0 bg-[#b9472f] px-4 py-3 text-xs font-semibold text-white transition hover:bg-[#923622] focus:outline-none focus:ring-2 focus:ring-[#b9472f] focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-[#b9b1a5]"
-              aria-label={`Add ${product.name} to cart`}
-            >
-              {product.stock === 0 ? "Out of Stock" : "Add to cart"}
-            </button>
+          ) : null}
+        </div>
+        <div className="mt-auto space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-base font-semibold text-orange-500">{formatCurrencyFromCents(product.priceCents)}</span>
+            {product.stock === 0 ? (
+              <span className="text-xs font-semibold text-red-600">Out of Stock</span>
+            ) : product.stock <= 5 ? (
+              <span className="text-xs font-semibold text-orange-600">Only {product.stock} left</span>
+            ) : (
+              <span className="text-xs text-neutral-500">In Stock</span>
+            )}
           </div>
+          <button
+            type="button"
+            onClick={() => addItem(product)}
+            disabled={product.stock === 0}
+            className="w-full rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+            aria-label={`Add ${product.name} to cart`}
+          >
+            {product.stock === 0 ? "Out of Stock" : "Add to cart"}
+          </button>
         </div>
       </div>
     </div>

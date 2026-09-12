@@ -23,14 +23,14 @@ const itemVariants = {
 
 export function FeaturedProductsSection({ products }: FeaturedProductsSectionProps) {
   return (
-    <section className="paper-texture border-b border-[#ddcfbb]">
+    <section className="border-b border-[#ddcfbb] bg-[#fbf6ed]">
       <div className="mx-auto grid max-w-[1440px] gap-8 px-6 py-12 sm:px-10 lg:grid-cols-[0.72fr_1.28fr] lg:px-16 lg:py-16 xl:px-20">
         <FadeIn className="flex items-center">
           <div className="max-w-md">
             <div className="mb-4 flex items-center gap-4">
               <span className="h-px w-10 bg-[#b9472f]" />
             </div>
-            <h2 className="font-editorial text-4xl leading-tight text-[#181b19] sm:text-5xl">Featured Mithila creations</h2>
+            <h2 className="[font-family:Georgia,serif] text-4xl leading-tight text-[#181b19] sm:text-5xl">Featured Mithila creations</h2>
             <p className="mt-4 text-sm leading-7 text-[#625d54] sm:text-base">
               Handpicked treasures that celebrate ancestral motifs, natural dyes, and the spirit of Janakpur.
             </p>
