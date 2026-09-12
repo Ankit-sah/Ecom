@@ -55,9 +55,6 @@ export function HeroSection() {
               style={{ backgroundImage: "url('https://images.unsplash.com/photo-1598965402089-897ce52e835b?auto=format&fit=crop&w=1600&q=88')" }}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#f7f0e4]/15 via-transparent to-[#183f37]/10" />
-            <div className="absolute inset-x-6 bottom-6 border border-white/40 bg-[#183f37]/75 p-4 text-white backdrop-blur-sm sm:inset-x-auto sm:bottom-8 sm:right-8 sm:max-w-sm sm:p-5">
-              <p className="font-editorial text-xl">Mithila artistry, framed for modern homes.</p>
-            </div>
           </FadeIn>
         </div>
 
