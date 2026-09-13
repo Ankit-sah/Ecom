@@ -1,3 +1,4 @@
+import { verifyWalletOrder } from "@/lib/verify-wallet-order";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
@@ -12,6 +13,7 @@ import { formatCurrencyFromCents } from "@/utils/format";
 type SuccessPageProps = {
   searchParams: Promise<{
     session_id?: string;
+    order_id?: string;
   }>;
 };
 
@@ -20,16 +22,19 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
   const params = await searchParams;
 
   if (!session?.user) {
-    redirect("/auth/sign-in");
+    const returnParams = new URLSearchParams();
+    if (params.order_id) returnParams.set("order_id", params.order_id);
+    if (params.session_id) returnParams.set("session_id", params.session_id);
+    redirect(`/auth/sign-in?callbackUrl=${encodeURIComponent(`/checkout/success?${returnParams}`)}`);
   }
 
-  if (!params.session_id) {
+  if (!params.session_id && (!params.order_id || !/^[a-f0-9]{24}$/i.test(params.order_id))) {
     redirect("/cart");
   }
 
   // Find order by Stripe session ID
-  const order = await prisma.order.findUnique({
-    where: { stripeSessionId: params.session_id },
+  let order = await prisma.order.findFirst({
+    where: { userId: session.user.id, ...(params.session_id ? { stripeSessionId: params.session_id } : { id: params.order_id }) },
     include: {
       items: {
         include: {
@@ -49,6 +54,26 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
   if (!order) {
     redirect("/cart");
+  }
+
+  if (order.status === "PENDING" && order.paymentProvider) {
+    try {
+      await verifyWalletOrder(order.id);
+      const latest = await prisma.order.findUnique({ where: { id: order.id } });
+      if (latest) order = { ...order, ...latest };
+    } catch { /* Leave pending and let the customer retry verification. */ }
+  }
+  if (!["PAID", "FULFILLED"].includes(order.status)) {
+    const pending = order.status === "PENDING";
+    return <div className="mx-auto max-w-xl px-4 py-20 text-center">
+      <div className="rounded-2xl border border-[#ddcfbb] bg-white p-8">
+        <h1 className="font-serif text-3xl">{pending ? "Payment not yet confirmed" : "Payment was not completed"}</h1>
+        <p className="mt-4 text-sm leading-6 text-neutral-600">{pending ? "If you completed payment, confirmation may take a moment. Your cart is saved. Check again before starting another payment to avoid paying twice." : "Your cart is saved. You can return to checkout when you’re ready."}</p>
+        <p className="mt-3 text-sm">Order #{order.id.slice(-8).toUpperCase()}</p>
+        {pending && <a href={`/checkout/success?order_id=${order.id}`} className="mt-6 inline-flex rounded-full bg-[#31554d] px-6 py-3 text-sm font-semibold text-white">Check payment status</a>}
+        <div className="mt-5 flex justify-center gap-5 text-sm text-[#b9472f]"><Link href="/cart" className="underline">Back to bag</Link><Link href="/contact" className="underline">Contact support</Link></div>
+      </div>
+    </div>;
   }
 
   return (
@@ -95,6 +120,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
           </div>
         </div>
 
+        {order.paymentAmountPaisa && <p className="mb-6 rounded-xl bg-green-50 p-4 text-sm text-green-800">Paid via {order.paymentProvider === "esewa" ? "eSewa" : "Khalti"}: {formatCurrencyFromCents(order.paymentAmountPaisa, "en-NP", "NPR")}</p>}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-gray-800">Order Items</h2>
           <div className="space-y-3">
@@ -179,7 +205,7 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
         <Link
           href="/account/orders"
-          className="rounded-full bg-[orange-500] px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-[orange-500]/30 transition hover:bg-orange-600"
+          className="rounded-full bg-orange-500 px-6 py-3 text-center text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600"
         >
           View Order History
         </Link>
@@ -191,10 +217,10 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
         </Link>
       </div>
 
-      <div className="rounded-3xl border border-orange-500/50 bg-[orange-500] p-8 text-white">
+      <div className="rounded-3xl border border-orange-500/50 bg-orange-500 p-8 text-white">
         <h2 className="text-xl font-semibold">What&apos;s Next?</h2>
         <ul className="mt-4 space-y-2 text-sm text-rose-100">
-          <li>• You&apos;ll receive an order confirmation email shortly</li>
+          <li>• View your confirmed order in your account at any time</li>
           <li>• We&apos;ll notify you when your order ships with tracking information</li>
           <li>• Estimated delivery: {order.shippingAddress?.country === "NP" ? "3-7 business days" : "7-21 business days"}</li>
           <li>• Questions? <Link href="/contact" className="font-semibold underline hover:text-white">Contact us</Link></li>

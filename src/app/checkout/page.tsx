@@ -4,6 +4,8 @@ import { getServerSession } from "next-auth";
 import { CheckoutPageClient } from "@/components/checkout/checkout-page-client";
 import { authOptions } from "@/lib/auth";
 
+import { walletConfig } from "@/lib/wallet-payments";
+
 export const dynamic = "force-dynamic";
 
 export default async function CheckoutPage() {
@@ -15,7 +17,7 @@ export default async function CheckoutPage() {
 
   return (
     <div className="px-4 py-16">
-      <CheckoutPageClient />
+      <CheckoutPageClient options={walletConfig()} />
     </div>
   );
 }

@@ -43,3 +43,6 @@ next-env.d.ts
 # Prisma - generated files are created during build via postinstall script
 # .prisma directory is created during build, no need to commit
 .prisma
+
+# Keep the documented environment template in source control.
+!.env.example

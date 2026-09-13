@@ -152,3 +152,80 @@ Post-deploy tasks:
 - Tailwind CSS v4 uses the new `@import "tailwindcss"` syntax.
 - NextAuth is configured with database sessions and Prisma adapter.
 - Stripe checkout route also stores a pending order to reconcile payment outcomes.
+
+## eSewa and Khalti payments
+
+Checkout supports Stripe (USD), eSewa ePay v2, and Khalti Web Checkout (NPR).
+The catalog and order accounting remain in USD; each wallet order stores its exact
+NPR amount in paisa, the merchant conversion rate, provider reference, and verified
+transaction ID. Checkout displays the NPR total before redirecting. Shipping and
+estimated tax are computed on the server; clients cannot override them.
+
+Configure these server environment variables (never prefix secret keys with `NEXT_PUBLIC_`):
+
+- `PAYMENT_ENVIRONMENT`: `sandbox` or `production`, explicitly required.
+- `PAYMENT_USD_TO_NPR_RATE`: your approved merchant NPR-per-USD conversion rate.
+  The environment template uses 135 for sandbox demonstration only. There is no automatic exchange-rate feed; set an approved rate before production.
+- `ESEWA_PRODUCT_CODE` and `ESEWA_SECRET_KEY`: merchant credentials from eSewa.
+- `KHALTI_SECRET_KEY`: the secret key from the appropriate Khalti merchant dashboard.
+- `NEXT_PUBLIC_APP_URL`: your canonical site origin, HTTPS for live payments.
+
+Wallet methods remain unavailable until their configuration is complete. Stripe
+requires only its server secret for the hosted checkout redirect. Existing product
+prices are **not** reinterpreted as NPR. The existing 8% estimated tax policy is
+preserved; review your tax and shipping policy before taking live orders.
+
+Run `npx prisma generate` after pulling these changes. New Order fields are optional
+and require no existing-data backfill. MongoDB must be a replica set (including Atlas)
+for the atomic payment and inventory transaction. No database push was performed as
+part of this change.
+
+Provider setup and callback behavior:
+
+1. Follow the official [eSewa ePay v2 documentation](https://developer.esewa.com.np/pages/Epay)
+   and [Khalti Web Checkout documentation](https://docs.khalti.com/khalti-epayment/)
+   to obtain sandbox credentials. For Khalti, use the secret key from its test merchant
+   dashboard, not a public key. For eSewa, use its documented UAT product code and key.
+2. Both providers return to `/api/payments/verify/<orderId>` on the canonical origin.
+   The server verifies eSewa callback signatures and queries the provider directly.
+   Khalti uses its persisted `pidx` for lookup. Amount and reference mismatches never
+   mark the order paid.
+3. The confirmation page requires the order owner's session. Pending wallet orders
+   can be checked again there, including when the initial callback was interrupted.
+   Only verified paid/fulfilled orders clear the cart. Repeated callbacks cannot
+   deduct wallet order inventory twice.
+4. Test success, cancellation, insufficient balance, provider timeout, callback replay,
+   tampered amounts, and expired sign-in sessions with sandbox accounts. Check both
+   provider dashboards and admin orders, and confirm stock changes only once.
+5. Switch to `production`, install approved live merchant keys and product code,
+   and confirm the HTTPS site origin before accepting real money.
+
+Operational limits: wallet orders awaiting a callback stay pending until checked
+again; no scheduled reconciliation or automatic wallet refunds are included. Reconcile
+abandoned/pending orders against merchant dashboards. Wallet confirmation emails are
+not sent automatically. If stock sells out during payment, the verified payment is
+recorded with an inventory-review note and fulfillment stays blocked for staff review.
+Payment initiation timeouts can leave pending orders; check them before retrying a charge.
+
+Run `npm run test:payments` for payment-validation, signature, amount, and replay tests.
+
+### Ready-to-use sandbox settings
+
+The local environment and `.env.example` include the public eSewa test product code
+and signing key from https://developer.esewa.com.np/pages/Test-credentials. Never use
+these for production. Live mode refuses the public eSewa credentials.
+
+- eSewa test login: `9711111111`, password `Test@123`, OTP `123456`.
+- Khalti test payer: `9800000000`, MPIN `1111`, OTP `987654`.
+- Khalti merchant credential: add your own test dashboard's `live_secret_key` as
+  `KHALTI_SECRET_KEY` in `.env`. Payer credentials cannot authenticate the merchant API.
+- Local return origin: `http://localhost:3000`. Run the app on port 3000, or update
+  both `NEXT_PUBLIC_APP_URL` and `NEXTAUTH_URL` to the actual local origin and restart.
+- eSewa sandbox verification uses `https://rc.esewa.com.np`; the older `uat` host
+  is no longer used. Production verification uses `https://esewa.com.np`.
+
+Run `npm run check:payments` to check configuration and contact the actual sandbox
+providers. This creates a small, unpaid sandbox payment session, never a charge or
+store order. It refuses production mode and does not log secrets. A successful
+provider probe does not replace completing a signed-in store checkout and verifying
+its order and inventory. Restart the development server after changing `.env`.

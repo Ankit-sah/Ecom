@@ -56,3 +56,13 @@ body {
     min-height: -webkit-fill-available;
   }
 }
+
+/* Shared keyboard focus and comfortable native form controls. */
+:focus-visible { outline: 2px solid #31554d; outline-offset: 4px; }
+::selection { background: #e9d5ba; color: #242b25; }
+input, select, textarea { font: inherit; }
+button:not(:disabled), summary { cursor: pointer; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

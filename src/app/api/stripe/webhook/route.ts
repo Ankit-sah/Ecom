@@ -5,9 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { deductStockFromOrder, restoreStockFromOrder } from "@/lib/inventory";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "");
-
 export async function POST(request: Request) {
+  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  if (!stripeKey) return NextResponse.json({ error: "Card payments are unavailable." }, { status: 503 });
+  const stripe = new Stripe(stripeKey);
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
     console.error("STRIPE_WEBHOOK_SECRET not configured in environment variables");

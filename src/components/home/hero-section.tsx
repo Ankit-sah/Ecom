@@ -18,16 +18,16 @@ export function HeroSection() {
 
             <FadeIn className="relative z-10 max-w-[620px] space-y-7 lg:pl-8">
               <div className="flex items-center gap-4">
-                <span className="text-[11px] font-semibold uppercase tracking-[0.34em] text-[#31554d] sm:text-xs">Hand-painted traditions</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.34em] text-[#31554d] sm:text-xs">From Janakpur, with love</span>
                 <span className="h-px w-12 bg-[#b9472f]" />
               </div>
 
               <h1 className="[font-family:Georgia,serif] text-4xl leading-[1.08] tracking-[-0.025em] text-[#171b19] sm:text-5xl lg:text-[64px]">
-                Use Janakpur Art and Craft—custodians of Mithila artistry since 1993.
+                Art with roots. Pieces with soul.
               </h1>
 
               <p className="max-w-xl text-base leading-7 text-[#5d5b55] sm:text-lg sm:leading-8">
-                Discover vibrant Madhubani paintings, handwoven textiles, and decor inspired by Janakpur’s folklore. Each piece celebrates the artisans who bring this heritage to life.
+                Bring Mithila’s living traditions into your home. Explore hand-painted art, textiles, and meaningful gifts from Janakpur Art and Craft, celebrating local artistry since 1993.
               </p>
 
               <div className="flex flex-col gap-3 pt-1 sm:flex-row">
@@ -37,6 +37,9 @@ export function HeroSection() {
                 <Link href="/artisans" className="inline-flex h-12 items-center justify-center border border-[#b9472f] bg-[#fbf6ed] px-7 text-sm font-semibold text-[#633023] transition hover:bg-[#f2e7d6] focus:outline-none focus:ring-2 focus:ring-[#b9472f] focus:ring-offset-2">
                   Meet the artisans
                 </Link>
+              </div>
+              <div className="flex flex-wrap gap-x-6 gap-y-2 border-t border-[#ddcfbb] pt-5 text-xs text-[#31554d]">
+                <span>Made in Nepal</span><span>Artisan-crafted</span><span>Worldwide delivery</span>
               </div>
             </FadeIn>
           </div>

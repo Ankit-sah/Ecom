@@ -101,6 +101,11 @@ model Order {
   totalCents        Int
   currency          String           @default("USD")
   stripeSessionId   String?          @unique
+  paymentProvider   String?
+  paymentReference  String?
+  paymentAmountPaisa Int?
+  paymentExchangeRate Float?
+  paymentTransactionId String?
   stripePaymentId   String?
   trackingNumber    String?
   notes             String?

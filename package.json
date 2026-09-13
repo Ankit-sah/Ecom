@@ -4,7 +4,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "npx prisma generate"
+    "postinstall": "npx prisma generate",
+    "test:payments": "node --test tests/payments.test.cjs",
+    "check:payments": "node scripts/check-payments.cjs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",

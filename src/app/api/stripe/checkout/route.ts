@@ -4,6 +4,8 @@ import Stripe from "stripe";
 
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { CheckoutError, validateCheckout, checkoutTotals } from "@/lib/checkout-validation";
+import { paymentOrigin } from "@/lib/wallet-payments";
 import { validateOrderStock } from "@/lib/inventory";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
@@ -22,32 +24,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as {
-      items?: Array<{
-        productId: string;
-        quantity: number;
-      }>;
-      shippingMethod?: "domestic" | "international";
-      shippingCents?: number;
-      shippingAddress?: {
-        fullName: string;
-        phone?: string;
-        addressLine1: string;
-        addressLine2?: string;
-        city: string;
-        state?: string;
-        postalCode: string;
-        country?: string;
-      };
-    };
-
-    if (!body.items || body.items.length === 0) {
-      return NextResponse.json({ error: "At least one item is required." }, { status: 400 });
-    }
-
-    if (!body.shippingAddress) {
-      return NextResponse.json({ error: "Shipping address is required." }, { status: 400 });
-    }
+    const body = validateCheckout(await request.json());
 
     const productIds = body.items.map((item) => item.productId);
     const products = await prisma.product.findMany({
@@ -100,14 +77,9 @@ export async function POST(request: Request) {
     }));
 
     const subtotalCents = itemsWithProduct.reduce((total, item) => total + item.quantity * item.product.priceCents, 0);
-    const taxCents = Math.round(subtotalCents * 0.08);
-    const shippingMethod = body.shippingMethod ?? "domestic";
-    const computedShippingCents =
-      body.shippingCents ??
-      (shippingMethod === "domestic"
-        ? Math.max(800, Math.round(subtotalCents * 0.05))
-        : Math.max(2500, Math.round(subtotalCents * 0.12)));
-    const totalCents = subtotalCents + taxCents + computedShippingCents;
+    const shippingMethod = body.shippingMethod;
+    const { taxCents, shippingCents: computedShippingCents, totalCents } = checkoutTotals(subtotalCents, shippingMethod);
+    if (taxCents > 0) lineItems.push({ price_data: { currency: "usd", product_data: { name: "Estimated tax", description: "Order tax", metadata: { productId: "tax" } }, unit_amount: taxCents }, quantity: 1 });
 
     const shippingLineItem = {
       price_data: {
@@ -146,10 +118,7 @@ export async function POST(request: Request) {
       },
     });
 
-    const origin =
-      request.headers.get("origin") ??
-      process.env.NEXT_PUBLIC_APP_URL ??
-      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+    const origin = paymentOrigin();
 
     const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -214,6 +183,7 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
+    if (error instanceof CheckoutError || error instanceof SyntaxError) return NextResponse.json({ error: error.message }, { status: 400 });
     console.error("Failed to create Stripe checkout session", error);
     
     // Provide more specific error messages
@@ -241,7 +211,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { 
         error: "Failed to create checkout session.",
-        details: error instanceof Error ? error.message : "Unknown error",
+
       },
       { status: 500 }
     );

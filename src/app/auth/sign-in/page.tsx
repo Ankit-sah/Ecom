@@ -4,11 +4,13 @@ import { getServerSession } from "next-auth";
 import { SignInButton } from "@/components/auth/sign-in-button";
 import { authOptions } from "@/lib/auth";
 
-export default async function SignInPage() {
+export default async function SignInPage({ searchParams }: { searchParams: Promise<{ callbackUrl?: string }> }) {
+  const requested = (await searchParams).callbackUrl;
+  const callbackUrl = requested?.startsWith("/") && !requested.startsWith("//") && !requested.includes("\\") ? requested : "/account";
   const session = await getServerSession(authOptions);
 
   if (session) {
-    redirect("/");
+    redirect(callbackUrl);
   }
 
   return (
@@ -21,7 +23,7 @@ export default async function SignInPage() {
             Use your Okta account to access your profile, manage orders, and enjoy a personalized experience.
           </p>
         </div>
-        <SignInButton />
+        <SignInButton callbackUrl={callbackUrl} />
         <p className="text-xs text-neutral-500">
           By continuing you agree to our{" "}
           <a href="#" className="font-medium text-neutral-700 underline-offset-2 hover:underline">
