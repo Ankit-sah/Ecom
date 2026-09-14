@@ -2,6 +2,7 @@ import Script from "next/script";
 
 import { FeaturedProductsSection } from "@/components/home/featured-products-section";
 import { HeroSection } from "@/components/home/hero-section";
+import { ShopPromisesSection } from "@/components/home/shop-promises-section";
 import { StorySection } from "@/components/home/story-section";
 import { getFeaturedProducts } from "@/lib/product-service";
 import { generateOrganizationSchema, generateWebSiteSchema } from "@/lib/structured-data";
@@ -25,6 +26,7 @@ export default async function HomePage() {
       />
       <main>
         <HeroSection />
+        <ShopPromisesSection />
         <StorySection />
         <FeaturedProductsSection products={featuredProducts} />
       </main>

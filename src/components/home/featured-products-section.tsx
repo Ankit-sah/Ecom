@@ -51,7 +51,7 @@ export function FeaturedProductsSection({ products }: FeaturedProductsSectionPro
             viewport={{ once: true, amount: 0.2 }}
             className="grid gap-5 sm:grid-cols-2"
           >
-            {products.slice(0, 2).map((product) => (
+            {products.slice(0, 4).map((product) => (
               <motion.div key={product.id} variants={itemVariants}>
                 <ProductCard product={product} />
               </motion.div>

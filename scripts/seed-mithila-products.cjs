@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 const { loadEnvConfig } = require("@next/env");
 const { PrismaClient } = require("@prisma/client");
 

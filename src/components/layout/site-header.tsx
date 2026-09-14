@@ -9,7 +9,8 @@ import { MobileNav } from "@/components/layout/site-header/mobile-nav";
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
-  { href: "/checkout", label: "Checkout" },
+  { href: "/artisans", label: "Artisans" },
+  { href: "/about", label: "Our story" },
 ];
 
 export async function SiteHeader() {
@@ -26,12 +27,15 @@ export async function SiteHeader() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-orange-200 bg-white/85 shadow-sm backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[#ddcfbb] bg-white/90 shadow-sm backdrop-blur">
+      <div className="bg-[#31554d] px-4 py-2 text-center text-[11px] font-semibold tracking-[0.08em] text-white sm:text-xs">
+        Handcrafted in Janakpur, Nepal · Secure checkout with eSewa and Khalti
+      </div>
       <div className="relative mx-auto max-w-6xl px-3 py-3 sm:px-4 sm:py-4">
         <div className="flex items-center justify-between gap-4">
           <Link
             href="/"
-            className="text-lg font-semibold tracking-tight text-orange-500 sm:text-xl"
+            className="font-serif text-lg font-semibold tracking-tight text-[#b9472f] sm:text-xl"
             aria-label="Janakpur Art and Craft - Home"
           >
             Janakpur Art & Craft
@@ -39,7 +43,7 @@ export async function SiteHeader() {
 
           <nav className="hidden items-center gap-6 text-sm font-medium text-neutral-600 md:flex" aria-label="Main navigation">
             {links.map((item) => (
-              <Link key={item.href} href={item.href} className="transition hover:text-orange-500" aria-label={item.label}>
+              <Link key={item.href} href={item.href} className="transition hover:text-[#b9472f]" aria-label={item.label}>
                 {item.label}
               </Link>
             ))}

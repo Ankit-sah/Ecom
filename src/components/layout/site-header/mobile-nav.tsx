@@ -16,7 +16,8 @@ type MobileNavProps = {
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/products", label: "Products" },
-  { href: "/checkout", label: "Checkout" },
+  { href: "/artisans", label: "Artisans" },
+  { href: "/about", label: "Our story" },
 ];
 
 export function MobileNav({ session, isAdmin }: MobileNavProps) {
@@ -30,16 +31,16 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
       <AuthActions session={session} variant="minimal" />
       <button
         type="button"
-        className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-orange-200/70 bg-white/90 shadow-sm transition hover:border-orange-500"
+        className="relative z-50 flex h-11 w-11 items-center justify-center rounded-full border border-[#ddcfbb] bg-white/90 shadow-sm transition hover:border-[#b9472f]"
         aria-expanded={open}
         aria-label="Toggle navigation"
         onClick={() => setOpen((prev) => !prev)}
       >
         <span className="sr-only">Menu</span>
         <div className="relative h-5 w-5">
-          <span className={`absolute left-0 top-0 block h-0.5 w-5 rounded-full bg-orange-500 transition-all duration-300 ${open ? "top-2 rotate-45" : "top-0"}`} />
-          <span className={`absolute left-0 top-2 block h-0.5 w-5 rounded-full bg-orange-500 transition-all duration-300 ${open ? "opacity-0" : "opacity-100"}`} />
-          <span className={`absolute left-0 top-4 block h-0.5 w-5 rounded-full bg-orange-500 transition-all duration-300 ${open ? "top-2 -rotate-45" : "top-4"}`} />
+          <span className={`absolute left-0 top-0 block h-0.5 w-5 rounded-full bg-[#b9472f] transition-all duration-300 ${open ? "top-2 rotate-45" : "top-0"}`} />
+          <span className={`absolute left-0 top-2 block h-0.5 w-5 rounded-full bg-[#b9472f] transition-all duration-300 ${open ? "opacity-0" : "opacity-100"}`} />
+          <span className={`absolute left-0 top-4 block h-0.5 w-5 rounded-full bg-[#b9472f] transition-all duration-300 ${open ? "top-2 -rotate-45" : "top-4"}`} />
         </div>
       </button>
 
@@ -59,22 +60,22 @@ export function MobileNav({ session, isAdmin }: MobileNavProps) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -12 }}
               transition={{ duration: 0.18 }}
-              className="pointer-events-none fixed inset-x-0 top-[72px] z-50 px-4 sm:top-[80px]"
+              className="pointer-events-none fixed inset-x-0 top-[112px] z-50 px-4 sm:top-[120px]"
             >
-              <div className="pointer-events-auto mx-auto max-w-sm rounded-3xl border border-orange-200/70 bg-white p-6 shadow-2xl backdrop-blur">
+              <div className="pointer-events-auto mx-auto max-w-sm rounded-3xl border border-[#ddcfbb] bg-white p-6 shadow-2xl backdrop-blur">
                 <nav className="flex flex-col gap-2 text-sm font-semibold text-gray-800">
                   {links.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
                       onClick={() => setOpen(false)}
-                      className="rounded-2xl border border-transparent px-4 py-3 transition hover:border-orange-200 hover:bg-orange-50 active:bg-orange-100"
+                      className="rounded-2xl border border-transparent px-4 py-3 transition hover:border-[#ddcfbb] hover:bg-[#fbf6ed] active:bg-[#f5eadb]"
                     >
                       {item.label}
                     </Link>
                   ))}
                 </nav>
-                <div className="mt-4 flex flex-col gap-2 border-t border-orange-100 pt-4">
+                <div className="mt-4 flex flex-col gap-2 border-t border-[#ddcfbb] pt-4">
                   <CartButton variant="compact" />
                   <AuthActions session={session} variant="minimal" />
                 </div>
