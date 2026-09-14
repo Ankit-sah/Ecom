@@ -101,7 +101,7 @@ async function createProduct(formData: FormData) {
   const artisanName = formData.get("artisanName")?.toString().trim();
   const artisanLocation = formData.get("artisanLocation")?.toString().trim();
   const artisanBio = formData.get("artisanBio")?.toString().trim();
-  const details = Object.fromEntries(["materials", "dimensions", "care", "dispatch", "delivery"].map((key) => [key, formData.get(key)?.toString().trim()]).filter(([, value]) => value));
+  const details = Object.fromEntries(["materials", "dimensions", "care", "origin", "dispatch", "delivery"].map((key) => [key, formData.get(key)?.toString().trim()]).filter(([, value]) => value));
 
   if (!name || !sku || Number.isNaN(priceCents) || Number.isNaN(stock)) {
     throw new Error("Missing required fields.");
@@ -314,6 +314,7 @@ export default async function AdminProductsPage() {
             <div className="grid gap-3 md:grid-cols-2">
               <input name="materials" placeholder="Materials, e.g. terracotta, natural pigments" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
               <input name="dimensions" placeholder="Dimensions, e.g. 25 cm diameter" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
+              <input name="origin" placeholder="Origin, e.g. Janakpur, Nepal" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
               <input name="dispatch" placeholder="Dispatch estimate, e.g. Ships in 2–3 business days" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
               <input name="delivery" placeholder="Delivery estimate" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
               <textarea name="care" rows={2} placeholder="Care instructions" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm md:col-span-2" />

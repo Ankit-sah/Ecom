@@ -198,6 +198,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </dd>
           </div>
           <div>
+            <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Origin</dt>
+            <dd className="mt-2 text-sm text-neutral-700">{details.origin}</dd>
+          </div>
+          <div>
             <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Price</dt>
             <dd className="mt-2 text-sm text-orange-500">{formatCurrencyFromCents(product.priceCents)}</dd>
           </div>
