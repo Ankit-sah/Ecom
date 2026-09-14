@@ -4,8 +4,9 @@ import Script from "next/script";
 import { ProductDetailActions } from "@/components/products/product-detail-actions";
 import { RelatedProducts } from "@/components/products/related-products";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
-import { OptimizedImage } from "@/components/products/optimized-image";
+import { ProductGallery } from "@/components/products/product-gallery";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/product-service";
+import { getProductDetails } from "@/lib/product-details";
 import { getCanonicalUrl, generateProductSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 import { formatCurrencyFromCents } from "@/utils/format";
 
@@ -101,6 +102,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   ]);
   
   const productSchema = generateProductSchema(product);
+  const details = getProductDetails(product);
   const breadcrumbSchema = generateBreadcrumbSchema([
     { name: "Home", url: getCanonicalUrl("/") },
     { name: "Products", url: getCanonicalUrl("/products") },
@@ -128,39 +130,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
           ]}
         />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-12">
-        <div className="grid gap-4 sm:gap-6">
-          <div className="relative aspect-square overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-100 sm:rounded-3xl">
-            {product.images.length > 0 ? (
-              <OptimizedImage
-                src={product.images[0]}
-                alt={`${product.name}${product.category ? ` - ${product.category.name}` : ""}${product.artisan ? ` crafted by ${product.artisan.name}` : ""}`}
-                fill
-                context="detail"
-                className="object-cover"
-                priority
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center text-neutral-500" aria-label="No image available">
-                No image available
-              </div>
-            )}
-          </div>
-          {product.images.length > 1 && (
-            <div className="grid grid-cols-3 gap-3">
-              {product.images.slice(1).map((image, index) => (
-                <div key={image} className="relative aspect-square overflow-hidden rounded-2xl border border-neutral-200">
-                  <OptimizedImage
-                    src={image}
-                    alt={`${product.name} - Additional view ${index + 2}`}
-                    fill
-                    context="thumbnail"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <ProductGallery images={product.images} name={product.name} category={product.category?.name} artisan={product.artisan?.name} />
 
         <div className="space-y-6 sm:space-y-8">
           <div className="space-y-3 sm:space-y-4">
@@ -179,12 +149,16 @@ export default async function ProductDetailPage({ params }: PageProps) {
             </div>
             <h1 className="text-2xl font-semibold text-gray-800 sm:text-3xl md:text-4xl">{product.name}</h1>
             <p className="text-xs text-neutral-600 sm:text-sm">{product.description}</p>
-            <p className="text-sm font-medium text-neutral-500">
-              Catalog slug: <span className="text-orange-500">{product.slug}</span>
-            </p>
+            <p className="text-sm leading-6 text-neutral-600">Each work is handmade; slight shifts in colour and pattern make your piece one of a kind.</p>
           </div>
 
           <ProductDetailActions product={product} />
+
+          <section className="rounded-2xl border border-[#ddcfbb] bg-[#f3f5ef] p-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[#31554d]">Delivery</p>
+            <p className="mt-2 font-semibold text-[#242b25]">{details.dispatch}</p>
+            <p className="mt-1 text-sm leading-6 text-neutral-600">{details.delivery}</p>
+          </section>
 
           <div className="space-y-4 rounded-3xl border border-orange-200 bg-white/85 p-8">
             <h2 className="text-lg font-semibold text-gray-800">Why it’s special</h2>
@@ -205,8 +179,12 @@ export default async function ProductDetailPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-orange-200 bg-white/85 p-10">
-        <h2 className="text-xl font-semibold text-gray-800">Product details</h2>
+      <div className="rounded-3xl border border-[#ddcfbb] bg-white p-6 sm:p-10">
+        <h2 className="font-serif text-3xl text-[#242b25]">Details for your piece</h2>
+        <div className="mt-6 grid gap-4 md:grid-cols-3">
+          {[["Materials", details.materials], ["Dimensions", details.dimensions], ["Care", details.care]].map(([label, value]) => <section key={label} className="rounded-2xl bg-[#fbf6ed] p-5"><h3 className="text-sm font-semibold text-[#31554d]">{label}</h3><p className="mt-2 text-sm leading-6 text-neutral-600">{value}</p></section>)}
+        </div>
+        <h2 className="mt-10 text-xl font-semibold text-gray-800">Product information</h2>
         <dl className="mt-6 grid gap-6 sm:grid-cols-2">
           <div>
             <dt className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">Category</dt>
@@ -261,4 +239,3 @@ export default async function ProductDetailPage({ params }: PageProps) {
     </>
   );
 }
-

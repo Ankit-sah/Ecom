@@ -95,13 +95,14 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
           ]}
         />
 
-        <section className="mx-auto flex max-w-6xl flex-col gap-6 text-center">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-500">Mithila marketplace</p>
-          <h1 className="text-2xl font-semibold text-gray-800 sm:text-3xl md:text-4xl">All handcrafted treasures</h1>
-          <p className="mx-auto max-w-2xl text-xs text-neutral-600 sm:text-sm">
+        <section className="mx-auto max-w-6xl rounded-3xl border border-[#ddcfbb] bg-[#f5eadb] px-6 py-10 text-center sm:px-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#b9472f]">Mithila marketplace</p>
+          <h1 className="mt-3 font-serif text-4xl text-[#242b25] sm:text-5xl">All handcrafted treasures</h1>
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-neutral-600">
             Browse the full Janakpur Art and Craft collection—hand-painted wall plates, story scrolls, jewellery,
             textiles, and decor crafted in Janakpur and destined for admirers around the world.
           </p>
+          <div className="mt-7 flex flex-wrap justify-center gap-x-7 gap-y-2 text-xs font-semibold text-[#31554d]"><span>Handmade in Nepal</span><span>Fair artisan partnerships</span><span>Secure checkout</span></div>
         </section>
 
         <section className="mx-auto max-w-6xl">
@@ -115,6 +116,10 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
             </aside>
 
             <div className="space-y-4 sm:space-y-6">
+              <details className="rounded-2xl border border-[#ddcfbb] bg-white p-4 lg:hidden">
+                <summary className="cursor-pointer text-sm font-semibold text-[#31554d]">Filter and sort the collection</summary>
+                <div className="mt-4"><ProductFilters categories={categories} artisans={artisans} maxPrice={maxPrice} /></div>
+              </details>
               {products.length === 0 ? (
                 <div className="rounded-3xl border border-dashed border-orange-500/40 bg-white/70 p-16 text-center">
                   <p className="text-sm text-neutral-600">
@@ -131,8 +136,8 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
                 </div>
               ) : (
                 <>
-                  <p className="text-sm text-neutral-600">
-                    Showing {products.length} {products.length === 1 ? "product" : "products"}
+                  <p aria-live="polite" className="text-sm text-neutral-600">
+                    {products.length} {products.length === 1 ? "piece" : "pieces"} ready to discover
                   </p>
                   <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
                     {products.map((product) => (
@@ -148,4 +153,3 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     </>
   );
 }
-

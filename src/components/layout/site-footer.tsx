@@ -3,7 +3,7 @@ import Link from "next/link";
 const footerLinks = {
   shop: [
     { label: "All Products", href: "/products" },
-    { label: "Featured", href: "/products?filter=featured" },
+    { label: "Featured", href: "/products?featured=true" },
     { label: "Categories", href: "/products" },
   ],
   about: [

@@ -124,7 +124,7 @@ export function CartPageClient() {
         </ul>
       </div>
 
-      <div className="space-y-6 rounded-3xl border border-orange-200/70 bg-white/85 p-6 shadow-sm">
+      <aside className="space-y-6 rounded-3xl border border-orange-200/70 bg-white/85 p-6 shadow-sm lg:sticky lg:top-24">
         <div className="space-y-2">
           <h2 className="text-xl font-semibold text-gray-800">Order summary</h2>
           <p className="text-sm text-neutral-600">Items in cart: {totalQuantity}</p>
@@ -151,13 +151,16 @@ export function CartPageClient() {
         </Link>
         <p className="text-xs text-neutral-500">
           Need help?{" "}
-          <a href="#" className="font-semibold text-orange-500 underline-offset-2 hover:underline">
+          <Link href="/contact" className="font-semibold text-orange-500 underline-offset-2 hover:underline">
             Contact support
-          </a>
+          </Link>
           .
         </p>
-      </div>
+        <div className="border-t border-orange-100 pt-5 text-xs leading-5 text-neutral-500">
+          <p className="font-semibold text-[#31554d]">Shop with confidence</p>
+          <p className="mt-1">Secure payment, careful packaging, and support from our Janakpur team.</p>
+        </div>
+      </aside>
     </div>
   );
 }
-

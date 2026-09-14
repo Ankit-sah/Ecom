@@ -101,6 +101,7 @@ async function createProduct(formData: FormData) {
   const artisanName = formData.get("artisanName")?.toString().trim();
   const artisanLocation = formData.get("artisanLocation")?.toString().trim();
   const artisanBio = formData.get("artisanBio")?.toString().trim();
+  const details = Object.fromEntries(["materials", "dimensions", "care", "dispatch", "delivery"].map((key) => [key, formData.get(key)?.toString().trim()]).filter(([, value]) => value));
 
   if (!name || !sku || Number.isNaN(priceCents) || Number.isNaN(stock)) {
     throw new Error("Missing required fields.");
@@ -168,6 +169,7 @@ async function createProduct(formData: FormData) {
       stock,
       images,
       tags,
+      details: Object.keys(details).length ? details : undefined,
       featured,
       published,
       publishedAt: published ? new Date() : null,
@@ -306,6 +308,17 @@ export default async function AdminProductsPage() {
           <div className="md:col-span-2">
             <ProductImagesField />
           </div>
+          <fieldset className="space-y-3 rounded-2xl border border-orange-200/70 bg-white/60 p-4 md:col-span-2">
+            <legend className="px-2 text-sm font-semibold text-gray-800">Product page details</legend>
+            <p className="text-xs text-neutral-500">Optional. These appear on the customer-facing product page.</p>
+            <div className="grid gap-3 md:grid-cols-2">
+              <input name="materials" placeholder="Materials, e.g. terracotta, natural pigments" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
+              <input name="dimensions" placeholder="Dimensions, e.g. 25 cm diameter" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
+              <input name="dispatch" placeholder="Dispatch estimate, e.g. Ships in 2–3 business days" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
+              <input name="delivery" placeholder="Delivery estimate" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm" />
+              <textarea name="care" rows={2} placeholder="Care instructions" className="rounded-xl border border-orange-200/70 bg-white px-3 py-2 text-sm md:col-span-2" />
+            </div>
+          </fieldset>
           <fieldset className="space-y-2 rounded-2xl border border-orange-200/70 bg-white/60 p-4">
             <legend className="px-2 text-sm font-semibold text-gray-800">Category</legend>
             <label className="block text-xs font-semibold text-orange-500" htmlFor="categoryId">
@@ -524,4 +537,3 @@ export default async function AdminProductsPage() {
     </div>
   );
 }
-

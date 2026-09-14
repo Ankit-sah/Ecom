@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 
 import { prisma } from "@/lib/prisma";
 import { toProductPayload } from "@/lib/product-service";
@@ -38,6 +39,7 @@ export async function POST(request: Request) {
       priceCents?: number;
       images?: string[];
       tags?: string[];
+      details?: Record<string, unknown>;
       stock?: number;
       featured?: boolean;
       published?: boolean;
@@ -92,6 +94,7 @@ export async function POST(request: Request) {
         priceCents: body.priceCents,
         images: body.images ?? [],
         tags: body.tags ?? [],
+        details: body.details as Prisma.InputJsonValue | undefined,
         stock: body.stock ?? 0,
         featured: body.featured ?? false,
         published: body.published ?? false,
@@ -113,4 +116,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Failed to create product." }, { status: 500 });
   }
 }
-
