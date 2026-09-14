@@ -1,6 +1,7 @@
 "use client";
 
 import { FadeIn } from "@/components/ui/fade-in";
+import { OptimizedImage } from "@/components/products/optimized-image";
 
 const qualities = [
   { title: "Generational craftsmanship", description: "Handmade works crafted by artisans who uphold traditional Mithila motifs.", icon: "✦" },
@@ -12,12 +13,10 @@ export function StorySection() {
   return (
     <section className="border-y border-[#ddcfbb] bg-[#fbf6ed]">
       <div className="mx-auto grid max-w-[1440px] gap-0 lg:grid-cols-[0.72fr_1.18fr_0.82fr]">
-        <FadeIn className="min-h-[420px] lg:min-h-full">
-          <div
-            className="h-full min-h-[420px] bg-cover bg-center"
-            style={{ backgroundImage: "linear-gradient(to top, rgba(24,63,55,.12), rgba(24,63,55,0)), url('https://images.unsplash.com/photo-1598965402089-897ce52e835b?auto=format&fit=crop&w=1200&q=82')" }}
-            aria-hidden="true"
-          />
+        <FadeIn className="relative min-h-[420px] overflow-hidden lg:min-h-full">
+          <OptimizedImage src="/products/traditional-mithila-wall-hanging.png" alt="Traditional Mithila wall hanging created in Janakpur" fill context="hero" priority={false} className="object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#183f37]/35 via-transparent to-transparent" />
+          <div className="absolute bottom-6 left-6 max-w-[210px] border border-white/50 bg-white/90 p-4 text-sm leading-6 text-[#31554d] shadow-lg">Traditional motifs carry stories of nature, ritual, and everyday life.</div>
         </FadeIn>
 
         <FadeIn delay={0.08} className="flex items-center">

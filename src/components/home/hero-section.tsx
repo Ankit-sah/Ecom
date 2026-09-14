@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { FadeIn } from "@/components/ui/fade-in";
+import { OptimizedImage } from "@/components/products/optimized-image";
 
 export function HeroSection() {
   return (
@@ -44,9 +45,25 @@ export function HeroSection() {
             </FadeIn>
           </div>
 
-          <FadeIn delay={0.12} direction="left" className="relative min-h-[460px] overflow-hidden md:min-h-full">
-            <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1598965402089-897ce52e835b?auto=format&fit=crop&w=1600&q=88')" }} />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#f7f0e4]/15 via-transparent to-[#183f37]/10" />
+          <FadeIn delay={0.12} direction="left" className="relative min-h-[500px] overflow-hidden bg-[#e8d4ae] p-5 sm:p-8 md:min-h-full">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_90%_12%,rgba(185,71,47,.22),transparent_30%),radial-gradient(circle_at_8%_88%,rgba(49,85,77,.2),transparent_34%)]" />
+            <div className="relative grid h-full grid-cols-[1.1fr_.9fr] gap-3 sm:gap-5">
+              <Link href="/products/mithila-terracotta-vase" className="group relative row-span-2 block overflow-hidden rounded-tl-[4rem] rounded-br-[4rem] bg-[#f7efe2] shadow-xl">
+                <OptimizedImage src="/products/mithila-terracotta-vase.png" alt="Hand-painted Mithila terracotta vase" fill context="hero" priority className="object-cover transition duration-700 group-hover:scale-105" />
+                <span className="absolute bottom-0 left-0 bg-[#31554d] px-4 py-3 text-xs font-semibold text-white sm:px-5">Hand-painted terracotta</span>
+              </Link>
+              <Link href="/products/mithila-wooden-serving-tray" className="group relative block overflow-hidden rounded-tr-[3.5rem] bg-[#f7efe2] shadow-lg">
+                <OptimizedImage src="/products/mithila-wooden-serving-tray.png" alt="Mithila art wooden serving tray" fill context="hero" priority={false} className="object-cover transition duration-700 group-hover:scale-105" />
+              </Link>
+              <Link href="/products/mithila-hand-painted-jewelry-box" className="group relative block overflow-hidden rounded-bl-[3.5rem] bg-[#f7efe2] shadow-lg">
+                <OptimizedImage src="/products/mithila-hand-painted-jewelry-box.png" alt="Hand-painted Mithila jewelry box" fill context="hero" priority={false} className="object-cover transition duration-700 group-hover:scale-105" />
+                <span className="absolute right-0 top-0 bg-[#b9472f] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-white">New</span>
+              </Link>
+            </div>
+            <div className="absolute bottom-6 right-6 hidden max-w-[210px] rounded-2xl border border-white/50 bg-white/90 p-4 shadow-xl sm:block">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#b9472f]">Made by hand</p>
+              <p className="mt-1 font-serif text-lg leading-tight text-[#242b25]">Traditional art, for everyday spaces.</p>
+            </div>
           </FadeIn>
         </div>
 
