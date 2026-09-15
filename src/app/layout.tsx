@@ -6,6 +6,7 @@ import "./globals.css";
 
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
+import { MobileBottomNav } from "@/components/layout/mobile-bottom-nav";
 import { authOptions } from "@/lib/auth";
 import { getBaseUrl } from "@/lib/structured-data";
 import { CartProvider } from "@/providers/cart-provider";
@@ -117,10 +118,11 @@ export default async function RootLayout({
         </a>
         <AuthProvider session={session}>
           <CartProvider>
-            <div className="flex min-h-screen flex-col">
+            <div className="flex min-h-screen flex-col pb-16 md:pb-0">
               <SiteHeader />
               <main id="main-content" className="flex-1">{children}</main>
               <SiteFooter />
+              <MobileBottomNav />
             </div>
           </CartProvider>
         </AuthProvider>

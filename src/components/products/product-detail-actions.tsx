@@ -21,9 +21,9 @@ export function ProductDetailActions({ product }: Props) {
   const isLowStock = product.stock > 0 && product.stock <= 5;
 
   return (
-    <div className="space-y-4 rounded-2xl border border-orange-200/70 bg-white/80 p-6 shadow-sm backdrop-blur">
+    <div className="space-y-4 rounded-2xl border border-[#ddcfbb] bg-[#fffdf9] p-5 shadow-sm sm:p-6">
       <div className="flex items-center justify-between">
-        <span className="text-lg font-semibold text-orange-500">{formatCurrencyFromCents(product.priceCents)}</span>
+        <span className="font-serif text-2xl font-semibold text-[#242b25]">{formatCurrencyFromCents(product.priceCents)}</span>
         <div className="text-right">
           {isOutOfStock ? (
             <span className="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
@@ -42,12 +42,12 @@ export function ProductDetailActions({ product }: Props) {
       </div>
 
       <div className="flex items-center gap-3">
-        <div className="flex items-center rounded-full border border-orange-500/40">
+        <div className="flex items-center rounded-xl border border-[#ddcfbb] bg-white">
           <button
             type="button"
             onClick={decrement}
             disabled={isOutOfStock}
-            className="h-10 w-10 rounded-l-full text-lg font-semibold text-orange-500 transition hover:bg-orange-50 hover:text-orange-600 disabled:cursor-not-allowed disabled:text-neutral-400"
+            className="h-11 w-10 rounded-l-xl text-lg font-semibold text-[#b9472f] transition hover:bg-[#fbf6ed] disabled:cursor-not-allowed disabled:text-neutral-400"
             aria-label="Decrease quantity"
           >
             –
@@ -57,7 +57,7 @@ export function ProductDetailActions({ product }: Props) {
             type="button"
             onClick={increment}
             disabled={isOutOfStock || quantity >= product.stock}
-            className="h-10 w-10 rounded-r-full text-lg font-semibold text-orange-500 transition hover:bg-orange-50 hover:text-orange-600 disabled:cursor-not-allowed disabled:text-neutral-400"
+            className="h-11 w-10 rounded-r-xl text-lg font-semibold text-[#b9472f] transition hover:bg-[#fbf6ed] disabled:cursor-not-allowed disabled:text-neutral-400"
             aria-label="Increase quantity"
           >
             +
@@ -67,7 +67,7 @@ export function ProductDetailActions({ product }: Props) {
           type="button"
           onClick={() => addItem(product, quantity)}
           disabled={isOutOfStock}
-          className="flex-1 rounded-full bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
+          className="flex-1 rounded-xl bg-[#b9472f] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#923622] disabled:cursor-not-allowed disabled:bg-neutral-300 disabled:shadow-none"
         >
           {isOutOfStock ? "Out of Stock" : "Add to cart"}
         </button>
@@ -80,4 +80,3 @@ export function ProductDetailActions({ product }: Props) {
     </div>
   );
 }
-

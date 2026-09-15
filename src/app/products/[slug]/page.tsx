@@ -135,20 +135,20 @@ export default async function ProductDetailPage({ params }: PageProps) {
         <div className="space-y-6 sm:space-y-8">
           <div className="space-y-3 sm:space-y-4">
             <div className="flex flex-wrap items-center gap-2">
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-orange-600">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#b9472f]">
                 {product.category?.name ?? "Mithila Collection"}
               </p>
               {product.artisan ? (
-                <span className="rounded-full border border-orange-200 px-3 py-1 text-[11px] font-semibold text-orange-500">
+                <span className="rounded-full border border-[#ddcfbb] px-3 py-1 text-[10px] font-semibold text-[#31554d]">
                   Crafted by {product.artisan.name}
                 </span>
               ) : null}
-              <span className="rounded-full border border-orange-200 px-3 py-1 text-[11px] font-semibold text-orange-500">
+              <span className="rounded-full border border-[#ddcfbb] px-3 py-1 text-[10px] font-semibold text-[#31554d]">
                 SKU: {product.sku}
               </span>
             </div>
-            <h1 className="text-2xl font-semibold text-gray-800 sm:text-3xl md:text-4xl">{product.name}</h1>
-            <p className="text-xs text-neutral-600 sm:text-sm">{product.description}</p>
+            <h1 className="font-serif text-3xl font-semibold leading-tight text-[#242b25] sm:text-4xl md:text-5xl">{product.name}</h1>
+            <p className="text-sm leading-6 text-neutral-600">{product.description}</p>
             <p className="text-sm leading-6 text-neutral-600">Each work is handmade; slight shifts in colour and pattern make your piece one of a kind.</p>
           </div>
 
@@ -160,8 +160,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
             <p className="mt-1 text-sm leading-6 text-neutral-600">{details.delivery}</p>
           </section>
 
-          <div className="space-y-4 rounded-3xl border border-orange-200 bg-white/85 p-8">
-            <h2 className="text-lg font-semibold text-gray-800">Why it’s special</h2>
+          <div className="space-y-4 rounded-3xl border border-[#ddcfbb] bg-[#fffdf9] p-6 sm:p-8">
+            <h2 className="font-serif text-2xl font-semibold text-[#242b25]">Why it’s special</h2>
             <ul className="space-y-3 text-sm text-neutral-600">
               <li>• Handcrafted in Janakpur using generations-old Mithila techniques.</li>
               <li>• Natural pigments sourced from flowers, clay, and local minerals.</li>
