@@ -1,9 +1,11 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { NextAuthOptions } from "next-auth";
 import type { Adapter } from "next-auth/adapters";
+import CredentialsProvider from "next-auth/providers/credentials";
 import OktaProvider from "next-auth/providers/okta";
 
 import { prisma } from "@/lib/prisma";
+import { verifyPassword } from "@/lib/passwords";
 
 // UserRole enum type - matches Prisma schema
 type UserRole = "ADMIN" | "STAFF" | "ARTISAN_MANAGER" | "CUSTOMER";
@@ -13,6 +15,7 @@ const adminEmails = adminEmailEnv
   .split(",")
   .map((email) => email.trim().toLowerCase())
   .filter((email) => email.length > 0);
+const oktaEnabled = Boolean(process.env.OKTA_CLIENT_ID && process.env.OKTA_CLIENT_SECRET && process.env.OKTA_ISSUER);
 
 function isValidObjectId(value: string | undefined | null) {
   return typeof value === "string" && /^[0-9a-fA-F]{24}$/.test(value);
@@ -48,11 +51,29 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   providers: [
-    OktaProvider({
-      clientId: process.env.OKTA_CLIENT_ID!,
-      clientSecret: process.env.OKTA_CLIENT_SECRET!,
-      issuer: process.env.OKTA_ISSUER!,
+    CredentialsProvider({
+      id: "credentials",
+      name: "Email and password",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const email = credentials?.email?.trim().toLowerCase();
+        const password = credentials?.password;
+        if (!email || !password) return null;
+
+        const user = await prisma.user.findUnique({ where: { email } });
+        if (!user || !(await verifyPassword(password, user.passwordHash))) return null;
+
+        await ensureAdminRole(user.id, user.email);
+        const role = adminEmails.includes(email) ? "ADMIN" : user.role;
+        return { id: user.id, name: user.name, email: user.email, role, phone: user.phone };
+      },
     }),
+    ...(oktaEnabled
+      ? [OktaProvider({ clientId: process.env.OKTA_CLIENT_ID!, clientSecret: process.env.OKTA_CLIENT_SECRET!, issuer: process.env.OKTA_ISSUER! })]
+      : []),
   ],
   callbacks: {
     async session({ session, token }) {
@@ -92,4 +113,3 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/sign-in",
   },
 };
-

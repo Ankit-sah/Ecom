@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const initialFormState = {
   firstName: "",
@@ -66,11 +67,21 @@ export function SignUpForm() {
         return;
       }
 
-      setSuccess(
-        "Account created successfully. You can now sign in with your Okta credentials. Redirecting to sign in…",
-      );
-      setTimeout(() => router.push("/auth/sign-in"), 2500);
+      const signInResult = await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+        callbackUrl: "/account",
+      });
+      if (signInResult?.error) {
+        setSuccess("Account created. Please sign in to continue.");
+        router.push("/auth/sign-in");
+        return;
+      }
+      setSuccess("Account created. You’re now signed in.");
       setForm(initialFormState);
+      router.push("/account");
+      router.refresh();
     } catch (requestError) {
       console.error(requestError);
       setError("Unexpected error while creating your account. Please try again.");
@@ -180,4 +191,3 @@ export function SignUpForm() {
     </form>
   );
 }
-
