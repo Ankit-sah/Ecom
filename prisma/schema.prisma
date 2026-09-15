@@ -44,6 +44,33 @@ model Product {
   wishlistItems WishlistItem[]
 }
 
+model AccountToken {
+  id        String           @id @default(auto()) @map("_id") @db.ObjectId
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String           @db.ObjectId
+  type      AccountTokenType
+  tokenHash String           @unique
+  expires   DateTime
+  createdAt DateTime         @default(now())
+
+  @@index([userId, type])
+}
+
+enum AccountTokenType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
+model AnalyticsEvent {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  event     String
+  path      String?
+  productId String?
+  createdAt DateTime @default(now())
+
+  @@index([event, createdAt])
+}
+
 model ProductCategory {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
@@ -166,6 +193,7 @@ model User {
   orders        Order[]
   addresses     Address[]
   wishlistItems WishlistItem[]
+  accountTokens AccountToken[]
 }
 
 model WishlistItem {

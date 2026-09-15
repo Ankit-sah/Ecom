@@ -11,8 +11,15 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error("Application error:", error);
+    if (process.env.NEXT_PUBLIC_ANALYTICS_ENABLED === "true") {
+      void fetch("/api/analytics", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event: "client_error", path: window.location.pathname }),
+        keepalive: true,
+      });
+    }
   }, [error]);
 
   return (
@@ -56,4 +63,3 @@ export default function Error({
     </div>
   );
 }
-

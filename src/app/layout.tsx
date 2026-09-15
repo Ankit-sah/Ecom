@@ -11,6 +11,7 @@ import { authOptions } from "@/lib/auth";
 import { getBaseUrl } from "@/lib/structured-data";
 import { CartProvider } from "@/providers/cart-provider";
 import { AuthProvider } from "@/providers/session-provider";
+import { AnalyticsTracker } from "@/components/analytics-tracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -118,6 +119,7 @@ export default async function RootLayout({
         </a>
         <AuthProvider session={session}>
           <CartProvider>
+            <AnalyticsTracker />
             <div className="flex min-h-screen flex-col pb-16 md:pb-0">
               <SiteHeader />
               <main id="main-content" className="flex-1">{children}</main>

@@ -3,6 +3,8 @@ import { Prisma } from "@prisma/client";
 
 import { hashPassword } from "@/lib/passwords";
 import { prisma } from "@/lib/prisma";
+import { createAccountToken } from "@/lib/account-tokens";
+import { sendEmailVerificationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -25,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Use a password between 8 and 128 characters." }, { status: 400 });
     }
 
-    await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
         name: `${firstName} ${lastName}`,
         email,
@@ -33,6 +35,8 @@ export async function POST(request: Request) {
         role: "CUSTOMER",
       },
     });
+    const verificationToken = await createAccountToken(user.id, "EMAIL_VERIFICATION");
+    await sendEmailVerificationEmail(email, verificationToken);
     return NextResponse.json({ success: true }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {

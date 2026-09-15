@@ -26,6 +26,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
           </p>
         </div>
         <SignInForm callbackUrl={callbackUrl} />
+        <a href="/auth/forgot-password" className="block text-right text-xs font-semibold text-orange-600 hover:underline">Forgot password?</a>
         {oktaEnabled ? <><div className="flex items-center gap-3 text-xs text-neutral-400"><span className="h-px flex-1 bg-[#ddcfbb]" />or<span className="h-px flex-1 bg-[#ddcfbb]" /></div><SignInButton callbackUrl={callbackUrl} /></> : null}
         <p className="text-xs text-neutral-500">
           By continuing you agree to our{" "}

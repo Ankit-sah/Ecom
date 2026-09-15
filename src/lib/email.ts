@@ -59,6 +59,30 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
   }
 }
 
+function appUrl() {
+  return process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+}
+
+export async function sendEmailVerificationEmail(email: string, token: string) {
+  const url = `${appUrl()}/auth/verify-email?token=${encodeURIComponent(token)}`;
+  return sendEmail({
+    to: email,
+    subject: "Verify your Janakpur Art and Craft email",
+    html: `<p>Welcome to Janakpur Art and Craft.</p><p><a href="${url}">Verify your email address</a></p><p>This link expires in one hour.</p>`,
+    text: `Welcome to Janakpur Art and Craft. Verify your email address: ${url}\n\nThis link expires in one hour.`,
+  });
+}
+
+export async function sendPasswordResetEmail(email: string, token: string) {
+  const url = `${appUrl()}/auth/reset-password?token=${encodeURIComponent(token)}`;
+  return sendEmail({
+    to: email,
+    subject: "Reset your Janakpur Art and Craft password",
+    html: `<p>We received a password reset request.</p><p><a href="${url}">Choose a new password</a></p><p>This link expires in one hour. If you did not request it, you can ignore this email.</p>`,
+    text: `Choose a new password: ${url}\n\nThis link expires in one hour. If you did not request it, you can ignore this email.`,
+  });
+}
+
 /**
  * Send order confirmation email
  */
@@ -228,4 +252,3 @@ Handcrafted Mithila Artistry Since 1993
     text,
   });
 }
-
