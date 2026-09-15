@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useCart } from "@/providers/cart-provider";
 import type { Product } from "@/types/product";
 import { formatCurrencyFromCents } from "@/utils/format";
+import { WishlistButton } from "@/components/products/wishlist-button";
 
 type Props = {
   product: Product;
@@ -63,6 +64,7 @@ export function ProductDetailActions({ product }: Props) {
             +
           </button>
         </div>
+        <WishlistButton productId={product.id} />
         <button
           type="button"
           onClick={() => addItem(product, quantity)}

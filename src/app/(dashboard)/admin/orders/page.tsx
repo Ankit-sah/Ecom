@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { prisma } from "@/lib/prisma";
 import { requireRole } from "@/lib/server-auth";
+import { sendShippingNotificationEmail } from "@/lib/email";
 import { formatCurrencyFromCents } from "@/utils/format";
 
 async function fetchOrders() {
@@ -49,6 +50,7 @@ async function fetchOrders() {
 async function updateOrderStatus(orderId: string, status: string, note?: string) {
   "use server";
   const session = await requireRole(["ADMIN", "STAFF", "ARTISAN_MANAGER"]);
+  if (!(["PENDING", "PAID", "FULFILLED", "CANCELLED", "FAILED", "REFUNDED"] as const).includes(status as "PENDING" | "PAID" | "FULFILLED" | "CANCELLED" | "FAILED" | "REFUNDED")) throw new Error("Invalid order status.");
   const normalizedStatus = status as "PENDING" | "PAID" | "FULFILLED" | "CANCELLED" | "FAILED" | "REFUNDED";
 
   await prisma.order.update({
@@ -71,29 +73,44 @@ async function updateOrderStatus(orderId: string, status: string, note?: string)
 
 async function updateFulfillmentStage(orderId: string, stage: string, trackingNumber?: string) {
   "use server";
-  await requireRole(["ADMIN", "STAFF", "ARTISAN_MANAGER"]);
+  const session = await requireRole(["ADMIN", "STAFF", "ARTISAN_MANAGER"]);
+  if (!(["NOT_STARTED", "PREPARING", "DISPATCHED", "DELIVERED"] as const).includes(stage as "NOT_STARTED" | "PREPARING" | "DISPATCHED" | "DELIVERED")) throw new Error("Invalid fulfilment stage.");
+  const order = await prisma.order.findUnique({ where: { id: orderId }, select: { email: true, fulfillmentStage: true } });
+  if (!order) throw new Error("Order not found.");
+  const normalizedTracking = trackingNumber?.trim().slice(0, 120) || null;
+  const now = new Date();
 
   await prisma.order.update({
     where: { id: orderId },
     data: {
       fulfillmentStage: stage as "NOT_STARTED" | "PREPARING" | "DISPATCHED" | "DELIVERED",
-      trackingNumber: trackingNumber ?? null,
+      trackingNumber: normalizedTracking,
+      statusHistory: { create: { status: stage === "DELIVERED" ? "FULFILLED" : "PAID", note: `Fulfilment updated to ${stage.toLowerCase()}${normalizedTracking ? ` · Tracking ${normalizedTracking}` : ""}`, actorId: session.user?.email ?? null } },
       shipment: {
         upsert: {
           create: {
             carrier: "Custom",
-            trackingNumber: trackingNumber ?? null,
+            trackingNumber: normalizedTracking,
+            ...(stage === "DISPATCHED" ? { shippedAt: now } : {}),
+            ...(stage === "DELIVERED" ? { deliveredAt: now } : {}),
           },
           update: {
-            trackingNumber: trackingNumber ?? null,
-            updatedAt: new Date(),
+            trackingNumber: normalizedTracking,
+            ...(stage === "DISPATCHED" ? { shippedAt: now } : {}),
+            ...(stage === "DELIVERED" ? { deliveredAt: now } : {}),
+            updatedAt: now,
           },
         },
       },
     },
   });
 
+  if (stage === "DISPATCHED" && order.fulfillmentStage !== "DISPATCHED") {
+    await sendShippingNotificationEmail(order.email, orderId, normalizedTracking);
+  }
+
   revalidatePath("/admin/orders");
+  revalidatePath("/account/orders");
 }
 
 type OrderWithRelations = Awaited<ReturnType<typeof fetchOrders>>[number];
@@ -287,4 +304,3 @@ export default async function AdminOrdersPage() {
     </div>
   );
 }
-

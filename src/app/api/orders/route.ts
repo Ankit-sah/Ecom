@@ -2,6 +2,8 @@ import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 import { authOptions } from "@/lib/auth";
+import { checkoutTotals, CheckoutError, validateCheckout } from "@/lib/checkout-validation";
+import { validateOrderStock } from "@/lib/inventory";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
@@ -99,38 +101,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as {
-      items?: Array<{
-        productId: string;
-        quantity: number;
-      }>;
-      stripeSessionId?: string;
-      shippingCents?: number;
-      shippingAddress?: {
-        fullName: string;
-        phone?: string;
-        addressLine1: string;
-        addressLine2?: string;
-        city: string;
-        state?: string;
-        postalCode: string;
-        country?: string;
-      } | null;
-      billingAddress?: {
-        fullName: string;
-        phone?: string;
-        addressLine1: string;
-        addressLine2?: string;
-        city: string;
-        state?: string;
-        postalCode: string;
-        country?: string;
-      } | null;
-    };
-
-    if (!body.items || !Array.isArray(body.items) || body.items.length === 0) {
-      return NextResponse.json({ error: "Order items are required." }, { status: 400 });
-    }
+    const body = validateCheckout(await request.json());
 
     const productIds = body.items.map((item) => item.productId);
     const products = await prisma.product.findMany({
@@ -141,59 +112,25 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Some products could not be found." }, { status: 400 });
     }
 
-    const items = body.items.map((item: { productId: string; quantity: number }) => {
+    const stockValidation = await validateOrderStock(body.items);
+    if (!stockValidation.valid) return NextResponse.json({ error: "An item is no longer available.", details: stockValidation.errors }, { status: 400 });
+
+    const items = body.items.map((item) => {
       const product = products.find((p: { id: string }) => p.id === item.productId);
       if (!product) {
         throw new Error(`Product ${item.productId} not found`);
       }
       return {
         product,
-        quantity: Math.max(1, item.quantity),
+        quantity: item.quantity,
       };
     });
 
     const subtotalCents = items.reduce((total, item) => total + item.quantity * item.product.priceCents, 0);
-    const taxCents = Math.round(subtotalCents * 0.08);
-    const shippingCents = typeof body.shippingCents === "number" ? body.shippingCents : Math.round(subtotalCents * 0.05);
-    const totalCents = subtotalCents + taxCents + shippingCents;
+    const { taxCents, shippingCents, totalCents } = checkoutTotals(subtotalCents, body.shippingMethod);
 
-    let shippingAddressId: string | undefined;
-    if (body.shippingAddress) {
-      const shippingAddress = await prisma.address.create({
-        data: {
-          label: "Shipping",
-          fullName: body.shippingAddress.fullName,
-          phone: body.shippingAddress.phone,
-          addressLine1: body.shippingAddress.addressLine1,
-          addressLine2: body.shippingAddress.addressLine2,
-          city: body.shippingAddress.city,
-          state: body.shippingAddress.state,
-          postalCode: body.shippingAddress.postalCode,
-          country: body.shippingAddress.country ?? "NP",
-          userId: session.user.id,
-        },
-      });
-      shippingAddressId = shippingAddress.id;
-    }
-
-    let billingAddressId: string | undefined;
-    if (body.billingAddress) {
-      const billingAddress = await prisma.address.create({
-        data: {
-          label: "Billing",
-          fullName: body.billingAddress.fullName,
-          phone: body.billingAddress.phone,
-          addressLine1: body.billingAddress.addressLine1,
-          addressLine2: body.billingAddress.addressLine2,
-          city: body.billingAddress.city,
-          state: body.billingAddress.state,
-          postalCode: body.billingAddress.postalCode,
-          country: body.billingAddress.country ?? "NP",
-          userId: session.user.id,
-        },
-      });
-      billingAddressId = billingAddress.id;
-    }
+    const shippingAddress = await prisma.address.create({ data: { label: "Shipping", ...body.shippingAddress, userId: session.user.id } });
+    const shippingAddressId = shippingAddress.id;
 
     const order = await prisma.order.create({
       data: {
@@ -203,9 +140,7 @@ export async function POST(request: Request) {
         taxCents,
         shippingCents,
         totalCents,
-        stripeSessionId: body.stripeSessionId,
         shippingAddressId,
-        billingAddressId,
         items: {
           create: items.map((item) => ({
             quantity: item.quantity,
@@ -217,7 +152,7 @@ export async function POST(request: Request) {
           create: {
             status: "PENDING",
             actorId: session.user.email,
-            note: "Order created via API",
+            note: "Order created via validated API request",
           },
         },
       },
@@ -254,8 +189,8 @@ export async function POST(request: Request) {
       { status: 201 },
     );
   } catch (error) {
+    if (error instanceof CheckoutError || error instanceof SyntaxError) return NextResponse.json({ error: error.message }, { status: 400 });
     console.error("Failed to create order", error);
     return NextResponse.json({ error: "Failed to create order." }, { status: 500 });
   }
 }
-

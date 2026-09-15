@@ -40,6 +40,12 @@ type Order = {
   shippingAddress: ShippingAddress | null;
 };
 
+const fulfillmentSteps = ["NOT_STARTED", "PREPARING", "DISPATCHED", "DELIVERED"] as const;
+
+function fulfillmentLabel(stage: string | null) {
+  return stage ? stage.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase()) : "Not started";
+}
+
 async function getOrders(userId: string): Promise<Order[]> {
   const orders = await prisma.order.findMany({
     where: { userId },
@@ -156,6 +162,7 @@ export default async function OrdersPage() {
                       day: "numeric",
                     })}
                   </p>
+                  <p className="text-sm font-medium text-[#31554d]">Fulfilment: {fulfillmentLabel(order.fulfillmentStage)}</p>
                   {order.trackingNumber && (
                     <p className="text-sm text-neutral-600">
                       Tracking: <span className="font-medium text-orange-500">{order.trackingNumber}</span>
@@ -192,6 +199,20 @@ export default async function OrdersPage() {
                 </div>
               )}
 
+              {order.status === "PAID" || order.fulfillmentStage !== "NOT_STARTED" ? (
+                <div className="mt-4 border-t border-orange-200/50 pt-4">
+                  <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[#31554d]">Delivery progress</p>
+                  <ol className="mt-3 grid grid-cols-4 gap-2 text-center text-[10px] font-semibold text-neutral-500 sm:text-xs">
+                    {fulfillmentSteps.map((step, index) => {
+                      const activeIndex = fulfillmentSteps.indexOf((order.fulfillmentStage ?? "NOT_STARTED") as typeof fulfillmentSteps[number]);
+                      const complete = index <= activeIndex;
+                      return <li key={step} className="space-y-2"><span className={`mx-auto flex h-7 w-7 items-center justify-center rounded-full ${complete ? "bg-[#31554d] text-white" : "bg-[#f5eadb] text-[#6d5b48]"}`}>{complete ? "✓" : index + 1}</span><span>{fulfillmentLabel(step)}</span></li>;
+                    })}
+                  </ol>
+                  {order.fulfillmentStage === "DISPATCHED" ? <p className="mt-3 text-center text-xs text-neutral-600">Your parcel is on its way. Delivery timing depends on the selected service.</p> : null}
+                </div>
+              ) : null}
+
               {order.shippingAddress && (
                 <div className="mt-4 border-t border-orange-200/50 pt-4">
                   <p className="text-xs font-semibold uppercase tracking-[0.1em] text-orange-600">Shipping Address</p>
@@ -219,4 +240,3 @@ export default async function OrdersPage() {
     </div>
   );
 }
-
