@@ -122,6 +122,8 @@ The application seeds a small catalog the first time it runs if the database is 
 - Public product API responses use CDN caching for five minutes with stale-while-revalidate. Product images use Next Image AVIF/WebP variants and a one-day cache.
 - Sensitive account and checkout endpoints have shared database-backed rate limits. Configure Vercel Firewall/WAF and DDoS protection in the Vercel project for edge-level protection.
 - The app provides route and global error boundaries, security response headers, and opt-in internal page/error telemetry. Set both analytics variables to `true` only when you want to retain these anonymous operational events.
+- Product image uploads accept JPEG, PNG, WebP, and AVIF only, with a 5 MB limit. The email configuration diagnostic is restricted to admin and staff sessions.
+- Payment routes reserve up to 30 seconds through Next.js route configuration. Add every production environment variable in Vercel before deployment; `/api/health` reports a degraded status when core configuration is missing.
 - Use `/admin/products` to upload imagery (stored in Vercel Blob) and publish new catalogue items.
 
 ## Deployment (Vercel)

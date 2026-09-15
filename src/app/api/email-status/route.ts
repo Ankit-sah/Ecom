@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 
+import { getCurrentSession } from "@/lib/server-auth";
+
 /**
  * Diagnostic endpoint to check email configuration
  * Accessible at /api/email-status
  */
 export async function GET() {
+  const session = await getCurrentSession();
+  if (!session?.user || !["ADMIN", "STAFF"].includes(session.user.role ?? "CUSTOMER")) {
+    return NextResponse.json({ error: "Forbidden." }, { status: 403, headers: { "Cache-Control": "no-store" } });
+  }
   const emailEnabled = process.env.EMAIL_ENABLED === "true";
   const emailProvider = process.env.EMAIL_PROVIDER || "none";
   const hasApiKey = !!process.env.RESEND_API_KEY;
@@ -19,5 +25,5 @@ export async function GET() {
     message: emailEnabled && emailProvider === "resend" && hasApiKey
       ? "✅ Email is properly configured"
       : "❌ Email is not configured. Add to .env: EMAIL_ENABLED=true, EMAIL_PROVIDER=resend, RESEND_API_KEY=your_key",
-  });
+  }, { headers: { "Cache-Control": "no-store" } });
 }

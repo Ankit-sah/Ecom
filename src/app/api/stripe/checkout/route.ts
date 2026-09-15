@@ -9,6 +9,8 @@ import { paymentOrigin } from "@/lib/wallet-payments";
 import { validateOrderStock } from "@/lib/inventory";
 import { isRateLimited } from "@/lib/rate-limit";
 
+export const maxDuration = 30;
+
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 const stripe = stripeSecretKey != null ? new Stripe(stripeSecretKey) : null;

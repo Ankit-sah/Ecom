@@ -6,6 +6,9 @@ import { requireRole } from "@/lib/server-auth";
 
 export const runtime = "nodejs";
 
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/avif"]);
+
 export async function POST(request: Request) {
   await requireRole(["ADMIN", "STAFF", "ARTISAN_MANAGER"]);
 
@@ -24,6 +27,12 @@ export async function POST(request: Request) {
   if (file.size === 0) {
     return NextResponse.json({ error: "Uploaded file is empty." }, { status: 400 });
   }
+  if (file.size > MAX_IMAGE_BYTES) {
+    return NextResponse.json({ error: "Image files must be 5 MB or smaller." }, { status: 413 });
+  }
+  if (!ACCEPTED_IMAGE_TYPES.has(file.type)) {
+    return NextResponse.json({ error: "Use a JPEG, PNG, WebP, or AVIF image." }, { status: 415 });
+  }
 
   const filename = `${randomUUID()}-${file.name.replace(/\s+/g, "-")}`;
   const arrayBuffer = await file.arrayBuffer();
@@ -34,6 +43,5 @@ export async function POST(request: Request) {
     contentType: file.type || "application/octet-stream",
   });
 
-  return NextResponse.json({ url: blob.url }, { status: 201 });
+  return NextResponse.json({ url: blob.url }, { status: 201, headers: { "Cache-Control": "no-store" } });
 }
-

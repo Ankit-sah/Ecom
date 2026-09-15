@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { deductStockFromOrder, restoreStockFromOrder } from "@/lib/inventory";
 import { sendOrderConfirmationEmail } from "@/lib/email";
 
+export const maxDuration = 30;
+
 export async function POST(request: Request) {
   const stripeKey = process.env.STRIPE_SECRET_KEY;
   if (!stripeKey) return NextResponse.json({ error: "Card payments are unavailable." }, { status: 503 });
@@ -197,4 +199,3 @@ export async function POST(request: Request) {
 }
 
 export const dynamic = "force-dynamic";
-

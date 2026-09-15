@@ -7,6 +7,8 @@ import { CheckoutError, checkoutTotals, validateCheckout } from "@/lib/checkout-
 import { esewaSignature, khaltiRequest, paymentOrigin, toPaisa, walletConfig } from "@/lib/wallet-payments";
 import { isRateLimited } from "@/lib/rate-limit";
 
+export const maxDuration = 30;
+
 export async function POST(request: Request) {
   const rateLimit = await isRateLimited(request, "wallet-checkout", { limit: 10, windowMs: 15 * 60 * 1000 });
   if (rateLimit.limited) return NextResponse.json({ error: "Too many checkout attempts. Please try again shortly." }, { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } });
