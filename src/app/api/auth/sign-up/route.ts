@@ -9,8 +9,6 @@ import { isRateLimited } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
-    const rateLimit = await isRateLimited(request, "sign-up", { limit: 5, windowMs: 60 * 60 * 1000 });
-    if (rateLimit.limited) return NextResponse.json({ error: "Too many attempts. Please try again later." }, { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } });
     const body = (await request.json()) as {
       firstName?: string;
       lastName?: string;
@@ -30,6 +28,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Use a password between 8 and 128 characters." }, { status: 400 });
     }
 
+    try {
+      const rateLimit = await isRateLimited(request, "sign-up", { limit: 5, windowMs: 60 * 60 * 1000 });
+      if (rateLimit.limited) return NextResponse.json({ error: "Too many attempts. Please try again later." }, { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } });
+    } catch (error) {
+      // Do not make account creation unavailable because a defensive control is unavailable.
+      console.error("Sign-up rate limit unavailable", error);
+    }
+
     const user = await prisma.user.create({
       data: {
         name: `${firstName} ${lastName}`,
@@ -38,14 +44,20 @@ export async function POST(request: Request) {
         role: "CUSTOMER",
       },
     });
-    const verificationToken = await createAccountToken(user.id, "EMAIL_VERIFICATION");
-    await sendEmailVerificationEmail(email, verificationToken);
-    return NextResponse.json({ success: true }, { status: 201 });
+    let verificationEmailSent = false;
+    try {
+      const verificationToken = await createAccountToken(user.id, "EMAIL_VERIFICATION");
+      verificationEmailSent = await sendEmailVerificationEmail(email, verificationToken);
+    } catch (error) {
+      // The customer account is valid even when optional email delivery is misconfigured or unavailable.
+      console.error("Verification email setup failed for newly created user", error);
+    }
+    return NextResponse.json({ success: true, verificationEmailSent }, { status: 201 });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return NextResponse.json({ error: "An account with this email already exists. Please sign in." }, { status: 409 });
     }
     console.error("Failed to create local user", error);
-    return NextResponse.json({ error: "Unexpected error while creating user." }, { status: 500 });
+    return NextResponse.json({ error: "We could not create your account right now. Please try again shortly." }, { status: 500 });
   }
 }

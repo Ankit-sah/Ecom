@@ -60,7 +60,7 @@ export function SignUpForm() {
         }),
       });
 
-      const result = (await response.json()) as { error?: string };
+      const result = (await response.json()) as { error?: string; verificationEmailSent?: boolean };
 
       if (!response.ok) {
         setError(result.error ?? "Failed to create your account. Please try again.");
@@ -78,7 +78,7 @@ export function SignUpForm() {
         router.push("/auth/sign-in");
         return;
       }
-      setSuccess("Account created. You’re now signed in.");
+      setSuccess(result.verificationEmailSent ? "Account created. Check your email to verify your address." : "Account created. You’re now signed in.");
       setForm(initialFormState);
       router.push("/account");
       router.refresh();
