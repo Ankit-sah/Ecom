@@ -71,6 +71,16 @@ model AnalyticsEvent {
   @@index([event, createdAt])
 }
 
+model RateLimitEntry {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  key       String   @unique
+  count     Int      @default(0)
+  resetAt   DateTime
+  updatedAt DateTime @updatedAt
+
+  @@index([resetAt])
+}
+
 model ProductCategory {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String

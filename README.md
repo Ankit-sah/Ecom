@@ -115,6 +115,13 @@ The application seeds a small catalog the first time it runs if the database is 
 - Complete the checkout form with shipping details and proceed to Stripe’s hosted payment page.
 - Inspect `/admin/orders` to confirm statuses update after successful payment (requires webhook).
 - Check your server console for email sending logs and your inbox for order confirmation emails.
+
+### Production reliability
+
+- Vercel load-balances serverless requests automatically. Point an uptime monitor at `/api/health`; it verifies MongoDB connectivity and returns `503` when the service is degraded.
+- Public product API responses use CDN caching for five minutes with stale-while-revalidate. Product images use Next Image AVIF/WebP variants and a one-day cache.
+- Sensitive account and checkout endpoints have shared database-backed rate limits. Configure Vercel Firewall/WAF and DDoS protection in the Vercel project for edge-level protection.
+- The app provides route and global error boundaries, security response headers, and opt-in internal page/error telemetry. Set both analytics variables to `true` only when you want to retain these anonymous operational events.
 - Use `/admin/products` to upload imagery (stored in Vercel Blob) and publish new catalogue items.
 
 ## Deployment (Vercel)

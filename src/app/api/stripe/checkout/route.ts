@@ -7,12 +7,15 @@ import { prisma } from "@/lib/prisma";
 import { CheckoutError, validateCheckout, checkoutTotals } from "@/lib/checkout-validation";
 import { paymentOrigin } from "@/lib/wallet-payments";
 import { validateOrderStock } from "@/lib/inventory";
+import { isRateLimited } from "@/lib/rate-limit";
 
 const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
 
 const stripe = stripeSecretKey != null ? new Stripe(stripeSecretKey) : null;
 
 export async function POST(request: Request) {
+  const rateLimit = await isRateLimited(request, "stripe-checkout", { limit: 10, windowMs: 15 * 60 * 1000 });
+  if (rateLimit.limited) return NextResponse.json({ error: "Too many checkout attempts. Please try again shortly." }, { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } });
   if (!stripe) {
     return NextResponse.json({ error: "Stripe secret key is not configured." }, { status: 500 });
   }
@@ -217,4 +220,3 @@ export async function POST(request: Request) {
     );
   }
 }
-

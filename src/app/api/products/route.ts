@@ -25,7 +25,7 @@ export async function GET() {
 
   return NextResponse.json({
     products: products.map(toProductPayload),
-  });
+  }, { headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400" } });
 }
 
 export async function POST(request: Request) {

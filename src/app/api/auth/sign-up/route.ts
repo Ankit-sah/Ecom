@@ -5,9 +5,12 @@ import { hashPassword } from "@/lib/passwords";
 import { prisma } from "@/lib/prisma";
 import { createAccountToken } from "@/lib/account-tokens";
 import { sendEmailVerificationEmail } from "@/lib/email";
+import { isRateLimited } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   try {
+    const rateLimit = await isRateLimited(request, "sign-up", { limit: 5, windowMs: 60 * 60 * 1000 });
+    if (rateLimit.limited) return NextResponse.json({ error: "Too many attempts. Please try again later." }, { status: 429, headers: { "Retry-After": String(rateLimit.retryAfter) } });
     const body = (await request.json()) as {
       firstName?: string;
       lastName?: string;
