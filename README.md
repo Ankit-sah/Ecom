@@ -8,7 +8,7 @@ reach global customers online, and it is built with:
 - **Tailwind CSS v4** for styling
 - **Prisma** + **MongoDB** as the data layer
 - **Stripe Checkout** for secure payments
-- **NextAuth.js** with an **Okta** OAuth provider
+- **NextAuth.js** with local email/password accounts and optional **Okta** OIDC
 
 The project includes core storefront screens (home, products, product detail, cart, checkout), a role-aware administrative
 dashboard, bulk import tooling, Stripe webhooks, and ready-to-deploy configuration for Vercel.
@@ -150,7 +150,7 @@ Post-deploy tasks:
 ## Notes
 
 - Tailwind CSS v4 uses the new `@import "tailwindcss"` syntax.
-- NextAuth is configured with database sessions and Prisma adapter.
+- Authentication uses signed JWT sessions with the Prisma adapter. Customers can register with a local email and password; passwords are stored only as salted scrypt hashes. Okta OIDC is an optional sign-in method when its three `OKTA_*` settings are configured.
 - Stripe checkout route also stores a pending order to reconcile payment outcomes.
 
 ## eSewa and Khalti payments
@@ -229,3 +229,14 @@ providers. This creates a small, unpaid sandbox payment session, never a charge 
 store order. It refuses production mode and does not log secrets. A successful
 provider probe does not replace completing a signed-in store checkout and verifying
 its order and inventory. Restart the development server after changing `.env`.
+
+## Authentication
+
+Local account registration works with only `DATABASE_URL`, `NEXTAUTH_SECRET`, and
+`NEXTAUTH_URL`. Set a long random `NEXTAUTH_SECRET` for every deployed environment.
+
+Okta is optional. To enable it, create an **OIDC Web Application** in Okta and add
+`https://your-domain/api/auth/callback/okta` as a Sign-in redirect URI. Then set
+`OKTA_CLIENT_ID`, `OKTA_CLIENT_SECRET`, and `OKTA_ISSUER` (usually ending in
+`/oauth2/default`). The sign-in page displays the Okta option only when all three
+values are present. Local registration remains independent of Okta.

@@ -1,7 +1,8 @@
 "use client";
 
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import type { Session } from "next-auth";
+import Link from "next/link";
 
 type AuthActionsProps = {
   session: Session | null;
@@ -46,24 +47,21 @@ export function AuthActions({ session, variant = "default" }: AuthActionsProps) 
 
   if (isMinimal) {
     return (
-      <button
-        type="button"
-        onClick={() => signIn("okta")}
+      <Link
+        href="/auth/sign-in"
         className="rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow shadow-orange-500/30 transition hover:bg-orange-600"
       >
         Sign in
-      </button>
+      </Link>
     );
   }
 
   return (
-    <button
-      type="button"
-      onClick={() => signIn("okta")}
+    <Link
+      href="/auth/sign-in"
       className="rounded-full bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-orange-500/30 transition hover:bg-orange-600"
     >
       Sign in
-    </button>
+    </Link>
   );
 }
-
