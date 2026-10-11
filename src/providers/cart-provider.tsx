@@ -6,12 +6,15 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
+  type SetStateAction,
 } from "react";
 
 import type { CartItem, Product } from "@/types/cart";
 import { getCartTotals } from "@/utils/cart";
+import { trackBrowserEvent } from "@/lib/browser-analytics";
 
 type CartContextValue = {
   items: CartItem[];
@@ -30,7 +33,15 @@ const STORAGE_KEY = "ecom-cart";
 export function CartProvider({ children }: { children: ReactNode }) {
   // Always start with empty array to avoid hydration mismatch
   // We'll hydrate from localStorage in useEffect after mount
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItemsState] = useState<CartItem[]>([]);
+  const itemsRef = useRef<CartItem[]>([]);
+  // Keep consecutive cart actions in sync and keep analytics outside React updaters,
+  // which React can invoke more than once in development.
+  const setItems = useCallback((update: SetStateAction<CartItem[]>) => {
+    const next = typeof update === "function" ? update(itemsRef.current) : update;
+    itemsRef.current = next;
+    setItemsState(next);
+  }, []);
   const [isHydrated, setIsHydrated] = useState(false);
 
   // Hydrate cart from localStorage only on client after mount
@@ -51,7 +62,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsHydrated(true);
     }
-  }, []);
+  }, [setItems]);
 
   // Save to localStorage only after hydration to avoid issues
   useEffect(() => {
@@ -62,6 +73,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items, isHydrated]);
 
   const addItem = useCallback((product: Product, quantity = 1) => {
+    const previousQuantity = itemsRef.current.find(item => item.product.id === product.id)?.quantity ?? 0;
+    if (!Number.isInteger(quantity) || quantity <= 0 || product.stock <= previousQuantity) return;
     setItems((current) => {
       const existing = current.find((item) => item.product.id === product.id);
       if (existing) {
@@ -73,11 +86,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
       return [...current, { product, quantity: Math.min(quantity, product.stock) }];
     });
-  }, []);
+    if ((itemsRef.current.find(item => item.product.id === product.id)?.quantity ?? 0) > previousQuantity) {
+      trackBrowserEvent("add_to_cart", product.id);
+    }
+  }, [setItems]);
 
   const removeItem = useCallback((productId: string) => {
     setItems((current) => current.filter((item) => item.product.id !== productId));
-  }, []);
+  }, [setItems]);
 
   const updateQuantity = useCallback((productId: string, quantity: number) => {
     setItems((current) =>
@@ -92,11 +108,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
         )
         .filter((item) => item.quantity > 0),
     );
-  }, []);
+  }, [setItems]);
 
   const clearCart = useCallback(() => {
     setItems([]);
-  }, []);
+  }, [setItems]);
 
   // Sync cart with current stock levels - remove out of stock items
   // This runs once after hydration to clean up any stale cart items
@@ -186,4 +202,3 @@ export function useCart() {
   }
   return context;
 }
-

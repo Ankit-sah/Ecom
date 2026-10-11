@@ -6,6 +6,7 @@ async function getOverview() {
     prisma.product.count(),
     prisma.product.count({ where: { published: true } }),
     prisma.order.aggregate({
+      where: { status: { in: ["PAID", "FULFILLED"] } },
       _sum: { totalCents: true },
       _count: { _all: true },
     }),
@@ -13,6 +14,7 @@ async function getOverview() {
     prisma.catalogImportJob.count({ where: { status: { in: ["PENDING", "PROCESSING"] } } }),
   ]);
 
+  const totalOrders = await prisma.order.count();
   const activeOrders = await prisma.order.count({
     where: { status: { in: ["PENDING", "PAID"] } },
   });
@@ -21,7 +23,7 @@ async function getOverview() {
     productCount,
     publishedCount,
     orders: {
-      total: orderStats._count._all ?? 0,
+      total: totalOrders,
       revenueCents: orderStats._sum.totalCents ?? 0,
       active: activeOrders,
     },

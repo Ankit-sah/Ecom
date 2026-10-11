@@ -25,9 +25,9 @@ export async function verifyWalletOrder(orderId: string) {
   } else return false;
 
   // Atomic status claim + inventory updates: duplicate callbacks cannot deduct twice.
-  await prisma.$transaction(async tx => {
+  const transitioned = await prisma.$transaction(async tx => {
     const claimed = await tx.order.updateMany({ where: { id: order.id, status: "PENDING" }, data: { status: "PAID", paymentTransactionId: transactionId } });
-    if (!claimed.count) return;
+    if (!claimed.count) return false;
     const items = await tx.orderItem.findMany({ where: { orderId: order.id } });
     const shortages: string[] = [];
     for (const item of items) {
@@ -40,6 +40,16 @@ export async function verifyWalletOrder(orderId: string) {
       ...(shortages.length ? { notes: `Payment received. Inventory review required for: ${shortages.join(", ")}. Do not dispatch until resolved.` } : {}),
       statusHistory: { create: { status: "PAID", note: `${order.paymentProvider} payment verified${shortages.length ? "; inventory review required" : ""}` } },
     } });
+    return true;
   });
+  if (transitioned && process.env.ANALYTICS_ENABLED === "true") {
+    try {
+      // Reuse the order ID so a completion can only be counted once.
+      // This is outside settlement: analytics failures cannot roll back payment.
+      await prisma.analyticsEvent.create({ data: { id: order.id, event: "payment_succeeded", path: "/checkout/success" } });
+    } catch {
+      console.warn("Payment analytics could not be recorded.");
+    }
+  }
   return true;
 }

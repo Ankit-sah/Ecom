@@ -21,7 +21,7 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Lint
         run: npm run lint
@@ -29,3 +29,45 @@ jobs:
       - name: Type check
         run: npx tsc --noEmit
 
+      - name: Payment security tests
+        run: npm run test:payments
+
+      - name: Production build
+        run: npm run build
+        env:
+          DATABASE_URL: mongodb://localhost:27017/ecom-ci
+          NEXTAUTH_SECRET: ci-only-secret-not-for-production
+          NEXTAUTH_URL: http://localhost:3000
+
+  browser-tests:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: mongodb://127.0.0.1:27017/ecom_e2e?replicaSet=ecom-e2e
+      E2E_DATABASE_URL: mongodb://127.0.0.1:27017/ecom_e2e?replicaSet=ecom-e2e
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Start isolated MongoDB replica set
+        run: |
+          docker run -d --name ecom-e2e-mongo -p 27017:27017 mongo:7 --replSet ecom-e2e --bind_ip_all
+          for attempt in $(seq 1 30); do
+            if docker exec ecom-e2e-mongo mongosh --quiet --eval 'db.adminCommand({ping:1})'; then break; fi
+            sleep 1
+          done
+          docker exec ecom-e2e-mongo mongosh --quiet --eval 'rs.initiate({_id:"ecom-e2e",members:[{_id:0,host:"127.0.0.1:27017"}]})'
+          for attempt in $(seq 1 30); do
+            if docker exec ecom-e2e-mongo mongosh --quiet --eval 'if (!db.hello().isWritablePrimary) quit(1)'; then break; fi
+            sleep 1
+          done
+      - run: npx prisma db push
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: browser-test-results
+          path: test-results/

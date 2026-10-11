@@ -42,6 +42,7 @@ model Product {
   inventoryLog ProductInventoryEvent[]
   auditLog     ProductAuditLog[]
   wishlistItems WishlistItem[]
+  reviews      ProductReview[]
 }
 
 model AccountToken {
@@ -159,6 +160,7 @@ model Order {
   items         OrderItem[]
   statusHistory OrderStatusHistory[]
   shipment      OrderShipment?
+  supportTickets SupportTicket[]
 }
 
 model OrderItem {
@@ -204,6 +206,8 @@ model User {
   addresses     Address[]
   wishlistItems WishlistItem[]
   accountTokens AccountToken[]
+  reviews       ProductReview[]
+  supportTickets SupportTicket[]
 }
 
 model WishlistItem {
@@ -215,6 +219,27 @@ model WishlistItem {
   createdAt DateTime @default(now())
 
   @@unique([userId, productId])
+}
+
+model ProductReview {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  product          Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId        String   @db.ObjectId
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           String   @db.ObjectId
+  rating           Int
+  title            String
+  body             String
+  verifiedPurchase Boolean  @default(false)
+  status           ReviewStatus @default(PENDING)
+  moderatedBy      String?
+  moderatedAt      DateTime?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([userId, productId])
+  @@index([productId, createdAt])
+  @@index([status, updatedAt])
 }
 
 enum UserRole {
@@ -265,6 +290,7 @@ model VerificationToken {
 model Address {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   label        String?
+  saved        Boolean @default(false)
   fullName     String
   phone        String?
   addressLine1 String
@@ -279,6 +305,8 @@ model Address {
 
   shippingOrders Order[] @relation("ShippingAddress")
   billingOrders  Order[] @relation("BillingAddress")
+
+  @@index([userId, saved])
 }
 
 model OrderStatusHistory {
@@ -320,4 +348,43 @@ enum ImportStatus {
   PROCESSING
   COMPLETED
   FAILED
+}
+
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SupportStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+model SupportTicket {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @db.ObjectId
+  user User @relation(fields: [userId], references: [id])
+  orderId String? @db.ObjectId
+  order Order? @relation(fields: [orderId], references: [id])
+  subject String
+  status SupportStatus @default(OPEN)
+  messages SupportMessage[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId, updatedAt])
+  @@index([status, updatedAt])
+}
+
+model SupportMessage {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  ticketId String @db.ObjectId
+  ticket SupportTicket @relation(fields: [ticketId], references: [id])
+  body String
+  authorId String
+  fromStaff Boolean @default(false)
+  createdAt DateTime @default(now())
 }

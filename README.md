@@ -249,3 +249,26 @@ Okta is optional. To enable it, create an **OIDC Web Application** in Okta and a
 `OKTA_CLIENT_ID`, `OKTA_CLIENT_SECRET`, and `OKTA_ISSUER` (usually ending in
 `/oauth2/default`). The sign-in page displays the Okta option only when all three
 values are present. Local registration remains independent of Okta.
+
+
+### Customer service and browser tests
+
+Saved address management is at `/account/addresses`; checkout prefills the most recently added address and supports choosing another address or entering a new one. Order shipping addresses remain independent snapshots. Deleting a saved address removes it from the address book while preserving order history.
+
+Customers can create order-linked or general support requests at `/account/support`, read replies and status history, and reply to reopen a request. ADMIN and STAFF can reply and set statuses at `/admin/support`. The staff queue supports status filters and pagination.
+
+New and edited verified-purchase reviews are pending until ADMIN or STAFF approve them at `/admin/reviews`. Only approved reviews are returned by the public reviews API. Staff queues support status filters and pagination, and stale approval attempts are rejected if the review changed after loading. Existing reviews without an explicit status are hidden until reviewed; assign `PENDING` to legacy records during rollout so they appear under the Pending filter (the All queue includes legacy reviews). Optional review photos are deferred.
+
+`/admin/analytics` provides 7/30/90-day activity counts, order outcomes and paid revenue by currency, popular product pages, and current low-stock products. Activity counts are not unique-user conversion rates. Event collection follows the existing analytics environment flags. Cart additions, checkout visits, and successful payment initiation now emit activity events; verified payment completion is recorded on the server and deduplicated by order. Clients cannot submit payment completion events.
+
+Before deploying, run `npx prisma db push` against the intended MongoDB database to create the new indexes. Run `npm run db:backfill-reviews` to preview legacy reviews without a moderation status, then `npm run db:backfill-reviews -- --apply` to place only those reviews in the pending queue. Both commands use the configured `DATABASE_URL`; the backfill is safe to repeat and preserves existing moderation decisions. Do not run E2E fixtures against the business database.
+
+Browser tests use Playwright ([web server setup](https://playwright.dev/docs/test-webserver)) and an isolated MongoDB replica-set database whose name must be `ecom_e2e`:
+
+```sh
+E2E_DATABASE_URL='mongodb://127.0.0.1:27019/ecom_e2e?replicaSet=ecom-e2e' DATABASE_URL='mongodb://127.0.0.1:27019/ecom_e2e?replicaSet=ecom-e2e' npx prisma db push
+npx playwright install chromium
+E2E_DATABASE_URL='mongodb://127.0.0.1:27019/ecom_e2e?replicaSet=ecom-e2e' npm run test:e2e
+```
+
+The suite creates uniquely named fixtures and deletes only those fixtures. It covers signup, saved-address prefill, wishlist/cart, real eSewa sandbox checkout initiation and signed handoff, order tracking, customer ticket history, staff replies/status changes, verified-review eligibility/moderation, analytics rendering, and customer access isolation. External gateway payment completion is not automated: tracking uses a seeded paid/dispatched outcome, and callback verification remains covered by `npm run test:payments`. CI runs these browser journeys with an ephemeral MongoDB replica set and uploads failure traces.

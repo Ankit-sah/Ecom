@@ -5,6 +5,7 @@ import { ProductDetailActions } from "@/components/products/product-detail-actio
 import { RelatedProducts } from "@/components/products/related-products";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { ProductGallery } from "@/components/products/product-gallery";
+import { ProductReviews } from "@/components/products/product-reviews";
 import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/product-service";
 import { getProductDetails } from "@/lib/product-details";
 import { getCanonicalUrl, generateProductSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
@@ -235,6 +236,8 @@ export default async function ProductDetailPage({ params }: PageProps) {
           </div>
         </dl>
       </div>
+
+      <ProductReviews productId={product.id} />
 
       {relatedProducts.length > 0 && (
         <RelatedProducts products={relatedProducts} currentProductSlug={slug} />

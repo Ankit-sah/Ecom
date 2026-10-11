@@ -3,7 +3,8 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { isRateLimited } from "@/lib/rate-limit";
 
-const allowedEvents = new Set(["page_view", "client_error", "add_to_cart", "checkout_started", "payment_started", "payment_succeeded"]);
+// Payment completion is written only by verified server payment handlers.
+const allowedEvents = new Set(["page_view", "client_error", "add_to_cart", "checkout_started", "payment_started"]);
 
 export async function POST(request: Request) {
   if (process.env.ANALYTICS_ENABLED !== "true") return new NextResponse(null, { status: 204 });

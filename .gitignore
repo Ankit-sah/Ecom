@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Keep the documented environment template in source control.
 !.env.example
+
+/playwright-report/
+/test-results/
+/.next-e2e/

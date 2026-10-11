@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useCart } from "@/providers/cart-provider";
 import { formatCurrencyFromCents } from "@/utils/format";
+import { trackBrowserEvent } from "@/lib/browser-analytics";
 
 type PaymentOptions = { stripe: boolean; esewa: boolean; khalti: boolean; rate: number | null; sandbox: boolean };
 type Provider = "stripe" | "esewa" | "khalti";
@@ -14,7 +15,7 @@ const methods = [
 ];
 const fields = [
   { key: "fullName", label: "Full name", autoComplete: "name", required: true },
-  { key: "phone", label: "Phone number", autoComplete: "tel", type: "tel" },
+  { key: "phone", label: "Phone number", autoComplete: "tel", type: "tel", required: true },
   { key: "addressLine1", label: "Street address", autoComplete: "address-line1", required: true, wide: true },
   { key: "addressLine2", label: "Apartment, suite, etc. (optional)", autoComplete: "address-line2", wide: true },
   { key: "city", label: "City", autoComplete: "address-level2", required: true },
@@ -23,12 +24,20 @@ const fields = [
   { key: "country", label: "Country code (e.g. NP, US)", autoComplete: "country", required: true },
 ] as const;
 
-export function CheckoutPageClient({ options }: { options: PaymentOptions }) {
+type SavedAddress = Record<string, string> & { id: string; label: string };
+export function CheckoutPageClient({ options, savedAddresses = [] }: { options: PaymentOptions; savedAddresses?: SavedAddress[] }) {
   const { items, subtotalCents, totalQuantity } = useCart();
+  const checkoutTracked = useRef(false);
+  useEffect(() => {
+    if (items.length && !checkoutTracked.current) {
+      checkoutTracked.current = true;
+      trackBrowserEvent("checkout_started");
+    }
+  }, [items.length]);
   const [provider, setProvider] = useState<Provider>(options.esewa ? "esewa" : options.khalti ? "khalti" : "stripe");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [shipping, setShipping] = useState<Record<string, string>>({ fullName: "", phone: "", addressLine1: "", addressLine2: "", city: "", state: "", postalCode: "", country: "NP" });
+  const [shipping, setShipping] = useState<Record<string, string>>(savedAddresses[0] ?? { fullName: "", phone: "", addressLine1: "", addressLine2: "", city: "", state: "", postalCode: "", country: "NP" });
   const shippingMethod = shipping.country.trim().toUpperCase() === "NP" ? "domestic" : "international";
   const taxCents = Math.round(subtotalCents * 0.08);
   const shippingCents = items.length ? shippingMethod === "domestic" ? Math.max(800, Math.round(subtotalCents * 0.05)) : Math.max(2500, Math.round(subtotalCents * 0.12)) : 0;
@@ -49,6 +58,7 @@ export function CheckoutPageClient({ options }: { options: PaymentOptions }) {
       const result = await response.json();
       if (!response.ok) throw new Error(response.status === 401 ? "Your session expired. Please sign in again before paying." : result.error || "Unable to start payment. Please try again.");
       if (provider === "esewa" && result.action && result.fields) {
+        trackBrowserEvent("payment_started");
         const form = document.createElement("form");
         form.method = "POST";
         form.action = result.action;
@@ -61,6 +71,7 @@ export function CheckoutPageClient({ options }: { options: PaymentOptions }) {
         return;
       }
       if (!result.url) throw new Error("The payment link could not be created. Please try again.");
+      trackBrowserEvent("payment_started");
       window.location.assign(result.url);
     } catch (error) {
       setError(error instanceof Error ? error.message : "Unable to start payment.");
@@ -84,9 +95,10 @@ export function CheckoutPageClient({ options }: { options: PaymentOptions }) {
           <h2 className="mb-6 text-xl font-semibold text-[#242b25]"><span className="mr-3 text-[#b9472f]">01</span> Delivery details</h2>
           <fieldset disabled={isLoading} className="grid min-w-0 gap-4 sm:grid-cols-2">
             <legend className="sr-only">Shipping address</legend>
+            {savedAddresses.length > 0 && <label className="col-span-full">Saved address<select className="mt-1 block w-full rounded border p-2" defaultValue={savedAddresses[0].id} onChange={event => { const address = savedAddresses.find(a => a.id === event.target.value); setShipping(address ?? { fullName: "", phone: "", addressLine1: "", addressLine2: "", city: "", state: "", postalCode: "", country: "NP" }); }}><option value="">Use a new address</option>{savedAddresses.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}</select></label>}
             {fields.map(field => <label key={field.key} className={`space-y-2 text-sm font-medium text-neutral-700 ${"wide" in field ? "sm:col-span-2" : ""}`}>
               <span>{field.label}{"required" in field && <span aria-hidden="true" className="text-[#b9472f]"> *</span>}</span>
-              <input name={field.key} autoComplete={field.autoComplete} type={"type" in field ? field.type : "text"} required={"required" in field} maxLength={field.key === "country" ? 2 : 200} pattern={field.key === "country" ? "[A-Za-z]{2}" : undefined} value={shipping[field.key]} onChange={event => setShipping(prev => ({ ...prev, [field.key]: event.target.value }))} className="block min-h-12 w-full min-w-0 rounded-lg border border-[#ddcfbb] bg-[#fffdf9] px-3 py-2 font-normal transition focus:border-[#31554d] focus:ring-2 focus:ring-[#31554d]/15" />
+              <input name={field.key} autoComplete={field.autoComplete} type={"type" in field ? field.type : "text"} required={"required" in field} maxLength={field.key === "country" ? 2 : 200} pattern={field.key === "country" ? "[A-Za-z]{2}" : field.key === "phone" ? "[+()\\-\\s0-9]{7,24}" : undefined} value={shipping[field.key]} onChange={event => setShipping(prev => ({ ...prev, [field.key]: event.target.value }))} className="block min-h-12 w-full min-w-0 rounded-lg border border-[#ddcfbb] bg-[#fffdf9] px-3 py-2 font-normal transition focus:border-[#31554d] focus:ring-2 focus:ring-[#31554d]/15" />
             </label>)}
           </fieldset>
           <div className="mt-6 rounded-xl bg-[#f3f5ef] p-4 text-sm"><p className="font-semibold text-[#31554d]">{shippingMethod === "domestic" ? "Domestic courier · Nepal" : "International express"}</p><p className="mt-1 text-neutral-600">{shippingMethod === "domestic" ? "Estimated delivery in 3–5 business days." : "Estimated delivery in 5–10 business days."} Shipping is calculated from your destination.</p></div>

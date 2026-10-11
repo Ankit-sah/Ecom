@@ -20,7 +20,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <h1 className="text-xl font-semibold text-gray-800">Janakpur Art and Craft · Admin</h1>
             <p className="text-xs uppercase tracking-[0.35em] text-orange-600">Role: {roleLabel}</p>
           </div>
-          <nav className="flex items-center gap-4 text-sm font-semibold text-orange-500">
+          <nav className="flex flex-wrap items-center gap-4 text-sm font-semibold text-orange-500">
             <Link href="/admin" className="hover:text-orange-600">
               Overview
             </Link>
@@ -30,6 +30,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <Link href="/admin/orders" className="hover:text-orange-600">
               Orders
             </Link>
+            <Link href="/admin/analytics">Analytics</Link>
+            {(["ADMIN", "STAFF"].includes(roleLabel)) && <><Link href="/admin/support">Support</Link><Link href="/admin/reviews">Reviews</Link></>}
             <Link href="/admin/imports" className="hover:text-orange-600">
               Imports & Audits
             </Link>

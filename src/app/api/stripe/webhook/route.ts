@@ -90,6 +90,18 @@ export async function POST(request: Request) {
             },
           });
 
+          if (process.env.ANALYTICS_ENABLED === "true" && order.status === "PENDING" &&
+              session.payment_status === "paid" && session.amount_total === order.totalCents &&
+              session.currency?.toUpperCase() === order.currency.toUpperCase()) {
+            try {
+              // The signed provider event must confirm the stored amount. A stable
+              // event ID prevents concurrent/replayed webhooks from counting twice.
+              await prisma.analyticsEvent.create({ data: { id: order.id, event: "payment_succeeded", path: "/checkout/success" } });
+            } catch {
+              console.warn("Payment analytics could not be recorded.");
+            }
+          }
+
           // Send order confirmation email
           try {
             const emailSent = await sendOrderConfirmationEmail(

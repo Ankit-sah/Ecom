@@ -233,6 +233,7 @@ export default async function OrdersPage() {
                   </p>
                 </div>
               )}
+              <div className="mt-4 border-t border-orange-200/50 pt-4 text-sm"><Link href={`/account/support?order=${order.id}`} className="font-semibold text-[#b9472f] underline underline-offset-4">Need help with this order?</Link></div>
             </div>
           ))}
         </div>

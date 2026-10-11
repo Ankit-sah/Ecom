@@ -4,19 +4,20 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const ts = require('typescript');
 const vm = require('node:vm');
-function load(file, mocks = {}) {
+function load(file, mocks = {}, globals = {}) {
   const source = ts.transpileModule(fs.readFileSync(file, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 } }).outputText;
   const exports = {};
-  vm.runInNewContext(source, { exports, require: name => mocks[name] || require(name), process, Buffer, URL, URLSearchParams, AbortSignal, fetch, console, setTimeout });
+  vm.runInNewContext(source, { exports, require: name => mocks[name] || require(name), process, Buffer, URL, URLSearchParams, AbortSignal, fetch, console, setTimeout, ...globals });
   return exports;
 }
 const validation = load('src/lib/checkout-validation.ts');
 const wallet = load('src/lib/wallet-payments.ts');
-const valid = () => ({ items: [{ productId: 'a'.repeat(24), quantity: 2 }], shippingAddress: { fullName: 'Buyer', addressLine1: 'Main Road', city: 'Janakpur', postalCode: '45600', country: 'NP' }, shippingCents: 0 });
+const valid = () => ({ items: [{ productId: 'a'.repeat(24), quantity: 2 }], shippingAddress: { fullName: 'Buyer', phone: '+977 9812345678', addressLine1: 'Main Road', city: 'Janakpur', postalCode: '45600', country: 'NP' }, shippingCents: 0 });
 test('checkout rejects negative, fractional, string, zero, duplicate and malformed items', () => {
   for (const quantity of [-1, 0, 1.5, '2', 1000, NaN]) assert.throws(() => validation.validateCheckout({ ...valid(), items: [{ productId: 'a'.repeat(24), quantity }] }));
   const body = valid(); body.items.push(body.items[0]); assert.throws(() => validation.validateCheckout(body));
   for (const body of [null, {}, { ...valid(), items: [] }, { ...valid(), shippingAddress: { ...valid().shippingAddress, fullName: ' ' } }]) assert.throws(() => validation.validateCheckout(body));
+  assert.throws(() => validation.validateCheckout({ ...valid(), shippingAddress: { ...valid().shippingAddress, phone: 'invalid' } }));
 });
 test('destination determines shipping and ignores client price overrides', () => {
   const body = valid(); body.shippingMethod = 'domestic'; body.shippingAddress.country = 'us';
@@ -92,4 +93,77 @@ test('gateway returns retain order identity with appended query data', () => {
   assert.equal(legacy.get('order_id'), id); assert.equal(legacy.get('data'), 'YWJj');
   const khalti = paymentCallbackParams(`https://shop.example/api/payments/verify/${id}?pidx=payment&status=Completed`, id);
   assert.equal(khalti.get('order_id'), id); assert.equal(khalti.get('pidx'), 'payment');
+});
+
+function walletAnalyticsFixture({ env = { ANALYTICS_ENABLED: 'true' }, failAnalytics = false, result = {} } = {}) {
+  const order = { id: 'a'.repeat(24), status: 'PENDING', paymentProvider: 'khalti', paymentReference: 'pidx', paymentAmountPaisa: 1000 };
+  const recorded = [];
+  let claims = 0, committed = false;
+  const prisma = {
+    order: { findUnique: async () => ({ ...order }) },
+    analyticsEvent: { create: async ({ data }) => {
+      recorded.push({ ...data, committed, orderStatus: order.status });
+      if (failAnalytics) throw new Error('Analytics database unavailable');
+    } },
+    $transaction: async callback => {
+      const value = await callback({
+        order: {
+          updateMany: async () => {
+            if (order.status !== 'PENDING') return { count: 0 };
+            order.status = 'PAID'; claims++;
+            return { count: 1 };
+          },
+          update: async () => {},
+        },
+        orderItem: { findMany: async () => [] },
+      });
+      committed = true;
+      return value;
+    },
+  };
+  const service = load('src/lib/verify-wallet-order.ts', {
+    '@/lib/prisma': { prisma },
+    '@/lib/wallet-payments': { khaltiRequest: async () => ({ pidx: 'pidx', total_amount: 1000, status: 'Completed', transaction_id: 'txn', refunded: false, ...result }) },
+  }, {
+    process: { env },
+    console: { ...console, warn: () => {} },
+  });
+  return { verify: () => service.verifyWalletOrder(order.id), order, recorded, claims: () => claims };
+}
+
+test('enabled payment analytics emits once after verified settlement despite concurrent and repeated callbacks', async () => {
+  const fixture = walletAnalyticsFixture();
+  assert.deepEqual(await Promise.all([fixture.verify(), fixture.verify()]), [true, true]);
+  assert.equal(await fixture.verify(), true);
+  assert.equal(fixture.claims(), 1);
+  assert.deepEqual(fixture.recorded, [{ id: fixture.order.id, event: 'payment_succeeded', path: '/checkout/success', committed: true, orderStatus: 'PAID' }]);
+});
+
+test('payment analytics remains disabled without the explicit true flag', async () => {
+  for (const env of [{}, { ANALYTICS_ENABLED: '' }, { ANALYTICS_ENABLED: 'false' }, { ANALYTICS_ENABLED: 'TRUE' }]) {
+    const fixture = walletAnalyticsFixture({ env });
+    assert.equal(await fixture.verify(), true);
+    assert.equal(fixture.order.status, 'PAID');
+    assert.equal(fixture.recorded.length, 0);
+  }
+});
+
+test('analytics write failures never fail or repeat a settled wallet payment', async () => {
+  const fixture = walletAnalyticsFixture({ failAnalytics: true });
+  assert.equal(await fixture.verify(), true);
+  assert.equal(fixture.order.status, 'PAID');
+  assert.equal(await fixture.verify(), true);
+  assert.equal(fixture.claims(), 1);
+  assert.equal(fixture.recorded.length, 1);
+  assert.equal(fixture.recorded[0].committed, true);
+});
+
+test('unverified wallet payments never emit completion analytics', async () => {
+  for (const result of [{ total_amount: 999 }, { status: 'Pending' }, { refunded: true }, { pidx: 'another-order' }, { transaction_id: null }]) {
+    const fixture = walletAnalyticsFixture({ result });
+    assert.equal(await fixture.verify(), false);
+    assert.equal(fixture.order.status, 'PENDING');
+    assert.equal(fixture.claims(), 0);
+    assert.equal(fixture.recorded.length, 0);
+  }
 });

@@ -44,6 +44,13 @@ export default async function AccountPage() {
           </div>
         </Link>
 
+        <Link
+          href="/account/wishlist"
+          className="group rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm transition hover:border-orange-500/50 hover:shadow-lg"
+        >
+          <div className="space-y-3"><h2 className="text-xl font-semibold text-gray-800 group-hover:text-orange-500">Saved Pieces</h2><p className="text-sm text-neutral-600">Return to the handmade pieces you saved for later.</p><span className="inline-block text-sm font-semibold text-orange-500 group-hover:underline">View Wishlist →</span></div>
+        </Link>
+
         <div className="rounded-3xl border border-orange-200/70 bg-white/85 p-8 shadow-sm">
           <div className="space-y-3">
             <h2 className="text-xl font-semibold text-gray-800">Account Information</h2>
@@ -83,20 +90,19 @@ export default async function AccountPage() {
             View Cart →
           </Link>
           <Link
-            href="/contact"
+            href="/account/support"
             className="text-sm text-neutral-700 hover:text-orange-500 hover:underline"
           >
             Contact Support →
           </Link>
           <Link
-            href="/faq"
+            href="/account/addresses"
             className="text-sm text-neutral-700 hover:text-orange-500 hover:underline"
           >
-            FAQ →
+            Saved addresses →
           </Link>
         </div>
       </section>
     </div>
   );
 }
-

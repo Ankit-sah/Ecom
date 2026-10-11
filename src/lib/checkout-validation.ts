@@ -12,8 +12,14 @@ export function validateCheckout(body: unknown) {
     seen.add(productId);
     return { productId, quantity };
   });
-  if (!value.shippingAddress || typeof value.shippingAddress !== "object") throw new CheckoutError("Shipping address is required.");
-  const address = value.shippingAddress as Record<string, unknown>;
+  const shippingAddress = validateShippingAddress(value.shippingAddress);
+  const shippingMethod = shippingAddress.country === "NP" ? "domestic" : "international";
+  return { items, shippingAddress, shippingMethod };
+}
+
+export function validateShippingAddress(input: unknown) {
+  if (!input || typeof input !== "object") throw new CheckoutError("Shipping address is required.");
+  const address = input as Record<string, unknown>;
   const field = (key: string, required = false) => {
     const raw = address[key];
     if (raw != null && typeof raw !== "string") throw new CheckoutError("Invalid shipping details.");
@@ -21,10 +27,10 @@ export function validateCheckout(body: unknown) {
     if ((required && !text) || text.length > 200) throw new CheckoutError("Please complete the required shipping fields.");
     return text;
   };
-  const shippingAddress = { fullName: field("fullName", true), phone: field("phone"), addressLine1: field("addressLine1", true), addressLine2: field("addressLine2"), city: field("city", true), state: field("state"), postalCode: field("postalCode", true), country: field("country", true).toUpperCase() };
+  const shippingAddress = { fullName: field("fullName", true), phone: field("phone", true), addressLine1: field("addressLine1", true), addressLine2: field("addressLine2"), city: field("city", true), state: field("state"), postalCode: field("postalCode", true), country: field("country", true).toUpperCase() };
   if (!/^[A-Z]{2}$/.test(shippingAddress.country)) throw new CheckoutError("Use a two-letter country code, such as NP.");
-  const shippingMethod = shippingAddress.country === "NP" ? "domestic" : "international";
-  return { items, shippingAddress, shippingMethod };
+  if (!/^[+()\-\s\d]{7,24}$/.test(shippingAddress.phone)) throw new CheckoutError("Use a valid phone number for delivery updates.");
+  return shippingAddress;
 }
 
 export function checkoutTotals(subtotalCents: number, shippingMethod: string) {
