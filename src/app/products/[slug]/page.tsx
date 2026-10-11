@@ -6,7 +6,7 @@ import { RelatedProducts } from "@/components/products/related-products";
 import { Breadcrumbs } from "@/components/layout/breadcrumbs";
 import { ProductGallery } from "@/components/products/product-gallery";
 import { ProductReviews } from "@/components/products/product-reviews";
-import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/product-service";
+import { getProductBySlug, getRelatedProducts } from "@/lib/product-service";
 import { getProductDetails } from "@/lib/product-details";
 import { getCanonicalUrl, generateProductSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 import { formatCurrencyFromCents } from "@/utils/format";
@@ -18,15 +18,6 @@ type PageProps = {
     slug: string;
   }>;
 };
-
-export async function generateStaticParams() {
-  const products = await getAllProducts();
-  return products
-    .filter((product) => product.slug)
-    .map((product) => ({
-      slug: product.slug,
-    }));
-}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;

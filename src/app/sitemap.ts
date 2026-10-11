@@ -3,6 +3,9 @@ import type { MetadataRoute } from "next";
 import { getAllProducts } from "@/lib/product-service";
 import { getBaseUrl } from "@/lib/structured-data";
 
+// Product URLs are read at request time so builds do not need database access.
+export const dynamic = "force-dynamic";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = getBaseUrl();
   
@@ -47,4 +50,3 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [...staticPages, ...productPages];
 }
-

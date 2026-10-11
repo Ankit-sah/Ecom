@@ -9,20 +9,13 @@ import { prisma } from "@/lib/prisma";
 import { getFilteredProducts } from "@/lib/product-service";
 import { getCanonicalUrl, generateCollectionPageSchema, generateBreadcrumbSchema } from "@/lib/structured-data";
 
+export const dynamic = "force-dynamic";
+
 type PageProps = {
   params: Promise<{
     slug: string;
   }>;
 };
-
-export async function generateStaticParams() {
-  const categories = await prisma.productCategory.findMany({
-    select: { slug: true },
-  });
-  return categories.map((category) => ({
-    slug: category.slug,
-  }));
-}
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
@@ -120,4 +113,3 @@ export default async function CategoryPage({ params }: PageProps) {
     </>
   );
 }
-
